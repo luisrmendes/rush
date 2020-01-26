@@ -22,8 +22,19 @@ dispatcher.add_handler(start_handler)
 
 
 # Response to text 
-def echo(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+# def echo(update, context):
+#     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
-echo_handler = MessageHandler(Filters.text, echo)
-dispatcher.add_handler(echo_handler)
+# echo_handler = MessageHandler(Filters.text, echo)
+# dispatcher.add_handler(echo_handler)
+
+
+def ambrosio(update, context):
+    if update.message.text == "Ambrosio" or update.message.text == "Ambrósio" :
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Diga senhora")
+
+   
+   
+
+ambrosio_handler = MessageHandler(Filters.text, ambrosio)
+dispatcher.add_handler(ambrosio_handler)
