@@ -1,14 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-char* get_cmd_output(char *cmd);
+int readFIFO();
+int writeFIFO();
+char* getCmdOutput(char *cmd);
 char* stringAdd(const char *s1, const char *s2);
 
 
 int main() {
 
-    printf("%s", get_cmd_output("ls"));
+    printf("%s", getCmdOutput("ls"));
+    writeFIFO();
+
+    return 0;
+}
+
+int writeFIFO() {
+    
+    mkfifo("myfifo", 0666);
+    int fd = open("myfifo", O_WRONLY|O_CREAT);
+    write(fd, "Hai, I'm here", strlen("Hai, I'm here"));
+    close(fd);
+    unlink("myfifo");
 
     return 0;
 }
@@ -23,9 +41,9 @@ char* stringAdd(const char *s1, const char *s2) {
     return result;
 }
 
-char* get_cmd_output(char *cmd) {
-    char *b = malloc (121);
-    char *buf = malloc (121);
+char* getCmdOutput(char *cmd) {
+    char *b = malloc(121);
+    char *buf = malloc(121);
     
     FILE *fp;
     if ((fp = popen(cmd, "r")) == NULL) {
@@ -36,7 +54,7 @@ char* get_cmd_output(char *cmd) {
     buf = fgets(b, 121, fp);
     fflush(fp);
     if(pclose(fp))  {
-        //printf("Command not found or exited with error status\n");
+        printf("Command not found or exited with error status\n");
         return "false";
     }
 
