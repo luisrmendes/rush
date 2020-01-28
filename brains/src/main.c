@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+char FIFO_PATH[] = "/tmp/brainsfifo";
+
 int readFIFO();
 int writeFIFO();
 char* getCmdOutput(char *cmd);
@@ -22,11 +24,11 @@ int main() {
 
 int writeFIFO() {
     
-    mkfifo("myfifo", 0666);
-    int fd = open("myfifo", O_WRONLY|O_CREAT);
+    mkfifo(FIFO_PATH, 0666);
+    int fd = open(FIFO_PATH, O_WRONLY|O_CREAT);
     write(fd, "Hai, I'm here", strlen("Hai, I'm here"));
     close(fd);
-    unlink("myfifo");
+    unlink(FIFO_PATH);
 
     return 0;
 }
