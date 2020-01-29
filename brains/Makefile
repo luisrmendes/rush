@@ -1,6 +1,5 @@
-# HEADERS = src/input_handler.h src/output_handler.h
-# OBJECTS = src/main.o src/input_handler.o src/output_handler.o
-OBJECTS = src/main.o
+HEADERS = src/fifoHandler.h
+OBJECTS = src/main.o src/fifoHandler.o 
 
 default: brains
 

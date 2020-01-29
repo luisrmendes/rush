@@ -39,4 +39,6 @@ dispatcher.add_handler(ambrosio_handler)
 
 thread = Thread(target = fifoReader, args = ())
 thread.start()
-thread.join()
+# thread.join()
+
+fifoWriter("ganda otario")
