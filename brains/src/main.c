@@ -5,7 +5,9 @@ int main() {
 
     // printf("%s", getCmdOutput("ls"));
     //writeFIFO();
-    readFIFO();
+    char fifoArg[] = "";
+    readFIFO(FIFO2_PATH, &fifoArg);
 
+    printf("%s", fifoArg);
     return 0;
 }

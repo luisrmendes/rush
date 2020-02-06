@@ -18,29 +18,31 @@ int watchFIFO(char *path) {
     return 0;
 }
 
-int readFIFO() {
+int readFIFO(char *fifopath, char args[]) {
     char str[100];
-    
+
     while(1) {
-        if (watchFIFO(FIFO2_PATH)) {
-            int fd = open(FIFO2_PATH, O_RDONLY);
+        if (watchFIFO(fifopath)) {
+            int fd = open(fifopath, O_RDONLY);
             readline(fd, str);
-            printf("%s", str);
+            args = str;
         }
         else 
-            watchFIFO(FIFO2_PATH);
-    }     
+            watchFIFO(fifopath);
+    }    
+
+     
 
     return 0;
 }
 
-int writeFIFO() {
+int writeFIFO(char *fifopath) {
     
-    mkfifo(FIFO1_PATH, 0666);
-    int fd = open(FIFO1_PATH, O_WRONLY|O_CREAT);
+    mkfifo(fifopath, 0666);
+    int fd = open(fifopath, O_WRONLY|O_CREAT);
     write(fd, "Hai, I'm here", strlen("Hai, I'm here"));
     close(fd);
-    unlink(FIFO1_PATH);
+    unlink(fifopath);
 
     return 0;
 }

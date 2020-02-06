@@ -13,6 +13,15 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 updater.start_polling()
 
+# /sv_brightness command
+def sv_brightness(update, context):
+    print(context.args[0])
+    #fifoWriter("sudo sh ~/github/dotFiles/brightness.sh " + context.args[0])
+    os.system("sudo sh ~/github/dotFiles/brightness.sh " + context.args[0])
+    os.system("ls")
+
+sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
+dispatcher.add_handler(sv_brightness_handler)
 
 # /start command
 def start(update, context):
@@ -40,5 +49,3 @@ dispatcher.add_handler(ambrosio_handler)
 thread = Thread(target = fifoReader, args = ())
 thread.start()
 # thread.join()
-
-fifoWriter("ganda otario")
