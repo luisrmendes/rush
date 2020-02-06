@@ -1,12 +1,15 @@
 import os, sys
 import time
-from threading import Thread
+
 
 FIFO1_PATH = "/tmp/brainsfifo1"
 FIFO2_PATH = "/tmp/brainsfifo2"
 
+
+
 def handleFIFO(data):
-    print(data)
+    print(data) 
+    return data
 
 def fifoReader():
     while 1:
@@ -39,4 +42,3 @@ def fifoWriter(content):
     os.write(fd, str.encode(content) + str.encode('\0'))
     os.close(fd)
     os.unlink(FIFO2_PATH)
-    

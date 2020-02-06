@@ -4,6 +4,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from api_key import telegram_api_key
 from fifoHandler import *
+from threading import Thread
 
 updater = Updater(token=telegram_api_key, use_context=True)
 
@@ -13,22 +14,14 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 updater.start_polling()
 
+
 # /sv_brightness command
 def sv_brightness(update, context):
-    print(context.args[0])
-    #fifoWriter("sudo sh ~/github/dotFiles/brightness.sh " + context.args[0])
-    os.system("sudo sh ~/github/dotFiles/brightness.sh " + context.args[0])
-    os.system("ls")
+    fifoWriter("sudo sh /home/luis/work/sideProjs/dotFiles/brightness.sh " + context.args[0])
+    
 
 sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
 dispatcher.add_handler(sv_brightness_handler)
-
-# /start command
-def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
-
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
 
 
 # Response to text 
@@ -49,3 +42,4 @@ dispatcher.add_handler(ambrosio_handler)
 thread = Thread(target = fifoReader, args = ())
 thread.start()
 # thread.join()
+

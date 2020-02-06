@@ -1,5 +1,12 @@
 #include "fifoHandler.h"
 
+int handleFifoCall(char *arg) {
+
+    writeFIFO(FIFO1_PATH, getCmdOutput(arg));
+
+    return 0;
+}
+
 int isFIFO(const char *path) {
     struct stat path_stat;
     stat(path, &path_stat);
@@ -18,29 +25,27 @@ int watchFIFO(char *path) {
     return 0;
 }
 
-int readFIFO(char *fifopath, char args[]) {
+int readFIFO(char *fifopath) {
     char str[100];
 
     while(1) {
         if (watchFIFO(fifopath)) {
             int fd = open(fifopath, O_RDONLY);
             readline(fd, str);
-            args = str;
+            handleFifoCall(str);         
         }
         else 
             watchFIFO(fifopath);
-    }    
-
-     
+    }  
 
     return 0;
 }
 
-int writeFIFO(char *fifopath) {
+int writeFIFO(char *fifopath, char *content) {
     
     mkfifo(fifopath, 0666);
     int fd = open(fifopath, O_WRONLY|O_CREAT);
-    write(fd, "Hai, I'm here", strlen("Hai, I'm here"));
+    write(fd, content, strlen(content));
     close(fd);
     unlink(fifopath);
 
