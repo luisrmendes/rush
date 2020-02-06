@@ -37,7 +37,7 @@ def watchFile(filename, time_limit=0, check_interval=0.1):
 
 
 def fifoWriter(content):
-    os.unlink(FIFO2_PATH)
+    #os.unlink(FIFO2_PATH)
     os.mkfifo(FIFO2_PATH)
     fd = os.open(FIFO2_PATH, os.O_WRONLY| os.O_CREAT)
     os.write(fd, str.encode(content) + str.encode('\0'))
