@@ -2,8 +2,8 @@ import os, sys
 import time
 
 
-FIFO1_PATH = "/tmp/brainsfifo1"
-FIFO2_PATH = "/tmp/brainsfifo2"
+FIFO1_PATH = "/tmp/brains_to_telegram"
+FIFO2_PATH = "/tmp/telegram_to_brains"
 
 
 

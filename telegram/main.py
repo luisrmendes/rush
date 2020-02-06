@@ -17,7 +17,7 @@ updater.start_polling()
 
 # /sv_brightness command
 def sv_brightness(update, context):
-    fifoWriter("sudo sh /home/luis/work/sideProjs/dotFiles/brightness.sh " + context.args[0])
+    fifoWriter("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     
 
 sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
