@@ -1,25 +1,12 @@
-from telegram.ext import Updater
-import logging
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
-from api_key import telegram_api_key
-from fifoHandler import *
+from bot_handler import *
 from threading import Thread
-
-updater = Updater(token=telegram_api_key, use_context=True)
-
-dispatcher = updater.dispatcher
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
-
-updater.start_polling()
-
+from fifoHandler import * 
 
 # /sv_brightness command
 def sv_brightness(update, context):
-    fifoWriter("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
+    # fifoWriter("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
+    os.system("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     
-
 sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
 dispatcher.add_handler(sv_brightness_handler)
 
@@ -39,7 +26,7 @@ def ambrosio(update, context):
 ambrosio_handler = MessageHandler(Filters.text, ambrosio)
 dispatcher.add_handler(ambrosio_handler)
 
-thread = Thread(target = fifoReader, args = ())
-thread.start()
-# thread.join()
+# thread = Thread(target = fifoReader, args = ())
+# thread.start()
+
 

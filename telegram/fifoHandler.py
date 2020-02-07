@@ -1,10 +1,8 @@
 import os, sys
 import time
 
-
 FIFO1_PATH = "/tmp/brains_to_telegram"
 FIFO2_PATH = "/tmp/telegram_to_brains"
-
 
 
 def handleFIFO(data):
