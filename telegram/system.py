@@ -1,11 +1,14 @@
 import os, sys
 import time
+import subprocess
 
 FIFO1_PATH = "/tmp/brains_to_telegram"
 FIFO2_PATH = "/tmp/telegram_to_brains"
 
 def bash_call(content):
     os.system(content)
+    result = subprocess.run([content], stdout=subprocess.PIPE)
+    return result
 
 def handleFIFO(data):
     print(data) 
