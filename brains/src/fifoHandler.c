@@ -1,8 +1,10 @@
 #include "fifoHandler.h"
 
 int handleFifoCall(char *arg) {
+    printf("%s", arg);
 
     writeFIFO(FIFO1_PATH, getCmdOutput(arg));
+    printf("%s", getCmdOutput(arg));
 
     return 0;
 }
