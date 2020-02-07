@@ -13,10 +13,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                      level=logging.INFO)
 
 
-
 # /sv_brightness command
 def desktop_wakeup(update, context):
-    # fifoWriter("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     result = bash_call("wakeonlan 00:D8:61:a1:CE:00")
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
@@ -26,7 +24,8 @@ dispatcher.add_handler(desktop_wakeup_handler)
 # /sv_brightness command
 def sv_brightness(update, context):
     # fifoWriter("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
-    bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
+    result = bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
 sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
 dispatcher.add_handler(sv_brightness_handler)

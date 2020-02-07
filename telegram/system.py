@@ -6,9 +6,13 @@ FIFO1_PATH = "/tmp/brains_to_telegram"
 FIFO2_PATH = "/tmp/telegram_to_brains"
 
 def bash_call(content):
-    os.system(content)
-    result = subprocess.run([content], stdout=subprocess.PIPE)
-    return result
+    # os.system(content)
+    cmd_output = os.popen(content).read()
+    
+    if cmd_output == "":
+        cmd_output = "OK"
+
+    return cmd_output
 
 def handleFIFO(data):
     print(data) 
