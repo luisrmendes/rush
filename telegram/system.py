@@ -14,7 +14,7 @@ def bash_call(content):
     # except OSError:
     #     print("Command " + content + " not found")
     #     return "Command " + content + " not found"
-    subprocess.check_call(content)
+    subprocess.check_call(content.split())
         
 def handleFIFO(data):
     print(data) 
