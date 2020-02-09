@@ -6,15 +6,14 @@ FIFO1_PATH = "/tmp/brains_to_telegram"
 FIFO2_PATH = "/tmp/telegram_to_brains"
 
 def bash_call(content):
-    # try:
-    #     subprocess.check_call(content)
-    #     return "OK"        
-    # except subprocess.CalledProcessError:
-    #     pass # handle errors in the called executable
-    # except OSError:
-    #     print("Command " + content + " not found")
-    #     return "Command " + content + " not found"
-    subprocess.check_call(content.split())
+    try:
+        subprocess.check_call(content.split())
+        return "OK"        
+    except subprocess.CalledProcessError:
+        pass # handle errors in the called executable
+    except OSError:
+        print("Command " + content + " not found")
+        return "Command " + content + " not found"
         
 def handleFIFO(data):
     print(data) 
