@@ -23,7 +23,6 @@ dispatcher.add_handler(desktop_wakeup_handler)
 
 # /sv_brightness command
 def sv_brightness(update, context):
-    # fifoWriter("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     result = bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
