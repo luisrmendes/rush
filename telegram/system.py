@@ -7,7 +7,7 @@ FIFO2_PATH = "/tmp/telegram_to_brains"
 
 def bash_call(content):
     try:
-        subprocess.check_call(content)
+        subprocess.run(content)
         return "OK"        
     except subprocess.CalledProcessError:
         pass # handle errors in the called executable
