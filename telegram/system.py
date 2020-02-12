@@ -5,6 +5,7 @@ import subprocess
 FIFO1_PATH = "/tmp/brains_to_telegram"
 FIFO2_PATH = "/tmp/telegram_to_brains"
 
+# Executes bash commands, handles bad ones
 def bash_call(content):
     try:
         result = subprocess.run(content.split(),  stdout=subprocess.PIPE)
@@ -16,12 +17,14 @@ def bash_call(content):
     except OSError:
         print("Command " + content + " not found")
         return "Command " + content + " not found"
-        
+
+# Just a handler for fifoReader        
 def handleFIFO(data):
     print(data) 
     return data
 
-def fifoReader():
+# Polling method for checking if a ffo exists, then reads it
+def fifoWatcher_and_Reader():
     while 1:
         if watchFile(FIFO1_PATH):
             # Block until writer finishes...
@@ -30,7 +33,8 @@ def fifoReader():
                 handleFIFO(data)
         else:
             watchFile(FIFO1_PATH)  
-    
+
+# Returns true if file with filename exists, if none waits check_interval seconds to check again               
 def watchFile(filename, time_limit=0, check_interval=0.1):    
     now = time.time()
     last_time = now + time_limit
@@ -44,6 +48,7 @@ def watchFile(filename, time_limit=0, check_interval=0.1):
 
     return False
 
+# Writes to FIFO, given constant FIFO path
 def fifoWriter(content):
     #os.unlink(FIFO2_PATH)
     os.mkfifo(FIFO2_PATH)
