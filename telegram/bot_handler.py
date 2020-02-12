@@ -12,8 +12,23 @@ dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
+# /ipv6 command
+def ipv6(update, context):
+    result = bash_call("dig @resolver1.opendns.com AAAA myip.opendns.com +short -6")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+ipv6_handler = CommandHandler('ipv6', ipv6)
+dispatcher.add_handler(ipv6_handler)
 
-# /sv_brightness command
+# /ipv4 command
+def ipv4(update, context):
+    result = bash_call("dig @resolver1.opendns.com A myip.opendns.com +short -4")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+ipv4_handler = CommandHandler('ipv4', ipv4)
+dispatcher.add_handler(ipv4_handler)
+
+# /desktop_wakeup command
 def desktop_wakeup(update, context):
     result = bash_call("wakeonlan 00:D8:61:a1:CE:00")
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
@@ -23,7 +38,7 @@ dispatcher.add_handler(desktop_wakeup_handler)
 
 # /sv_brightness command
 def sv_brightness(update, context):
-    result = bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
+    result = bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh" + context.args[0])
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
 sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
