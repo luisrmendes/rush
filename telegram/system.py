@@ -7,8 +7,10 @@ FIFO2_PATH = "/tmp/telegram_to_brains"
 
 def bash_call(content):
     try:
-        subprocess.check_call(content.split())
-        return "OK"        
+        result = subprocess.run(content.split(),  stdout=subprocess.PIPE)
+        if result.returncode == 127:
+            return "Error: No file was found"
+        return result.stdout.decode('utf-8')       
     except subprocess.CalledProcessError:
         pass # handle errors in the called executable
     except OSError:
