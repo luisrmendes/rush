@@ -12,6 +12,20 @@ dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
+
+# /status command
+def status(update, context):
+    result = bash_call("ping -c 1 google.com 2>&1 >/dev/null ; echo $?")
+    result = result.replace("\n", '')
+    if result == "0":   
+        send = "Desktop is onine"
+    else:
+        send = "Desktop is offline"
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=send)
+    
+status_handler = CommandHandler('status', status)
+dispatcher.add_handler(status_handler)
+
 # /ipv6 command
 def ipv6(update, context):
     result = bash_call("dig @resolver1.opendns.com AAAA myip.opendns.com +short -6")

@@ -7,6 +7,14 @@ FIFO2_PATH = "/tmp/telegram_to_brains"
 
 # Executes bash commands, handles bad ones
 def bash_call(content):
+    if content.find(';') != -1:
+        # for x in content.split(';'):
+        #     bash_call(x)
+        
+        # slight security hazard, look to replace!! (shell=True)
+        result = subprocess.run(content, stdout=subprocess.PIPE, shell=True)
+        return result.stdout.decode('utf-8')
+
     try:
         result = subprocess.run(content.split(),  stdout=subprocess.PIPE)
         if result.returncode == 127:
@@ -23,7 +31,7 @@ def handleFIFO(data):
     print(data) 
     return data
 
-# Polling method for checking if a ffo exists, then reads it
+# Polling method for checking if a fifo exists, then reads it
 def fifoWatcher_and_Reader():
     while 1:
         if watchFile(FIFO1_PATH):
