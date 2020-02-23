@@ -18,7 +18,7 @@ def status(update, context):
     result = bash_call("ping -c 1 192.168.1.71 2>&1 >/dev/null ; echo $?")
     result = result.replace("\n", '')
     if result == "0":   
-        send = "Desktop is onine"
+        send = "Desktop is online"
     else:
         send = "Desktop is offline"
     updater.bot.send_message(chat_id=update.effective_chat.id, text=send)
