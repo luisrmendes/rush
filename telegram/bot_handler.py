@@ -3,6 +3,7 @@ import logging
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from api_key import telegram_api_key
+from psw import psw
 from system import bash_call
 
 
@@ -12,6 +13,13 @@ dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
+# /shutdown command
+def shutdown(update, context):
+    result = bash_call("net rpc suspend -f -t 0 -C 'Bye Bye, says server' -U luis%" + psw + " -I 192.168.1.71")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+shutdown_handler = CommandHandler('shutdown', shutdown)
+dispatcher.add_handler(shutdown_handler)
 
 # /status command
 def status(update, context):
