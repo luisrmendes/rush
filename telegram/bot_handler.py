@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 # /shutdown command
 def shutdown(update, context):
-    result = bash_call("net rpc suspend -f -t 0 -C 'Bye Bye, says server' -U luis%" + psw + " -I 192.168.1.71")
+    result = bash_call("net rpc shutdown -f -t 0 -C 'Bye Bye, says server' -U luis%" + psw + " -I 192.168.1.71")
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
 shutdown_handler = CommandHandler('shutdown', shutdown)
