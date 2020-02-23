@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 # /status command
 def status(update, context):
-    result = bash_call("ping -c 1 google.com 2>&1 >/dev/null ; echo $?")
+    result = bash_call("ping -c 1 192.168.163.145 2>&1 >/dev/null ; echo $?")
     result = result.replace("\n", '')
     if result == "0":   
         send = "Desktop is onine"
