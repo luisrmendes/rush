@@ -17,8 +17,11 @@ def bash_call(content):
 
     try:
         result = subprocess.run(content.split(),  stdout=subprocess.PIPE)
-        if result.returncode == 127:
-            return "Error: No file was found"
+
+        # returns 127 in ssh commands, correct this
+        # if result.returncode == 127:
+        #     return "Error: No file was found"
+        
         return result.stdout.decode('utf-8')       
     except subprocess.CalledProcessError:
         pass # handle errors in the called executable
