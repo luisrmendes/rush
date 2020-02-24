@@ -13,6 +13,16 @@ dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
+
+# /rpi_play command
+# youtube-dl --extract-audio --audio-format mp3 <link> https:/&& omxplayer Rush\ -\ Clockwork\ Angels\ Tour\ -\ The\ Garden-EsBNzf5JlZA.mkv
+def rpi_play(update, context):
+    result = bash_call("ssh pi@192.168.1.106 'omxplayer ~/rush/wakeup_songs/01.\ Bastille\ Day.mp3'")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+rpi_play_handler = CommandHandler('rpi_play', rpi_play)
+dispatcher.add_handler(rpi_play_handler)
+
 # /shutdown command
 def shutdown_desktop(update, context):
     result = bash_call("net rpc shutdown -f -t 0 -C 'Bye Bye, says server' -U luis%" + psw + " -I 192.168.1.71")
