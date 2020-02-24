@@ -5,6 +5,7 @@ from telegram.ext import MessageHandler, Filters
 from api_key import telegram_api_key
 from psw import psw
 from system import bash_call
+import subprocess
 
 
 updater = Updater(token=telegram_api_key, use_context=True)
