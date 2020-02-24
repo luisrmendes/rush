@@ -7,27 +7,30 @@ FIFO2_PATH = "/tmp/telegram_to_brains"
 
 # Executes bash commands, handles bad ones
 def bash_call(content):
-    if content.find(';') != -1 or content.find('&&') != -1:
-        # for x in content.split(';'):
-        #     bash_call(x)
+    # if content.find(';') != -1 or content.find('&&') != -1:
+    #     # for x in content.split(';'):
+    #     #     bash_call(x)
         
-        # slight security hazard, look to replace!! (shell=True)
-        result = subprocess.run(content, stdout=subprocess.PIPE, shell=True)
-        return result.stdout.decode('utf-8')
+    #     # slight security hazard, look to replace!! (shell=True)
+    #     result = subprocess.run(content, stdout=subprocess.PIPE, shell=True)
+    #     return result.stdout.decode('utf-8')
 
-    try:
-        result = subprocess.run(content.split(),  stdout=subprocess.PIPE)
+    # try:
+    #     result = subprocess.run(content.split(),  stdout=subprocess.PIPE)
 
-        # returns 127 in ssh commands, correct this
-        # if result.returncode == 127:
-        #     return "Error: No file was found"
-        
-        return result.stdout.decode('utf-8')       
-    except subprocess.CalledProcessError:
-        pass # handle errors in the called executable
-    except OSError:
-        print("Command " + content + " not found")
-        return "Command " + content + " not found"
+    #     # returns 127 in ssh commands, correct this
+    #     # if result.returncode == 127:
+    #     #     return "Error: No file was found"
+
+    #     return result.stdout.decode('utf-8')       
+    # except subprocess.CalledProcessError:
+    #     pass # handle errors in the called executable
+    # except OSError:
+    #     print("Command " + content + " not found")
+    #     return "Command " + content + " not found"
+
+    result = subprocess.run(content, stdout=subprocess.PIPE, shell=True)
+    return result.stdout.decode('utf-8')
 
 # Just a handler for fifoReader        
 def handleFIFO(data):
