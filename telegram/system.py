@@ -7,6 +7,8 @@ FIFO2_PATH = "/tmp/telegram_to_brains"
 
 # Executes bash commands, handles bad ones
 def bash_call(content):
+
+    # This is all fucked up
     # if content.find(';') != -1 or content.find('&&') != -1:
     #     # for x in content.split(';'):
     #     #     bash_call(x)
