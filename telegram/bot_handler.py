@@ -14,6 +14,38 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                      level=logging.INFO)
 
 
+# /sock2_on command
+def sock2_on(update, context):
+    result = bash_call("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 2=on && python3 ~/rush/energienie.py 2=on'")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+sock2_on_handler = CommandHandler('sock2_on', sock2_on)
+dispatcher.add_handler(sock2_on_handler)
+
+# /sock1_on command
+def sock1_on(update, context):
+    result = bash_call("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on'")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+sock1_on_handler = CommandHandler('sock1_on', sock1_on)
+dispatcher.add_handler(sock1_on_handler)
+
+# /sock2_off command
+def sock2_off(update, context):
+    result = bash_call("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 2=off && python3 ~/rush/energienie.py 2=off'")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+sock2_off_handler = CommandHandler('sock2_off', sock2_off)
+dispatcher.add_handler(sock2_off_handler)
+
+# /sock1_off command
+def sock1_off(update, context):
+    result = bash_call("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 1=off && python3 ~/rush/energienie.py 1=off'")
+    updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
+    
+sock1_off_handler = CommandHandler('sock1_off', sock1_off)
+dispatcher.add_handler(sock1_off_handler)
+
 # /rpi_play command
 # youtube-dl --extract-audio --audio-format mp3 <link> https:/&& omxplayer Rush\ -\ Clockwork\ Angels\ Tour\ -\ The\ Garden-EsBNzf5JlZA.mkv
 def rpi_play(update, context):
