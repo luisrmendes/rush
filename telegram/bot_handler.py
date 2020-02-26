@@ -49,7 +49,7 @@ dispatcher.add_handler(sock1_off_handler)
 # /rpi_play command
 # youtube-dl --extract-audio --audio-format mp3 <link> https:/&& omxplayer Rush\ -\ Clockwork\ Angels\ Tour\ -\ The\ Garden-EsBNzf5JlZA.mkv
 def rpi_play(update, context):
-    result = bash_call("ssh pi@192.168.1.106 'omxplayer ~/rush/wakeup_songs/01.\ Bastille\ Day.mp3'")
+    result = bash_call("ssh pi@192.168.1.106 'omxplayer ~/rush/wakeup_songs/03.\ Lakeside\ Park.mp3'")
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
 rpi_play_handler = CommandHandler('rpi_play', rpi_play)

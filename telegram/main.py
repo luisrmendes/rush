@@ -3,7 +3,7 @@ from aux import *
 import subprocess
 
 # Start telegram bot
-updater.start_polling()
+# updater.start_polling()
 
 # thread = Thread(target = fifoReader, args = ())
 # thread.start()
