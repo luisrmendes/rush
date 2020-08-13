@@ -1,2 +1,3 @@
-Python depedencies:
-python-telegram-bot 
+# Rush - Canivete Suíço
+
+Start django: python manage.py runserver
