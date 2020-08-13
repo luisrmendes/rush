@@ -1,26 +1,15 @@
-<!doctype html>
+{% extends 'polls/common.html' %}
 
-<html lang="en">
-<head>
-  <meta charset="utf-8">
+{% block common_content %}
 
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  {% if latest_questions %}
+    <ul>
+      {% for question in latest_questions %}
+        <li><a href = "{% url 'polls:detail' question.id %}"><b>{{question.question_text}}</b></a></li>
+      {% endfor %}
+    </ul>  
+  {% else %}
+    <p> You don't have any questions. </p>
+  {% endif %}
 
-  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
-
-</head>
-
-<body>
-  <!-- <script src="js/scripts.js"></script> -->
-    {% if latest_questions %}
-        do something
-    {% else %}
-        do something else
-    {% endif %}
-
-    {% for question in latest_questions %}    
-
-</body>
-</html>
+{% endblock %}
