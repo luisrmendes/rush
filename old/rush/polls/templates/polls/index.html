@@ -1,0 +1,24 @@
+{% extends 'polls/common.html' %}
+
+{% block common_content %}
+
+{% if latest_questions %}
+<ul>
+  {% for question in latest_questions %}
+  <li><a href="{% url 'polls:detail' question.id %}"><b>{{question.question_text}}</b></a></li>
+  
+  {% endfor %}
+</ul>
+
+{% else %}
+<p> You don't have any questions. </p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" name="run_script">Run script</button>
+</form>
+  
+
+{% endblock %}
+
