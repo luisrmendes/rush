@@ -1,9 +1,7 @@
 # coding=utf-8
 
-from telegram.ext import Updater
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
 from api_key import telegram_api_key
 from psw import psw
 from system import bash_call
@@ -103,12 +101,12 @@ desktop_wakeup_handler = CommandHandler('desktop_wakeup', desktop_wakeup)
 dispatcher.add_handler(desktop_wakeup_handler)
 
 # /sv_brightness command
-def sv_brightness(update, context):
+def svBrightness(update, context):
     result = bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
-sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
-dispatcher.add_handler(sv_brightness_handler)
+svBrightness_handler = CommandHandler('svBrightness', svBrightness)
+dispatcher.add_handler(svBrightness_handler)
 
 
 # Response to text 
