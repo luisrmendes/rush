@@ -1,9 +1,6 @@
 # Rush - Canivete Suíço
 
-## Install Django
-sudo pacman -S python3 <br>
-sudo pacman -S python-pip <br>
-pip install django <br>
-
-
-Start django: python manage.py runserver
+## Telegram Bot dependencies
+python3<br>
+python-pip3 <br>
+pip3 install python-telegram-bot<br>
