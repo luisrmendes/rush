@@ -101,12 +101,12 @@ desktop_wakeup_handler = CommandHandler('desktop_wakeup', desktop_wakeup)
 dispatcher.add_handler(desktop_wakeup_handler)
 
 # /sv_brightness command
-def svBrightness(update, context):
+def sv_brightness(update, context):
     result = bash_call("sudo sh /home/luis/github/dotFiles/brightness.sh " + context.args[0])
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
-svBrightness_handler = CommandHandler('svBrightness', svBrightness)
-dispatcher.add_handler(svBrightness_handler)
+sv_brightness_handler = CommandHandler('sv_brightness', sv_brightness)
+dispatcher.add_handler(sv_brightness_handler)
 
 
 # Response to text 
