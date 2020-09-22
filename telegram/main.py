@@ -1,4 +1,4 @@
-from bot_handler import updater
+from botHandler import updater
 from threading import Thread
 from system import *
 import subprocess
