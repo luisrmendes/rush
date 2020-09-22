@@ -93,7 +93,7 @@ dispatcher.add_handler(CommandHandler('ipv4', ipv4))
 
 # /sv_brightness command
 def sv_brightness(update, context):
-    result = server.serverBrightness()
+    result = server.serverBrightness(context)
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
 dispatcher.add_handler(CommandHandler('sv_brightness', sv_brightness))
