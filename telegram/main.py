@@ -1,6 +1,5 @@
-from botHandler import updater
-from threading import Thread
-from system import *
+from commandHandler import updater
+from aux import *
 import subprocess
 
 # Start telegram bot
@@ -13,7 +12,8 @@ import datetime
 now = datetime.datetime.now()
 
     # if now.hour == 6 and now.minute == 50:
-    #     bash_call("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on'")
-    #     bash_call("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 2=on && python3 ~/rush/energienie.py 2=on'")
+    #     bashCall("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on'")
+    #     bashCall("ssh pi@192.168.1.106 'python3 ~/rush/energienie.py 2=on && python3 ~/rush/energienie.py 2=on'")
     #     time.sleep(5)
-    #     bash_call("ssh pi@192.168.1.106 'omxplayer ~/rush/wakeup_songs/03.\ Lakeside\ Park.mp3'")
+    #     bashCall("ssh pi@192.168.1.106 'omxplayer ~/rush/wakeup_songs/03.\ Lakeside\ Park.mp3'")
+    

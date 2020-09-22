@@ -3,7 +3,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 from api_key import telegram_api_key
-from system import bash_call
+from aux import *
 from Rpi import Rpi
 from Server import Server
 from Desktop import Desktop
@@ -89,7 +89,6 @@ def ipv4(update, context):
     updater.bot.send_message(chat_id=update.effective_chat.id, text=result)
     
 dispatcher.add_handler(CommandHandler('ipv4', ipv4))
-
 
 # /sv_brightness command
 def sv_brightness(update, context):
