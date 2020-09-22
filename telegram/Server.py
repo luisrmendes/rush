@@ -1,6 +1,7 @@
 from system import bash_call
 
 class Server:
+    
     def getIpv4(self):
         result = bash_call("dig @resolver1.opendns.com A myip.opendns.com +short -4")
         return result
