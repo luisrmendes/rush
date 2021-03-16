@@ -1,7 +1,0 @@
-apply plugin: 'java'
-
-
-dependencies {
-	implementation 'com.github.rubenlagus.TelegramBots:Bots:4.9.1'
-}
-
