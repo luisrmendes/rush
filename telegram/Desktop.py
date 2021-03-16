@@ -14,7 +14,7 @@ class Desktop:
 
     def shutdownDesktop(self):
         goodbyeMsg = "Server says goodbye!"
-        bashCall("ssh luis@192.168.1.71 'shutdown now'")
+        result = bashCall("ssh luis@192.168.1.71 'shutdown now'")
         return result
         
     def wakeupDesktop(self):
