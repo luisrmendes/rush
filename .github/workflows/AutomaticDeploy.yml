@@ -1,0 +1,16 @@
+name: Automatic Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deployOnServer:
+    runs-on: ubuntu-latest
+    env:
+      HOSTNAME: ${{ secrets.HOSTNAME }}
+    steps:
+    - name: Kill Running Process
+      run: ssh -t $HOSTNAME 'pkill -f rush.py'
+    - name: Deploy
+      run: ssh -t $HOSTNAME 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
