@@ -1,5 +1,4 @@
 from aux import *
-from psw import psw
 
 class Desktop:
     
