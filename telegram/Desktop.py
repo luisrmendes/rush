@@ -15,7 +15,7 @@ class Desktop:
 
     def shutdownDesktop(self):
         # TODO: Needs some work, maybe change to a ssh call 
-        result = bashCall("net rpc shutdown -f -t 0 -C 'Bye Bye, says server' -U luis%" + psw + " -I 192.168.1.71")
+        # result = bashCall("net rpc shutdown -f -t 0 -C 'Bye Bye, says server' -U luis%" + psw + " -I 192.168.1.71")
         return result
         
     def wakeupDesktop(self):
