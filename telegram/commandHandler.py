@@ -2,14 +2,20 @@
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
-from api_key import telegram_api_key
 from aux import *
 from Rpi import Rpi
 from Server import Server
 from Desktop import Desktop
 
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 
-updater = Updater(token=telegram_api_key, use_context=True)
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+
+updater = Updater(token=os.getenv('TELEGRAM_API'), use_context=True)
 
 dispatcher = updater.dispatcher
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
