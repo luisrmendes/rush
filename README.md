@@ -1,6 +1,6 @@
 # Rush - Canivete Suíço
 
 ## Telegram Bot dependencies
-python3<br>
-python-pip3 <br>
-pip3 install python-telegram-bot<br>
+python3  
+python-pip3  
+pip3 install python-telegram-bot  
