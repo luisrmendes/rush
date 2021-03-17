@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Configure SSH
         run: |        
-          apt update -y && apt install openssh-client 
-
           eval $(ssh-agent -s)
 
           echo "$SSH_KEY" | tr -d '\r' | ssh-add -
