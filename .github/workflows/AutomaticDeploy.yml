@@ -11,6 +11,6 @@ jobs:
       HOSTNAME: ${{ secrets.HOSTNAME }}
     steps:
     - name: Kill Running Process
-      run: ssh -t $HOSTNAME 'pkill -f rush.py'
+      run: ssh $HOSTNAME 'pkill -f rush.py'
     - name: Deploy
-      run: ssh -t $HOSTNAME 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
+      run: ssh $HOSTNAME 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
