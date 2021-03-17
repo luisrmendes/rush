@@ -25,6 +25,6 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: Kill Running Process
-        run: ssh $SSH_USER@$SSH_HOST 'pkill -f rush.py'
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'pkill -f rush.py'
       - name: Deploy
         run: ssh $SSH_USER@$SSH_HOST 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
