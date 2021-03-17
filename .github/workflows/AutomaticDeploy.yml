@@ -8,7 +8,9 @@ jobs:
   deployOnServer:
     runs-on: ubuntu-latest
     env:
-      HOSTNAME: ${{ secrets.HOSTNAME }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
     steps:
       - name: Configure SSH
         run: |
@@ -22,10 +24,6 @@ jobs:
             IdentityFile ~/.ssh/staging.key
             StrictHostKeyChecking no
           END
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
       - name: Kill Running Process
         run: ssh $SSH_USER@$SSH_HOST 'pkill -f rush.py'
       - name: Deploy
