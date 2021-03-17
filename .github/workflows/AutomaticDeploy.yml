@@ -10,7 +10,23 @@ jobs:
     env:
       HOSTNAME: ${{ secrets.HOSTNAME }}
     steps:
+    - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
     - name: Kill Running Process
-      run: ssh $HOSTNAME 'pkill -f rush.py'
+      run: ssh $SSH_USER@$SSH_HOST 'pkill -f rush.py'
     - name: Deploy
-      run: ssh $HOSTNAME 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
+      run: ssh $SSH_USER@$SSH_HOST 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
