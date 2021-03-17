@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Configure SSH
         run: |        
-          'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )''
+          'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
 
           eval $(ssh-agent -s)
 
