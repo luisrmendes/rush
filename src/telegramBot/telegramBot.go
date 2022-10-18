@@ -78,11 +78,11 @@ func PollUpdates() {
 		if update.Message != nil { // If we got a message
 			if update.Message.Text[0:1] == "/" {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, HandleCommands(update.Message))
-				msg.ReplyToMessageID = update.Message.MessageID
+				// msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			} else {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-				msg.ReplyToMessageID = update.Message.MessageID
+				// msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			}
 		}
