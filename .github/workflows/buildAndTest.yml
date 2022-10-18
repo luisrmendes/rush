@@ -29,15 +29,6 @@ jobs:
       - name: Build
         run: cd ./src/main && go build -v
 
-      # - name: Build Docker image
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     push: false
-      #     tags: ${{ github.event.repository.name }}:latest, ${{ github.repository }}:latest
-
-      # - name: Run functional tests
-      #   run:  go test -v ./...
-
       - name: deploy
         run: tmux send-keys -t ambrosioBot "^C" Enter &&
           cd ./src/main && 
