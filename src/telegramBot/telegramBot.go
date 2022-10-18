@@ -51,11 +51,15 @@ func HandleCommands(receivedMessage *tgbotapi.Message) string {
 // Polls updates from the bot API
 // Calls HandleUpdates to handle ... updates
 func PollUpdates() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-	}
 	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
+	if telegram_api_key == "" {
+		log.Printf("TELEGRAM_API_KEY not found in env vars, checking .env")
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatalf("Some error occured. Err: %s", err)
+		}
+	}
+	telegram_api_key = os.Getenv("TELEGRAM_API_KEY")
 	bot, err := tgbotapi.NewBotAPI(telegram_api_key)
 	if err != nil {
 		log.Panic(err)

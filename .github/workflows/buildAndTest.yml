@@ -12,6 +12,7 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
       SSH_HOST: ${{ secrets.SSH_HOST }}
+      TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_API_KEY }}
 
     steps:
       - name: Install Go
@@ -38,4 +39,4 @@ jobs:
       #   run:  go test -v ./...
 
       - name: deploy
-        run: cd src/main && ./main
+        run: cd src/main && TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} ./main
