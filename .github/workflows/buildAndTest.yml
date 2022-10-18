@@ -39,7 +39,8 @@ jobs:
       #   run:  go test -v ./...
 
       - name: deploy
-        run: cd ./src/main && 
+        run: pkill -f ./rush &&
+          cd ./src/main && 
           mv main /home/luis/github/ambrosioBot && 
           cd /home/luis/github/ambrosioBot &&
           tmux send-keys -t ambrosioBot "TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} ./main" Enter
