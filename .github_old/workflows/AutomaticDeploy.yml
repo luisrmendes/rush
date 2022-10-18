@@ -6,7 +6,7 @@ on:
 
 jobs:
   deployOnServer:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
