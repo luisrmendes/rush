@@ -65,7 +65,7 @@ func PollUpdates() {
 		log.Panic(err)
 	}
 
-	bot.Debug = true
+	// bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -73,12 +73,9 @@ func PollUpdates() {
 	u.Timeout = 10
 
 	updates := bot.GetUpdatesChan(u)
-	if updates.error_code == 409 {
-		log.Panic(updates.description)
-		os.Exit(1)
-	}
 
-	msg := tgbotapi.NewMessage(0, "I'm online!")
+	// Welcome message
+	msg := tgbotapi.NewMessage(322011297, "I'm online!")
 	bot.Send(msg)
 
 	for update := range updates {
