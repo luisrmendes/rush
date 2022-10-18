@@ -39,7 +39,7 @@ jobs:
       #   run:  go test -v ./...
 
       - name: deploy
-        run: pkill -f ./rush &&
+        run: pkill -f ./rush || true &&
           cd ./src/main && 
           mv main /home/luis/github/ambrosioBot && 
           cd /home/luis/github/ambrosioBot &&
