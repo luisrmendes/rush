@@ -73,6 +73,10 @@ func PollUpdates() {
 	u.Timeout = 10
 
 	updates := bot.GetUpdatesChan(u)
+	if updates.error_code == 409 {
+		log.Panic(updates.description)
+		os.Exit(1)
+	}
 
 	msg := tgbotapi.NewMessage(0, "I'm online!")
 	bot.Send(msg)
