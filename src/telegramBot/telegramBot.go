@@ -74,7 +74,7 @@ func PollUpdates() {
 
 	updates := bot.GetUpdatesChan(u)
 
-	msg := tgbotapi.NewMessage("private", "I'm online!")
+	msg := tgbotapi.NewMessage(0, "I'm online!")
 	bot.Send(msg)
 
 	for update := range updates {
