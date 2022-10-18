@@ -1,28 +1,39 @@
-name: Automatic Deploy
+name: Build And Test
 
 on:
   push:
     branches: [master]
 
 jobs:
-  deployOnServer:
+  build-and-test:
     runs-on: self-hosted
+
     env:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
       SSH_HOST: ${{ secrets.SSH_HOST }}
+    
     steps:
-      - name: Configure SSH
-        run: |        
-          echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.4
 
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+      - name: Fetch required Go modules
+        run:  go mod download
 
-      - name: Kill Running Process
-        run: ssh $SSH_USER@$SSH_HOST 'pkill -f rush.py'
-      - name: Deploy
-        run: ssh $SSH_USER@$SSH_HOST 'cd github/rush; tmux send-keys -t rush "git pull && python ~/github/rush/telegram/rush.py" ENTER'
+      - name: Build
+        run:  go build -v ./...
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: ${{ github.event.repository.name }}:latest, ${{ github.repository }}:latest
+
+      - name: Run functional tests
+        run:  go test -v ./...
+
