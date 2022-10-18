@@ -39,7 +39,7 @@ jobs:
       #   run:  go test -v ./...
 
       - name: deploy
-        run: pkill -f ./rush || true &&
+        run: tmux send-keys -t ambrosioBot "^C" Enter &&
           cd ./src/main && 
           mv main /home/luis/github/ambrosioBot && 
           cd /home/luis/github/ambrosioBot &&
