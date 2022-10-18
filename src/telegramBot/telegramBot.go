@@ -74,6 +74,9 @@ func PollUpdates() {
 
 	updates := bot.GetUpdatesChan(u)
 
+	msg := tgbotapi.NewMessage(1, "I'm online!")
+	bot.Send(msg)
+
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 			if update.Message.Text[0:1] == "/" {
