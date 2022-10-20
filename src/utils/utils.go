@@ -6,6 +6,8 @@ import (
 	"strconv"
 )
 
+var previousBrightness = 0
+
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
 	execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 "+brightStr)
@@ -13,8 +15,7 @@ func setDesktopBrightness(brightness int) {
 
 // Maybe some linear regression stuff would be cool
 func ControlDesktopBrightness(brightness int) {
-	previousValue := 0
-	if absDiff(previousValue, brightness) > 100 {
+	if absDiff(previousBrightness, brightness) > 100 {
 		log.Println("Sending brightness command")
 		switch {
 		case brightness >= 800:
@@ -33,7 +34,7 @@ func ControlDesktopBrightness(brightness int) {
 			setDesktopBrightness(0)
 		}
 	}
-	previousValue = brightness
+	previousBrightness = brightness
 }
 
 func execute(name string, args ...string) string {
