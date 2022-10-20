@@ -30,13 +30,13 @@ func readSensorData(wg *sync.WaitGroup, sData *sensorData) {
 		log.Printf("ESP8266_ADDRESS_PORT not found in env vars, checking .env")
 		err := godotenv.Load(".env")
 		if err != nil {
-			log.Fatalf("Some error occured. Err: %s", err)
+			log.Println("Some error occured. Err: %s", err)
 		}
 	}
 	esp8266_address_port = os.Getenv("ESP8266_ADDRESS_PORT")
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
+		log.Println("Some error occured. Err: %s", err)
 	}
 
 	for {
