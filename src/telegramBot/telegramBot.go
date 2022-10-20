@@ -63,7 +63,7 @@ func PollUpdates(wg *sync.WaitGroup) {
 	telegram_api_key = os.Getenv("TELEGRAM_API_KEY")
 	bot, err := tgbotapi.NewBotAPI(telegram_api_key)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
 	}
 
 	// bot.Debug = true
