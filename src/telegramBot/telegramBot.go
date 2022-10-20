@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"sync"
 )
 
 type Command struct {
@@ -50,7 +51,7 @@ func HandleCommands(receivedMessage *tgbotapi.Message) string {
 
 // Polls updates from the bot API
 // Calls HandleUpdates to handle ... updates
-func PollUpdates() {
+func PollUpdates(wg *sync.WaitGroup) {
 	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
 	if telegram_api_key == "" {
 		log.Printf("TELEGRAM_API_KEY not found in env vars, checking .env")
@@ -91,4 +92,5 @@ func PollUpdates() {
 			}
 		}
 	}
+	defer wg.Done()
 }
