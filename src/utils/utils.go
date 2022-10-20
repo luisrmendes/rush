@@ -33,8 +33,8 @@ func ControlDesktopBrightness(brightness int) {
 		case brightness < 200:
 			setDesktopBrightness(0)
 		}
+		previousBrightness = brightness
 	}
-	previousBrightness = brightness
 }
 
 func execute(name string, args ...string) string {
