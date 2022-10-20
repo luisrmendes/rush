@@ -15,7 +15,7 @@ func setDesktopBrightness(brightness int) {
 
 // Maybe some linear regression stuff would be cool
 func ControlDesktopBrightness(brightness int) {
-	if absDiff(previousBrightness, brightness) > 100 {
+	if absDiff(previousBrightness, brightness) > 50 {
 		log.Println("Sending brightness command")
 		switch {
 		case brightness >= 800:
