@@ -42,7 +42,8 @@ func readSensorData(wg *sync.WaitGroup, sData *sensorData) {
 	for {
 		connection, err := net.Dial("tcp", esp8266_address_port)
 		if err != nil {
-			panic(err)
+			log.Println(err)
+			continue
 		} else {
 			log.Println("Connected to " + esp8266_address_port)
 		}
