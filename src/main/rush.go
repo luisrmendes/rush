@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "example.com/telegramBot"
+	"example.com/telegramBot"
 	"example.com/utils"
 	"github.com/joho/godotenv"
 	"log"
@@ -84,7 +84,7 @@ func main() {
 	var sData sensorData
 
 	wg.Add(3)
-	// go telegramBot.PollUpdates(wg)
+	go telegramBot.PollUpdates(wg)
 
 	go readSensorData(wg, &sData)
 
