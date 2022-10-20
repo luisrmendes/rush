@@ -24,12 +24,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Fetch required Go modules
-      #   run:  go mod download
-
       - name: Build
         run: cd ./src/main && go build -v
 
+      # Must have a tmux window named "ambrosioBot"
       - name: deploy
         run: tmux send-keys -t ambrosioBot "^C" Enter &&
           cd ./src/main &&

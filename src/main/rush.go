@@ -2,6 +2,7 @@ package main
 
 import (
 	// "example.com/telegramBot"
+	"example.com/utils"
 	"github.com/joho/godotenv"
 	"log"
 	"net"
@@ -67,8 +68,12 @@ func readSensorData(wg *sync.WaitGroup, sData *sensorData) {
 
 func handleSensorData(wg *sync.WaitGroup, sData *sensorData) {
 	for {
+		time.Sleep(2000000000)
+		if sData.brightness == 0 {
+			continue
+		}
 		log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
-		time.Sleep(1000000000)
+		utils.ControlDesktopBrightness(sData.brightness)
 	}
 	defer wg.Done()
 }
@@ -77,12 +82,11 @@ func main() {
 	var wg = &sync.WaitGroup{}
 	var sData sensorData
 
-	wg.Add(1)
+	wg.Add(3)
 	// go telegramBot.PollUpdates(wg)
-	wg.Add(1)
+
 	go readSensorData(wg, &sData)
 
-	wg.Add(1)
 	go handleSensorData(wg, &sData)
 
 	wg.Wait()
