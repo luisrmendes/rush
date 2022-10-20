@@ -69,7 +69,7 @@ func readSensorData(wg *sync.WaitGroup, sData *sensorData) {
 
 func handleSensorData(wg *sync.WaitGroup, sData *sensorData) {
 	for {
-		time.Sleep(100000000)
+		time.Sleep(1000000000)
 		if sData.brightness == 0 {
 			continue
 		}
