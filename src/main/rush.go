@@ -74,6 +74,8 @@ func handleSensorData(wg *sync.WaitGroup, sData *sensorData) {
 			continue
 		}
 		log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
+
+		// Add task functions
 		utils.ControlDesktopBrightness(sData.brightness)
 	}
 	defer wg.Done()
@@ -82,8 +84,8 @@ func handleSensorData(wg *sync.WaitGroup, sData *sensorData) {
 func main() {
 	var wg = &sync.WaitGroup{}
 	var sData sensorData
-
 	wg.Add(3)
+
 	go telegramBot.PollUpdates(wg)
 
 	go readSensorData(wg, &sData)
