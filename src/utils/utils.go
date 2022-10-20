@@ -8,7 +8,7 @@ import (
 
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
-	execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 100 " + brightStr)
+	execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 " + brightStr)
 }
 
 // Maybe some linear regression stuff would be cool
