@@ -57,7 +57,7 @@ func PollUpdates(wg *sync.WaitGroup) {
 		log.Printf("TELEGRAM_API_KEY not found in env vars, checking .env")
 		err := godotenv.Load(".env")
 		if err != nil {
-			log.Fatalf("Some error occured. Err: %s", err)
+			log.Println("Some error occured. Err: %s", err)
 		}
 	}
 	telegram_api_key = os.Getenv("TELEGRAM_API_KEY")
