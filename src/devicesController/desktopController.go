@@ -14,10 +14,9 @@ func setDesktopBrightness(brightness int) {
 	execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 "+brightStr)
 }
 
-// Maybe some linear regression stuff would be cool
-func ControlDesktopBrightness(sensorBrightness int) {
-	// Only send command if previous set value was significantly different
 
+func ControlDesktopBrightness(sensorBrightness int) {
+	// Maybe some linear regression stuff would be cool
 	switch {
 	case sensorBrightness >= 800:
 		setMonitorBrightness = 100
@@ -34,7 +33,8 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	case sensorBrightness < 200:
 		setMonitorBrightness = 0
 	}
-	
+
+	// Only send command if previous set value was different
 	if previousSetMonitorBrightness != setMonitorBrightness {
 		log.Printf("Sending brightness command %d", setMonitorBrightness)
 		setDesktopBrightness(setMonitorBrightness)
@@ -52,11 +52,4 @@ func execute(name string, args ...string) string {
 	output := string(out[:])
 
 	return output
-}
-
-func absDiff(a, b int) int {
-	if a < b {
-		return b - a
-	}
-	return a - b
 }
