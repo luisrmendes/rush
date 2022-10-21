@@ -1,4 +1,4 @@
-package desktopController
+package devicesController
 
 import (
 	"log"
@@ -7,6 +7,8 @@ import (
 )
 
 var previousBrightness = 0
+var brightnessChangeThreshold = 20
+
 
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
@@ -16,7 +18,7 @@ func setDesktopBrightness(brightness int) {
 // Maybe some linear regression stuff would be cool
 func ControlDesktopBrightness(brightness int) {
 	// Only send command if previous set value was significantly different
-	if absDiff(previousBrightness, brightness) > 50 {
+	if absDiff(previousBrightness, brightness) > brightnessChangeThreshold {
 		log.Println("Sending brightness command")
 		switch {
 		case brightness >= 800:
