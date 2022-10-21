@@ -3,9 +3,10 @@ package telegramBot
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
+	"example.com/utils"
+	"example.com/devicesController"
 	"log"
 	"os"
-	"os/exec"
 	"sync"
 )
 
@@ -18,29 +19,22 @@ func (c Command) Handler() string {
 	switch c.name {
 
 	case "ipv4":
-		return execute("dig", "@resolver1.opendns.com", "A",
+		return utils.Execute("dig", "@resolver1.opendns.com", "A",
 			"myip.opendns.com", "+short", "-4")
 
 	case "desktop_wakeup":
-		return execute("wakeonlan", "00:D8:61:a1:CE:00")
+		return utils.Execute("wakeonlan", "00:D8:61:a1:CE:00")
 
+	case "lights_on":
+		return devicesController.RpiTurnOnSocket1()
+
+	case "lights_off":
+		return devicesController.RpiTurnOffSocket1()
+		
 	default:
 		log.Printf("Command %s handler not implemented!", c.name)
 		return "Command " + c.name + " handler not implemented!"
 	}
-}
-
-// Executes terminal calls
-// Returns the output of the command
-// Handles errors outputted by the command call
-func execute(name string, args ...string) string {
-	out, err := exec.Command(name, args...).Output()
-	if err != nil {
-		log.Printf("%s", err)
-	}
-	output := string(out[:])
-
-	return output
 }
 
 func HandleCommands(receivedMessage *tgbotapi.Message) string {
