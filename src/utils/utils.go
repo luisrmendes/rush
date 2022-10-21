@@ -15,6 +15,7 @@ func setDesktopBrightness(brightness int) {
 
 // Maybe some linear regression stuff would be cool
 func ControlDesktopBrightness(brightness int) {
+	// Only send command if previous set value was significantly different
 	if absDiff(previousBrightness, brightness) > 50 {
 		log.Println("Sending brightness command")
 		switch {
@@ -37,10 +38,11 @@ func ControlDesktopBrightness(brightness int) {
 	}
 }
 
+// Execute bash commands, handles errors
 func execute(name string, args ...string) string {
 	out, err := exec.Command(name, args...).Output()
 	if err != nil {
-		log.Fatalf("Command %s gave error %s", name, err)
+		log.Printf("Command %s gave error %s", name, err)
 	}
 	output := string(out[:])
 
