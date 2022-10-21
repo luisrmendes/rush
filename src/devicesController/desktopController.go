@@ -19,7 +19,7 @@ func setDesktopBrightness(brightness int) {
 func ControlDesktopBrightness(brightness int) {
 	// Only send command if previous set value was significantly different
 	if absDiff(previousBrightness, brightness) > brightnessChangeThreshold {
-		log.Println("Sending brightness command")
+		log.Printf("Sending brightness command, brightness = %d", brightness)
 		switch {
 		case brightness >= 800:
 			setDesktopBrightness(100)
