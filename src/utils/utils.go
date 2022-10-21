@@ -11,7 +11,7 @@ import (
 func Execute(name string, args ...string) string {
 	out, err := exec.Command(name, args...).Output()
 	if err != nil {
-		log.Printf("%s", err)
+		log.Printf("Command %s returned error: %s", name, err)
 	}
 	output := string(out[:])
 
