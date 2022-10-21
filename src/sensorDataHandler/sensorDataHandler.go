@@ -36,11 +36,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		}
 	}
 	esp8266_address_port = os.Getenv("ESP8266_ADDRESS_PORT")
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Some error occured. Err: %s", err)
-	}
-
+	
 	for {
 		connection, err := net.Dial("tcp", esp8266_address_port)
 		if err != nil {
