@@ -2,8 +2,8 @@ package devicesController
 
 import (
 	"log"
-	"os/exec"
 	"strconv"
+	"example.com/utils"
 )
 
 var previousSetMonitorBrightness = 0
@@ -11,9 +11,8 @@ var setMonitorBrightness = 0
 
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
-	execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 "+brightStr)
+	utils.Execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 "+brightStr)
 }
-
 
 func ControlDesktopBrightness(sensorBrightness int) {
 	// Maybe some linear regression stuff would be cool
@@ -40,16 +39,4 @@ func ControlDesktopBrightness(sensorBrightness int) {
 		setDesktopBrightness(setMonitorBrightness)
 		previousSetMonitorBrightness = setMonitorBrightness
 	}
-
-}
-
-// Execute bash commands, handles errors
-func execute(name string, args ...string) string {
-	out, err := exec.Command(name, args...).Output()
-	if err != nil {
-		log.Printf("Command %s gave error %s", name, err)
-	}
-	output := string(out[:])
-
-	return output
 }
