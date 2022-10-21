@@ -18,7 +18,7 @@ func setDesktopBrightness(brightness int) {
 func ControlDesktopBrightness(sensorBrightness int) {
 	setMonitorBrightness := 100
 	// Only send command if previous set value was significantly different
-	if absDiff(previousSetMonitorBrightness, setMonitorBrightness) > brightnessChangeThreshold {
+	if previousSetMonitorBrightness != setMonitorBrightness {
 		switch {
 		case sensorBrightness >= 800:
 			setMonitorBrightness = 100
