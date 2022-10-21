@@ -17,25 +17,27 @@ func setDesktopBrightness(brightness int) {
 
 // Maybe some linear regression stuff would be cool
 func ControlDesktopBrightness(brightness int) {
+	setBrightness := 100
 	// Only send command if previous set value was significantly different
 	if absDiff(previousBrightness, brightness) > brightnessChangeThreshold {
-		log.Printf("Sending brightness command, brightness = %d", brightness)
 		switch {
 		case brightness >= 800:
-			setDesktopBrightness(100)
+			setBrightness = 100
 		case brightness < 800 && brightness >= 600:
-			setDesktopBrightness(80)
+			setBrightness = 80
 		case brightness < 600 && brightness >= 500:
-			setDesktopBrightness(60)
+			setBrightness = 60
 		case brightness < 500 && brightness >= 400:
-			setDesktopBrightness(50)
+			setBrightness = 50
 		case brightness < 400 && brightness >= 300:
-			setDesktopBrightness(30)
+			setBrightness = 30
 		case brightness < 300 && brightness >= 200:
-			setDesktopBrightness(20)
+			setBrightness = 20
 		case brightness < 200:
-			setDesktopBrightness(0)
+			setBrightness = 0
 		}
+		log.Printf("Sending brightness command %d", setBrightness)
+		setDesktopBrightness(setBrightness)
 		previousBrightness = brightness
 	}
 }
