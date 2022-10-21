@@ -7,7 +7,8 @@ import (
 )
 
 var previousSetMonitorBrightness = 0
-var brightnessChangeThreshold = 20
+var setMonitorBrightness = 0
+
 
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
@@ -16,7 +17,6 @@ func setDesktopBrightness(brightness int) {
 
 // Maybe some linear regression stuff would be cool
 func ControlDesktopBrightness(sensorBrightness int) {
-	setMonitorBrightness := 100
 	// Only send command if previous set value was significantly different
 	if previousSetMonitorBrightness != setMonitorBrightness {
 		switch {
