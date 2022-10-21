@@ -26,10 +26,10 @@ func (c Command) Handler() string {
 		return utils.Execute("wakeonlan", "00:D8:61:a1:CE:00")
 
 	case "lights_on":
-		return devicesController.RpiTurnOnSocket1()
+		return devicesController.RpiTurnOnSockets()
 
 	case "lights_off":
-		return devicesController.RpiTurnOffSocket1()
+		return devicesController.RpiTurnOffSockets()
 		
 	default:
 		log.Printf("Command %s handler not implemented!", c.name)

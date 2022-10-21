@@ -4,12 +4,14 @@ import (
 	"example.com/utils"
 )
 
-func RpiTurnOnSocket1() string {
-	ret := utils.Execute("ssh", "pi@192.168.1.107", "python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on")
+func RpiTurnOnSockets() string {
+	ret := utils.Execute("ssh", "pi@192.168.1.107", "python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on && python3 ~/rush/energienie.py 1=on" + 
+		"python3 ~/rush/energienie.py 2=on && python3 ~/rush/energienie.py 2=on && python3 ~/rush/energienie.py 2=on")
 	return ret
 }
 
-func RpiTurnOffSocket1() string {
-	ret := utils.Execute("ssh", "pi@192.168.1.107", "python3 ~/rush/energienie.py 1=off && python3 ~/rush/energienie.py 1=off && python3 ~/rush/energienie.py 1=off")
+func RpiTurnOffSockets() string {
+	ret := utils.Execute("ssh", "pi@192.168.1.107", "python3 ~/rush/energienie.py 1=off && python3 ~/rush/energienie.py 1=off && python3 ~/rush/energienie.py 1=off" + 
+		"python3 ~/rush/energienie.py 2=off && python3 ~/rush/energienie.py 2=off && python3 ~/rush/energienie.py 2=off")
 	return ret
 }
