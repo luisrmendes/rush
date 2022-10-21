@@ -2,7 +2,7 @@ package sensorDataHandler
 
 import (
 	"github.com/joho/godotenv"
-	"example.com/utils"
+	"example.com/desktopController"
 	"log"
 	"net"
 	"os"
@@ -81,7 +81,7 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
 
 		// Add task functions
-		utils.ControlDesktopBrightness(sData.brightness)
+		desktopController.ControlDesktopBrightness(sData.brightness)
 	}
 	defer wg.Done()
 }
