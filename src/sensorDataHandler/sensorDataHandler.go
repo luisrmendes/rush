@@ -74,6 +74,8 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		if sData.brightness == 0 {
 			continue
 		}
+
+		// goroutine to log sensor data
 		go func(sData *SensorData) {
 			for range ticker.C {
 				log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
