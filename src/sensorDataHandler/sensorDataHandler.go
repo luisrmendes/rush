@@ -1,8 +1,8 @@
 package sensorDataHandler
 
 import (
+	"example.com/devicesController"
 	"github.com/joho/godotenv"
-	"example.com/desktopController"
 	"log"
 	"net"
 	"os"
@@ -18,8 +18,8 @@ type SensorData struct {
 	humidity    int
 }
 
-var handleSensorDataDelay time.Duration = 1000000000
-
+var handleSensorDataDelay time.Duration = 1000000000 // nanoseconds
+var logSensorDataInterval time.Duration = 2 // minutes
 
 // Looping function
 // Reads sensor data from ESP8266 TCP server
@@ -70,6 +70,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 }
 
 func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
+	ticker := time.NewTicker(time.Minute * logSensorDataInterval)
 	for {
 		time.Sleep(handleSensorDataDelay)
 
@@ -77,11 +78,14 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		if sData.brightness == 0 {
 			continue
 		}
-
-		log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
+		go func(sData *SensorData) {
+			for range ticker.C {
+				log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
+			}
+		}(sData)
 
 		// Add task functions
-		desktopController.ControlDesktopBrightness(sData.brightness)
+		devicesController.ControlDesktopBrightness(sData.brightness)
 	}
 	defer wg.Done()
 }
