@@ -6,9 +6,8 @@ import (
 	"strconv"
 )
 
-var previousSetBrightness = 0
+var previousSetMonitorBrightness = 0
 var brightnessChangeThreshold = 20
-
 
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
@@ -16,29 +15,29 @@ func setDesktopBrightness(brightness int) {
 }
 
 // Maybe some linear regression stuff would be cool
-func ControlDesktopBrightness(brightness int) {
-	setBrightness := 100
+func ControlDesktopBrightness(sensorBrightness int) {
+	setMonitorBrightness := 100
 	// Only send command if previous set value was significantly different
-	if absDiff(previousSetBrightness, brightness) > brightnessChangeThreshold {
+	if absDiff(previousSetMonitorBrightness, setMonitorBrightness) > brightnessChangeThreshold {
 		switch {
-		case brightness >= 800:
-			setBrightness = 100
-		case brightness < 800 && brightness >= 600:
-			setBrightness = 80
-		case brightness < 600 && brightness >= 500:
-			setBrightness = 60
-		case brightness < 500 && brightness >= 400:
-			setBrightness = 50
-		case brightness < 400 && brightness >= 300:
-			setBrightness = 30
-		case brightness < 300 && brightness >= 200:
-			setBrightness = 20
-		case brightness < 200:
-			setBrightness = 0
+		case sensorBrightness >= 800:
+			setMonitorBrightness = 100
+		case sensorBrightness < 800 && sensorBrightness >= 600:
+			setMonitorBrightness = 80
+		case sensorBrightness < 600 && sensorBrightness >= 500:
+			setMonitorBrightness = 60
+		case sensorBrightness < 500 && sensorBrightness >= 400:
+			setMonitorBrightness = 50
+		case sensorBrightness < 400 && sensorBrightness >= 300:
+			setMonitorBrightness = 30
+		case sensorBrightness < 300 && sensorBrightness >= 200:
+			setMonitorBrightness = 20
+		case sensorBrightness < 200:
+			setMonitorBrightness = 0
 		}
-		log.Printf("Sending brightness command %d", setBrightness)
-		setDesktopBrightness(setBrightness)
-		previousSetBrightness = setBrightness
+		log.Printf("Sending brightness command %d", setMonitorBrightness)
+		setDesktopBrightness(setMonitorBrightness)
+		previousSetMonitorBrightness = setMonitorBrightness
 	}
 }
 
