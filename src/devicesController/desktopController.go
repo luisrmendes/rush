@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-var previousBrightness = 0
+var previousSetBrightness = 0
 var brightnessChangeThreshold = 20
 
 
@@ -19,7 +19,7 @@ func setDesktopBrightness(brightness int) {
 func ControlDesktopBrightness(brightness int) {
 	setBrightness := 100
 	// Only send command if previous set value was significantly different
-	if absDiff(previousBrightness, brightness) > brightnessChangeThreshold {
+	if absDiff(previousSetBrightness, brightness) > brightnessChangeThreshold {
 		switch {
 		case brightness >= 800:
 			setBrightness = 100
@@ -38,7 +38,7 @@ func ControlDesktopBrightness(brightness int) {
 		}
 		log.Printf("Sending brightness command %d", setBrightness)
 		setDesktopBrightness(setBrightness)
-		previousBrightness = brightness
+		previousSetBrightness = setBrightness
 	}
 }
 
