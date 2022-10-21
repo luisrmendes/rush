@@ -19,6 +19,9 @@ type sensorData struct {
 	humidity    int
 }
 
+var handleSensorDataDelay time.Duration = 1000000000
+
+
 // Looping function
 // Reads sensor data from ESP8266 TCP server
 // Handles if TCP server shutdowns
@@ -67,13 +70,15 @@ func readSensorData(wg *sync.WaitGroup, sData *sensorData) {
 	defer wg.Done()
 }
 
-
 func handleSensorData(wg *sync.WaitGroup, sData *sensorData) {
 	for {
-		time.Sleep(1000000000)
+		time.Sleep(handleSensorDataDelay)
+
+		// Only handle data when data is being sent
 		if sData.brightness == 0 {
 			continue
 		}
+
 		log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
 
 		// Add task functions
