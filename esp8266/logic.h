@@ -30,8 +30,7 @@ void read_sensors_data(void) {
   // Serial.print(temperature);
   // Serial.print("\n");
   // Serial.print(humidity);
-
-  send_light_packet(brightness, temperature, humidity);
+  send_light_packet(climateValues[0], climateValues[1], climateValues[2]);
 }
 
 // void readSwitch_1(void) {

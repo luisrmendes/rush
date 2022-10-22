@@ -13,6 +13,13 @@ void setupHardware(void) {
   pinMode(LED_2_PIN, OUTPUT);
   pinMode(LED_3_PIN, OUTPUT);
   pinMode(LED_4_PIN, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  digitalWrite(LED_1_PIN, 0);
+  digitalWrite(LED_2_PIN, 0);
+  digitalWrite(LED_3_PIN, 0);
+  digitalWrite(LED_4_PIN, 0);
+  digitalWrite(LED_BUILTIN, 0);
 }
 
 /**
@@ -21,7 +28,7 @@ void setupHardware(void) {
 */
 void blink_leds(void) {
   const size_t led_array_size = 4;
-  int led_array[led_array_size] = {LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN};
+  int led_array[led_array_size] = { LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN };
 
   for (unsigned int i = 0; i < led_array_size; i++) {
     digitalWrite(led_array[i], 1);
@@ -51,7 +58,7 @@ void blink_leds(void) {
 void post(void) {
   Serial.print("\nStarting POST");
   const size_t led_array_size = 4;
-  int led_array[led_array_size] = {LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN};
+  int led_array[led_array_size] = { LED_1_PIN, LED_2_PIN, LED_3_PIN, LED_4_PIN };
 
   int small_delay = 60;
 
@@ -99,7 +106,6 @@ void post(void) {
   }
 
   Serial.print("\nDone\n");
-
 }
 
 /**
@@ -108,14 +114,14 @@ void post(void) {
 * Transmites back to the multicast address the post-change led states
 */
 void updateLeds(void) {
-  int led1State = 0;
-  int led2State = 0;
-  int led3State = ( climateValues[0] < 500);
-  int led4State = 0;
+  // int led1State = 0;
+  // int led2State = 0;
+  // int led3State = 0;
+  int led4State = (climateValues[0] < 500);
 
-  digitalWrite(LED_1_PIN, led1State);
-  digitalWrite(LED_2_PIN, led2State);
-  digitalWrite(LED_3_PIN, led3State);
+  // digitalWrite(LED_1_PIN, led1State);
+  // digitalWrite(LED_2_PIN, led2State);
+  // digitalWrite(LED_3_PIN, led3State);
   digitalWrite(LED_4_PIN, led4State);
 }
 

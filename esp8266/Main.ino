@@ -22,7 +22,7 @@ void setup(void) {
   /* run the kernel initialization routine */
   Sched_Init();
 
-  // Sched_AddT(receivePacket, 1, 21);
+  Sched_AddT(handleTCPConnection, 1, 21);
 
   Sched_AddT(read_sensors_data, 1, 156);
 
