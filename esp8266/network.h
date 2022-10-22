@@ -18,10 +18,11 @@ int climateValues[3];
 const char* ssid = SSID;
 const char* password = PASSWORD;
 
-/* multicast settings */
-IPAddress multicastAddress(239, 0, 0, 1);
-unsigned int multicastPort = 4444;
-WiFiUDP Udp;
+/* TCP Server stuff */
+const int serverPort = 4080;
+WiFiServer server(serverPort);
+WiFiClient client;
+
 
 int setupNetwork(void) {
   WiFi.mode(WIFI_STA);               /* station */
@@ -36,7 +37,14 @@ int setupNetwork(void) {
     Serial.print(' ');
   }
   Serial.println("\nConnection established!");
-  Udp.beginMulticast(WiFi.localIP(), multicastAddress, multicastPort);
+
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+  server.begin();
+  Serial.print("Open Telnet and connect to IP:");
+  Serial.print(WiFi.localIP());
+  Serial.print(" on port ");
+  Serial.println(serverPort);
 
   return 0;
 }
@@ -84,11 +92,7 @@ void send_light_packet(int brightnessValue, int temperatureValue, int humidityVa
   /* Append humidity value */
   memcpy(msg + 2 + brightnessValueSize + 1 + temperatureValueSize + 1, humidityValueArray, (humidityValueSize + 1) * sizeof(char));
 
-  Serial.print("Sent Data: ");
-  Serial.println(msg);
-  Udp.beginPacketMulticast(multicastAddress, multicastPort, WiFi.localIP());
-  Udp.write(msg);
-  Udp.endPacket();
+  client.write(msg);
 
   free(brightnessValueArray);
   free(temperatureValueArray);
@@ -96,5 +100,22 @@ void send_light_packet(int brightnessValue, int temperatureValue, int humidityVa
   free(msg);
 }
 
+/**
+  * Attempts to reconnect in a while loop, not returning
+  * Only returns when client is connected
+  */
+void handleTCPConnection() {
+  while (!client) {
+    digitalWrite(LED_3_PIN, 0);
+    Serial.println("Waiting for TCP connection . . .");
+    Serial.print("\tIP: ");
+    Serial.print(WiFi.localIP());
+    Serial.print(" on port ");
+    Serial.println(serverPort);
+    client = server.available();
+    delay(2500);
+  }
+  digitalWrite(LED_3_PIN, 1);
+}
 
 #endif
