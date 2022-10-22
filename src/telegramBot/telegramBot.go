@@ -3,43 +3,38 @@ package telegramBot
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
+	"example.com/utils"
+	"example.com/devicesController"
 	"log"
 	"os"
-	"os/exec"
+	"sync"
 )
 
 type Command struct {
 	name string
 }
 
-// Implements each
+// Implements each telegram command
 func (c Command) Handler() string {
 	switch c.name {
 
 	case "ipv4":
-		return execute("dig", "@resolver1.opendns.com", "A",
+		return utils.Execute("dig", "@resolver1.opendns.com", "A",
 			"myip.opendns.com", "+short", "-4")
 
 	case "desktop_wakeup":
-		return execute("wakeonlan", "00:D8:61:a1:CE:00")
+		return utils.Execute("wakeonlan", "00:D8:61:a1:CE:00")
 
+	case "lights_on":
+		return devicesController.RpiTurnOnSockets()
+
+	case "lights_off":
+		return devicesController.RpiTurnOffSockets()
+		
 	default:
 		log.Printf("Command %s handler not implemented!", c.name)
 		return "Command " + c.name + " handler not implemented!"
 	}
-}
-
-// Executes terminal calls
-// Returns the output of the command
-// Handles errors outputted by the command call
-func execute(name string, args ...string) string {
-	out, err := exec.Command(name, args...).Output()
-	if err != nil {
-		log.Printf("%s", err)
-	}
-	output := string(out[:])
-
-	return output
 }
 
 func HandleCommands(receivedMessage *tgbotapi.Message) string {
@@ -50,19 +45,20 @@ func HandleCommands(receivedMessage *tgbotapi.Message) string {
 
 // Polls updates from the bot API
 // Calls HandleUpdates to handle ... updates
-func PollUpdates() {
+func PollUpdates(wg *sync.WaitGroup) {
 	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
 	if telegram_api_key == "" {
 		log.Printf("TELEGRAM_API_KEY not found in env vars, checking .env")
 		err := godotenv.Load(".env")
 		if err != nil {
-			log.Fatalf("Some error occured. Err: %s", err)
+			log.Println("Some error occured. Err: %s", err)
 		}
 	}
 	telegram_api_key = os.Getenv("TELEGRAM_API_KEY")
+
 	bot, err := tgbotapi.NewBotAPI(telegram_api_key)
 	if err != nil {
-		log.Panic(err)
+		log.Println(err)
 	}
 
 	// bot.Debug = true
@@ -91,4 +87,5 @@ func PollUpdates() {
 			}
 		}
 	}
+	defer wg.Done()
 }

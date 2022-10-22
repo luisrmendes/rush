@@ -3,5 +3,5 @@ brains
 telegram/__pycache__
 telegram/__pycache__/api_key.cpython-36.pyc
 .env
-main
-esp8266/config.h
+src/main/main
+esp8266/config,h
