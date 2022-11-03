@@ -81,9 +81,9 @@ func PollUpdates(wg *sync.WaitGroup) {
 				// msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			} else {
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+				// msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 				// msg.ReplyToMessageID = update.Message.MessageID
-				bot.Send(msg)
+				// bot.Send(msg)
 			}
 		}
 	}
