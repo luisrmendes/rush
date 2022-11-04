@@ -11,7 +11,7 @@ var setMonitorBrightness = 0
 
 func setDesktopBrightness(brightness int) {
 	brightStr := strconv.Itoa(brightness)
-	utils.Execute("ssh", "desktop", "sudo ddcutil --bus 6 setvcp 10 "+brightStr)
+	utils.Execute("ssh", "desktop", "sudo ddcutil --bus 9 setvcp 10 "+brightStr)
 }
 
 func ControlDesktopBrightness(sensorBrightness int) {
