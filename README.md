@@ -7,7 +7,7 @@ pip3 install python-telegram-bot
 
 ## server side dependencies
 dig (bind?)  
-wakeonlan
+wakeonlan  
 Bot requires target desktop i2c monitor bus number  
 
 ## desktop side dependencies
