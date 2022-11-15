@@ -1,19 +1,15 @@
-# Rush - Canivete Suíço
-
-## Telegram Bot dependencies
-python3  
-python-pip3  
-pip3 install python-telegram-bot  
+# Rush
 
 ## server side dependencies
-dig (bind?)  
-wakeonlan  
-Bot requires target desktop i2c monitor bus number  
+- dig (bind?)  
+- wakeonlan  
+- Requires target desktop i2c monitor bus number  
+- 
 
-## desktop side dependencies
-ddcutil  
-i2c-tools  
-User monitorControl in i2c group  
+## desktop side dependencies  
+- ddcutil  
+- i2c-tools  
+- User monitorControl in i2c group  
 
 ## Ambrosio commands and description  
 desktop_wakeup - Wake up desktop WoL  
