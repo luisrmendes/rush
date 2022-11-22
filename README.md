@@ -2,9 +2,8 @@
 
 ## server side dependencies
 - dig (bind?)  
-- wakeonlan  
+- wol  
 - Requires target desktop i2c monitor bus number  
-- 
 
 ## desktop side dependencies  
 - ddcutil  
