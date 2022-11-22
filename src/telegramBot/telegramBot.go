@@ -23,7 +23,7 @@ func (c Command) Handler() string {
 			"myip.opendns.com", "+short", "-4")
 
 	case "desktop_wakeup":
-		return utils.Execute("wakeonlan", "00:D8:61:a1:CE:00")
+		return utils.Execute("wol", "00:D8:61:a1:CE:00")
 
 	case "lights_on":
 		return devicesController.RpiTurnOnSockets()
