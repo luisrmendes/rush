@@ -83,7 +83,8 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		}(sData)
 
 		// Add task functions
-		devicesController.ControlDesktopBrightness(sData.brightness)
+		go devicesController.ControlDesktopBrightness(sData.brightness)
+		go devicesController.ControlKbdBacklightLaptop(sData.brightness)
 	}
 	defer wg.Done()
 }
