@@ -24,8 +24,8 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 	// Only send command if previous set value was different
 	if previousSetKbdBrightness != setKbdBrightness {
 		setKbdBrightStr := strconv.Itoa(setKbdBrightness)
-		log.Printf("Sending kbd brightness command %d", setKbdBrightStr)
-		utils.Execute("ssh", "thinkpadx1-extreme", "echo "+setKbdBrightStr+" > /sys/class/leds/tpacpi\\:\\:kbd_backlight/brightness")
+		log.Printf("Sending kbd brightness command %d", setKbdBrightness)
+		utils.Execute("ssh", "thinkpadx1-extreme", "echo "+setKbdBrightStr+" > /sys/class/leds/tpacpi::kbd_backlight/brightness")
 		previousSetKbdBrightness = setKbdBrightness
 	}
 }
