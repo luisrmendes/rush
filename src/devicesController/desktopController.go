@@ -1,22 +1,18 @@
 package devicesController
 
 import (
+	"example.com/utils"
 	"log"
 	"strconv"
-	"example.com/utils"
 )
 
 var previousSetMonitorBrightness = 0
 var setMonitorBrightness = 0
 
-func setDesktopBrightness(brightness int) {
-	brightStr := strconv.Itoa(brightness)
-	utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 14 setvcp 10 "+brightStr)
-	// utils.Execute("ssh", "desktop", "ddcutil --bus 9 setvcp 10 "+brightStr)
-}
-
 func ControlDesktopBrightness(sensorBrightness int) {
-	// Maybe some linear regression stuff would be cool
+	maxBrightnessLaptop := 19393
+
+	// TODO: Maybe some linear regression stuff would be cool
 	switch {
 	case sensorBrightness >= 800:
 		setMonitorBrightness = 100
@@ -31,13 +27,16 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	case sensorBrightness < 300 && sensorBrightness >= 200:
 		setMonitorBrightness = 20
 	case sensorBrightness < 200:
-		setMonitorBrightness = 0
+		setMonitorBrightness = 1
 	}
 
 	// Only send command if previous set value was different
 	if previousSetMonitorBrightness != setMonitorBrightness {
-		log.Printf("Sending brightness command %d", setMonitorBrightness)
-		setDesktopBrightness(setMonitorBrightness)
+		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
+		monBrightStr := strconv.Itoa(setMonitorBrightness)
+		laptopBrightStr := strconv.Itoa(laptopBrightness)
+		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, laptopBrightness)
+		utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 14 setvcp 10 "+monBrightStr+" & echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness")
 		previousSetMonitorBrightness = setMonitorBrightness
 	}
 }
