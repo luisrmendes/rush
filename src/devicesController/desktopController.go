@@ -27,16 +27,22 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	case sensorBrightness < 300 && sensorBrightness >= 200:
 		setMonitorBrightness = 20
 	case sensorBrightness < 200:
-		setMonitorBrightness = 1
+		setMonitorBrightness = 0
 	}
 
 	// Only send command if previous set value was different
 	if previousSetMonitorBrightness != setMonitorBrightness {
 		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
+		if laptopBrightness == 0 {
+			laptopBrightness = 1
+		}
+
 		monBrightStr := strconv.Itoa(setMonitorBrightness)
 		laptopBrightStr := strconv.Itoa(laptopBrightness)
+		
 		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, laptopBrightness)
 		utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 14 setvcp 10 "+monBrightStr+" & echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness")
+		
 		previousSetMonitorBrightness = setMonitorBrightness
 	}
 }
