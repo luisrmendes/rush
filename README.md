@@ -1,14 +1,17 @@
 # Rush
 
 ## server side dependencies
-- dig (bind?)  
+- bind (dig...) 
 - wol  
-- Requires target desktop i2c monitor bus number  
+- Requires  desktop i2c monitor bus numbers
 
 ## desktop side dependencies  
 - ddcutil  
 - i2c-tools  
 - User monitorControl in i2c group  
+- User monitor in video group
+- Add udev rule to give video group brightness control permissions
+- Add monitorcontrol write permissions to kbd_backlight (.bashrc)
 
 ## Ambrosio commands and description  
 desktop_wakeup - Wake up desktop WoL  
