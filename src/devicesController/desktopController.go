@@ -41,11 +41,11 @@ func ControlDesktopBrightness(sensorBrightness int) {
 		setMonitorBrightness = 80
 	case sensorBrightness < 600 && sensorBrightness >= 500:
 		setMonitorBrightness = 60
-	case sensorBrightness < 500 && sensorBrightness >= 400:
+	case sensorBrightness < 500 && sensorBrightness >= 350:
 		setMonitorBrightness = 50
-	case sensorBrightness < 400 && sensorBrightness >= 250:
+	case sensorBrightness < 350 && sensorBrightness >= 300:
 		setMonitorBrightness = 30
-	case sensorBrightness < 250 && sensorBrightness >= 150:
+	case sensorBrightness < 300 && sensorBrightness >= 150:
 		setMonitorBrightness = 20
 	case sensorBrightness < 150:
 		setMonitorBrightness = 0
