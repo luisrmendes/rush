@@ -4,6 +4,7 @@ import (
 	"example.com/utils"
 	"log"
 	"strconv"
+	"math"
 )
 
 var previousSetMonitorBrightness = 0
@@ -53,9 +54,9 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	// 	setMonitorBrightness = 0
 	// }
 
-	var coef int = 7
-	if sensorBrightness >= 150 {
-		setMonitorBrightness = sensorBrightness * coef
+	var coef float64 = 0.7272727272
+	if sensorBrightness >= 150{
+		setMonitorBrightness = int(math.Round(float64(sensorBrightness) * coef))
 	}
 
 	// Only send command if previous set value was different
