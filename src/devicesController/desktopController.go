@@ -57,6 +57,8 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	var coef float64 = 0.14285714285714285
 	if sensorBrightness >= 150 {
 		setMonitorBrightness = int(math.Round(float64(sensorBrightness) * coef))
+	} else {
+		setMonitorBrightness = 0
 	}
 
 	// Only send command if previous set value was different
