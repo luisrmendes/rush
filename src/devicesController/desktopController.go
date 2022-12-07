@@ -34,23 +34,28 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	maxBrightnessLaptop := 19393
 
 	// TODO: Maybe some linear regression stuff would be cool, increase granularity
-	switch {
-	case sensorBrightness >= 800:
-		setMonitorBrightness = 100
-	case sensorBrightness < 800 && sensorBrightness >= 600:
-		setMonitorBrightness = 80
-	case sensorBrightness < 600 && sensorBrightness >= 500:
-		setMonitorBrightness = 60
-	case sensorBrightness < 500 && sensorBrightness >= 350:
-		setMonitorBrightness = 50
-	case sensorBrightness < 350 && sensorBrightness >= 300:
-		setMonitorBrightness = 30
-	case sensorBrightness < 300 && sensorBrightness >= 220:
-		setMonitorBrightness = 20
-	case sensorBrightness < 220 && sensorBrightness >= 150:
-		setMonitorBrightness = 10
-	case sensorBrightness < 150:
-		setMonitorBrightness = 0
+	// switch {
+	// case sensorBrightness >= 800:
+	// 	setMonitorBrightness = 100
+	// case sensorBrightness < 800 && sensorBrightness >= 600:
+	// 	setMonitorBrightness = 80
+	// case sensorBrightness < 600 && sensorBrightness >= 500:
+	// 	setMonitorBrightness = 60
+	// case sensorBrightness < 500 && sensorBrightness >= 350:
+	// 	setMonitorBrightness = 50
+	// case sensorBrightness < 350 && sensorBrightness >= 300:
+	// 	setMonitorBrightness = 30
+	// case sensorBrightness < 300 && sensorBrightness >= 220:
+	// 	setMonitorBrightness = 20
+	// case sensorBrightness < 220 && sensorBrightness >= 150:
+	// 	setMonitorBrightness = 10
+	// case sensorBrightness < 150:
+	// 	setMonitorBrightness = 0
+	// }
+
+	var coef int = 7
+	if sensorBrightness >= 150 {
+		setMonitorBrightness = sensorBrightness * coef
 	}
 
 	// Only send command if previous set value was different
