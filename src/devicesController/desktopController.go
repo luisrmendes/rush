@@ -8,7 +8,7 @@ import (
 )
 
 var previousSetMonitorBrightness = 0
-var setMonitorBrightness = 0
+var setMonitorBrightness = 1
 var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 
