@@ -3,8 +3,8 @@ package devicesController
 import (
 	"example.com/utils"
 	"log"
-	"strconv"
 	"math"
+	"strconv"
 )
 
 var previousSetMonitorBrightness = 0
@@ -55,7 +55,7 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	// }
 
 	var coef float64 = 0.14285714285714285
-	if sensorBrightness >= 150{
+	if sensorBrightness >= 150 {
 		setMonitorBrightness = int(math.Round(float64(sensorBrightness) * coef))
 	}
 
@@ -63,7 +63,7 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	if previousSetMonitorBrightness != setMonitorBrightness {
 		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
 		if laptopBrightness == 0 {
-			laptopBrightness = 1
+			laptopBrightness = 100
 		}
 
 		monBrightStr := strconv.Itoa(setMonitorBrightness)
