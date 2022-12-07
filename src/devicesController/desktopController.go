@@ -65,7 +65,7 @@ func ControlDesktopBrightness(sensorBrightness int) {
 	if previousSetMonitorBrightness != setMonitorBrightness {
 		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
 		if laptopBrightness == 0 {
-			laptopBrightness = 100
+			laptopBrightness = 500
 		}
 
 		monBrightStr := strconv.Itoa(setMonitorBrightness)
