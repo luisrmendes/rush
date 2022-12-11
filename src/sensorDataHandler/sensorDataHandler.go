@@ -65,6 +65,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	defer wg.Done()
 }
 
+// Handle sensor data
 func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	ticker := time.NewTicker(time.Minute * logSensorDataInterval)
 	for {

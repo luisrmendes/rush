@@ -1,6 +1,6 @@
 module example.com/devicesController
 
-go 1.19
+go 1.18
 
 replace example.com/utils => ../utils
 
