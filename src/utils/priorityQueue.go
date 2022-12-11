@@ -18,7 +18,7 @@ func InsertElement(pq *PriorityQueue, newElement PqElement) {
 	}
 	it := 0
 	for _, elem := range *pq {
-		if newElement.Priority > elem.Priority {
+		if newElement.Priority >= elem.Priority {
 			it++
 			continue
 		} else {
@@ -30,10 +30,19 @@ func InsertElement(pq *PriorityQueue, newElement PqElement) {
 
 	var pqCopy = *pq
 
+	fmt.Println("\nPRINT")
 	var firstSlice = pqCopy[:it]
+
+	fmt.Println("First slice: ", firstSlice)
+	fmt.Println("New Element: ", newElement)
+
 	firstSlice = append(firstSlice, newElement)
 	var secondSlice = pqCopy[it:]
-	*pq = append(firstSlice, secondSlice[:]...)
+
+	fmt.Println("Second Slice: ", secondSlice)
+
+	*pq = append(firstSlice, secondSlice...)
+	fmt.Println(*pq)
 }
 
 func Print(pq PriorityQueue) {
