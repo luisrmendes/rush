@@ -16,28 +16,21 @@ func InsertElement(pq *PriorityQueue, newElement PqElement) {
 		*pq = append(*pq, newElement)
 		return
 	}
-	it := 0
-	for _, elem := range *pq {
-		if newElement.Priority >= elem.Priority {
-			it++
-			continue
-		} else {
-			break
-		}
-	}
-
+	
 	// Why the f i cannot index an pass by reference array??
 
 	var pqCopy = *pq
 	var pqCopy2 PriorityQueue
 
 	var i = 0
-	for ; i < it; i++ {
-		pqCopy2 = append(pqCopy2, pqCopy[i])
+	for ; i < len(pqCopy); i++ {
+		if pqCopy[i].Priority <= newElement.Priority {
+			pqCopy2 = append(pqCopy2, pqCopy[i])
+		} else {
+			break
+		}
 	}
-	
 	pqCopy2 = append(pqCopy2, newElement)
-
 	for ; i < len(pqCopy); i++ {
 		pqCopy2 = append(pqCopy2, pqCopy[i])
 	}
