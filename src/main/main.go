@@ -35,6 +35,12 @@ func main() {
 
 	utils.InsertElement(&pq, newElem4)
 
+	var newElem5 utils.PqElement
+	newElem5.Priority = 5
+	newElem5.Name = "caravan"
+
+	utils.InsertElement(&pq, newElem5)
+
 	utils.Print(pq)
 
 

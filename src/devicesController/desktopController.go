@@ -72,7 +72,8 @@ func ControlDesktopBrightness(sensorBrightness int) {
 		laptopBrightStr := strconv.Itoa(laptopBrightness)
 
 		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, laptopBrightness)
-		utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 14 setvcp 10 "+monBrightStr+" & echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness")
+		utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 14 setvcp 10 "+monBrightStr+" & echo "
+			+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness")
 
 		previousSetMonitorBrightness = setMonitorBrightness
 	}

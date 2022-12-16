@@ -6,7 +6,7 @@ import (
 
 type PqElement struct {
 	Priority int
-	Name string
+	Name     string
 }
 
 type PriorityQueue []PqElement
@@ -29,20 +29,20 @@ func InsertElement(pq *PriorityQueue, newElement PqElement) {
 	// Why the f i cannot index an pass by reference array??
 
 	var pqCopy = *pq
+	var pqCopy2 PriorityQueue
 
-	fmt.Println("\nPRINT")
-	var firstSlice = pqCopy[:it]
+	var i = 0
+	for ; i < it; i++ {
+		pqCopy2 = append(pqCopy2, pqCopy[i])
+	}
+	
+	pqCopy2 = append(pqCopy2, newElement)
 
-	fmt.Println("First slice: ", firstSlice)
-	fmt.Println("New Element: ", newElement)
+	for ; i < len(pqCopy); i++ {
+		pqCopy2 = append(pqCopy2, pqCopy[i])
+	}
 
-	firstSlice = append(firstSlice, newElement)
-	var secondSlice = pqCopy[it:]
-
-	fmt.Println("Second Slice: ", secondSlice)
-
-	*pq = append(firstSlice, secondSlice...)
-	fmt.Println(*pq)
+	*pq = pqCopy2
 }
 
 func Print(pq PriorityQueue) {
