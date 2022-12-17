@@ -4,6 +4,32 @@ import (
 	"testing"
 )
 
+func TestPriorityQueueRemove1(t *testing.T) {
+	t.Log("priorityQueue Remove test 1")
+
+	var testPq PriorityQueue = NewPriorityQueue(NewPqElement(1, "temples of syrinx"), NewPqElement(2, "snow dog"),
+	NewPqElement(3, "By Tor"), NewPqElement(5, "2112"), NewPqElement(10, "Caravan"))
+
+	var correctPq = NewPriorityQueue(NewPqElement(1, "temples of syrinx"), NewPqElement(2, "snow dog"),
+		NewPqElement(3, "By Tor"), NewPqElement(10, "Caravan"))
+
+	RemoveElement(&testPq, *NewPqElement(5, "2112"))
+
+	if len(testPq) != len(correctPq) {
+		t.Errorf("priorityQueue size is %d, expected %d", len(correctPq), len(testPq))
+		t.Fail()
+	}
+
+	for i := 0; i < len(correctPq); i++ {
+		if correctPq[i] != testPq[i] {
+			t.Errorf("priorityQueue element is (%d, %s), expected (%d, %s)",
+				correctPq[i].Priority, correctPq[i].Name,
+				testPq[i].Priority, testPq[i].Name)
+			t.Fail()
+		}
+	}
+}
+
 func TestPriorityQueueInsert3(t *testing.T) {
 	t.Log("priorityQueue Insert test 3")
 
@@ -124,5 +150,4 @@ func TestPqElementConstructor(t *testing.T) {
 		t.Log("Error: Names are not the same!")
 		t.Fail()
 	}
-
 }

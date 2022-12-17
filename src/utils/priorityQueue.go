@@ -11,6 +11,34 @@ type PqElement struct {
 
 type PriorityQueue []PqElement
 
+func RemoveElementFromName(pq *PriorityQueue, elemName string) {
+	var i = 0
+	for _, v := range *pq {
+		if v.Name == elemName {
+			break
+		}
+		i++
+	}
+
+	newSlice := append((*pq)[:i], (*pq)[i+1:]...)
+	copy(*pq, newSlice)
+	(*pq) = (*pq)[:len(newSlice)]
+}
+
+func RemoveElement(pq *PriorityQueue, elem PqElement) {
+	var i = 0
+	for _, v := range *pq {
+		if v.Name == elem.Name {
+			break
+		}
+		i++
+	}
+
+	newSlice := append((*pq)[:i], (*pq)[i+1:]...)
+	copy(*pq, newSlice)
+	(*pq) = (*pq)[:len(newSlice)]
+}
+
 func NewPqElement(priority int, name string) *PqElement {
 	var newElement PqElement
 	newElement.Priority = priority
