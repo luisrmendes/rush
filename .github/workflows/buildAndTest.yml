@@ -28,12 +28,10 @@ jobs:
         run: cd ./src/main && go build -v
 
       - name: deploy
-        run: if tmux list-windows | grep -q 'ambrosioBot'; 
-                then echo "Window exists"
-              else 
+        run: \[tmux list-windows | grep -q 'ambrosioBot'] 
+                echo "Window exists" || 
                 echo "Window does not exist" &&
-                tmux new-session -s ambrosioBot
-              fi &&
+                tmux new-session -s ambrosioBot &&
           tmux send-keys -t ambrosioBot "^C" Enter &&
           cd ./src/main &&
           mv main /home/lrm/sideProjs/ambrosioBot &&
