@@ -32,7 +32,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		log.Printf("ESP8266_ADDRESS_PORT not found in env vars, checking .env")
 		err := godotenv.Load(".env")
 		if err != nil {
-			log.Println("Some error occured. Err: %s", err)
+			log.Panicf("Some error occured. Err: %s", err)
 		}
 	}
 	esp8266_address_port = os.Getenv("ESP8266_ADDRESS_PORT")
@@ -65,6 +65,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	defer wg.Done()
 }
 
+// Handle sensor data
 func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	ticker := time.NewTicker(time.Minute * logSensorDataInterval)
 	for {

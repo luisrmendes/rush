@@ -1,12 +1,15 @@
 package main
 
 import (
-	"example.com/telegramBot"
 	"example.com/sensorDataHandler"
+	"example.com/telegramBot"
 	"sync"
+	// "example.com/utils"
+	// "fmt"
 )
 
 func main() {
+
 	var wg = &sync.WaitGroup{}
 	var sData sensorDataHandler.SensorData
 	wg.Add(3)
