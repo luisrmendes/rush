@@ -31,7 +31,7 @@ jobs:
         run: if tmux list-windows | grep -q 'ambrosioBot'; 
                 then echo "Window exists"
               else 
-                echo "Window does not exist" 
+                echo "Window does not exist" &&
                 tmux new-session -s ambrosioBot
               fi &&
           tmux send-keys -t ambrosioBot "^C" Enter &&
