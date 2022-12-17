@@ -11,12 +11,27 @@ type PqElement struct {
 
 type PriorityQueue []PqElement
 
+func NewPqElement(priority int, name string) *PqElement {
+	var newElement PqElement
+	newElement.Priority = priority
+	newElement.Name = name
+	return &newElement
+}
+
+func NewPriorityQueue(pqElements ...*PqElement) PriorityQueue {
+	var newPriorityQueue PriorityQueue
+	for _, v := range pqElements {
+		newPriorityQueue = append(newPriorityQueue, *v)
+	}
+	return newPriorityQueue
+}
+
 func InsertElement(pq *PriorityQueue, newElement PqElement) {
 	if len(*pq) == 0 {
 		*pq = append(*pq, newElement)
 		return
 	}
-	
+
 	// Why the f i cannot index an pass by reference array??
 
 	var pqCopy = *pq

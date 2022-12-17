@@ -10,40 +10,6 @@ import (
 
 func main() {
 
-	var pq utils.PriorityQueue
-	var newElem utils.PqElement
-	newElem.Priority = 1
-	newElem.Name = "temples of syrinx"
-
-	utils.InsertElement(&pq, newElem)
-
-	var newElem2 utils.PqElement
-	newElem2.Priority = 2
-	newElem2.Name = "snowdog"
-
-	utils.InsertElement(&pq, newElem2)
-
-	var newElem3 utils.PqElement
-	newElem3.Priority = 3
-	newElem3.Name = "2112"
-
-	utils.InsertElement(&pq, newElem3)
-
-	var newElem4 utils.PqElement
-	newElem4.Priority = 2
-	newElem4.Name = "by tor"
-
-	utils.InsertElement(&pq, newElem4)
-
-	var newElem5 utils.PqElement
-	newElem5.Priority = 5
-	newElem5.Name = "caravan"
-
-	utils.InsertElement(&pq, newElem5)
-
-	utils.Print(pq)
-
-
 	// var wg = &sync.WaitGroup{}
 	// var sData sensorDataHandler.SensorData
 	// wg.Add(3)
