@@ -28,12 +28,4 @@ jobs:
         run: cd ./src/main && go build -v
 
       - name: deploy
-        run: \[tmux list-windows | grep -q 'ambrosioBot'] 
-                echo "Window exists" || 
-                echo "Window does not exist" &&
-                tmux new-session -s ambrosioBot &&
-          tmux send-keys -t ambrosioBot "^C" Enter &&
-          cd ./src/main &&
-          mv main /home/lrm/sideProjs/ambrosioBot &&
-          tmux send-keys -t ambrosioBot "cd /home/lrm/sideProjs/ambrosioBot" Enter && 
-            tmux send-keys -t ambrosioBot "TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} ESP8266_ADDRESS_PORT=${{ secrets.ESP8266_ADDRESS_PORT }} ./main" Enter
+        run: ./deployScript.sh
