@@ -36,6 +36,11 @@ func DisableAutomaticBrightnessControl() string {
 }
 
 func ControlKbdBacklightLaptop(sensorBrightness int) {
+	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	if err != nil {
+		return
+	}
+
 	switch {
 	case sensorBrightness >= 800:
 		setKbdBrightness = 0
@@ -55,6 +60,11 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 }
 
 func ControlDesktopBrightness(sensorBrightness int) {
+	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	if err != nil {
+		return
+	}
+
 	maxBrightnessLaptop := 19393
 
 	// TODO: Maybe some linear regression stuff would be cool, increase granularity
