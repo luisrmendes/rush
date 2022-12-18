@@ -37,7 +37,7 @@ func DisableAutomaticBrightnessControl() string {
 
 func ControlKbdBacklightLaptop(sensorBrightness int) {
 	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
-	if err != nil {
+	if err == nil {
 		return
 	}
 
@@ -61,7 +61,7 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 
 func ControlDesktopBrightness(sensorBrightness int) {
 	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
-	if err != nil {
+	if err == nil {
 		return
 	}
 
