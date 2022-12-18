@@ -9,9 +9,6 @@ jobs:
     runs-on: self-hosted
 
     env:
-      SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
-      SSH_HOST: ${{ secrets.SSH_HOST }}
       TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_API_KEY }}
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
 
@@ -19,7 +16,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16.4
+          go-version: 1.18
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,4 +25,5 @@ jobs:
         run: cd ./src/main && go build -v
 
       - name: deploy
-        run: chmod +x .github/workflows/deployScript.sh && ./.github/workflows/deployScript.sh $TELEGRAM_API_KEY $ESP8266_ADDRESS_PORT
+        run: chmod +x .github/workflows/deployScript.sh && 
+          ./.github/workflows/deployScript.sh $TELEGRAM_API_KEY $ESP8266_ADDRESS_PORT
