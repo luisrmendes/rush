@@ -11,6 +11,29 @@ var previousSetMonitorBrightness = 1
 var setMonitorBrightness = 0
 var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
+var brightControlPQ = utils.NewPriorityQueue()
+
+// Checks if "disableBrightnessAutoControl" key is in the pq.
+// If true, removes
+func EnableAutomaticBrightnessControl() string {
+	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	if err == nil {
+		utils.RemovePQElement(&brightControlPQ, "disableBrightnessAutoControl")
+		return "Enabled brightness auto control"
+	} else {
+		return "Brightness auto control is already enabled!"
+	}
+}
+
+func DisableAutomaticBrightnessControl() string {
+	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	if err == nil {
+		return "Brightness auto control is already disabled!"
+	} else {
+		utils.InsertPQElement(&brightControlPQ, *utils.NewPQElement(1, "disableBrightnessAutoControl"))
+		return "Disabled brightness auto control"
+	}
+}
 
 func ControlKbdBacklightLaptop(sensorBrightness int) {
 	switch {
@@ -72,7 +95,7 @@ func ControlDesktopBrightness(sensorBrightness int) {
 		laptopBrightStr := strconv.Itoa(laptopBrightness)
 
 		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, laptopBrightness)
-		utils.Execute("ssh", "thinkpadx1-extreme", 
+		utils.Execute("ssh", "thinkpadx1-extreme",
 			"ddcutil --bus 14 setvcp 10 "+monBrightStr+" & echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness")
 
 		previousSetMonitorBrightness = setMonitorBrightness

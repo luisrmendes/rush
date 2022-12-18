@@ -1,10 +1,10 @@
 package telegramBot
 
 import (
+	"example.com/devicesController"
+	"example.com/utils"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
-	"example.com/utils"
-	"example.com/devicesController"
 	"log"
 	"os"
 	"sync"
@@ -18,6 +18,12 @@ type Command struct {
 func (c Command) Handler() string {
 	switch c.name {
 
+	case "enableBrightnessAutoControl":
+		return devicesController.EnableAutomaticBrightnessControl()
+
+	case "disableBrightnessAutoControl":
+		return devicesController.DisableAutomaticBrightnessControl()
+
 	case "ipv4":
 		return utils.Execute("dig", "@resolver1.opendns.com", "A",
 			"myip.opendns.com", "+short", "-4")
@@ -30,7 +36,7 @@ func (c Command) Handler() string {
 
 	case "lights_off":
 		return devicesController.RpiTurnOffSockets()
-		
+
 	default:
 		log.Printf("Command %s handler not implemented!", c.name)
 		return "Command " + c.name + " handler not implemented!"
@@ -44,7 +50,7 @@ func HandleCommands(receivedMessage *tgbotapi.Message) string {
 }
 
 // Polls updates from the bot API
-// Calls HandleUpdates to handle ... updates
+// Calls HandleUpdates to handle... updates
 func PollUpdates(wg *sync.WaitGroup) {
 	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
 	if telegram_api_key == "" {
