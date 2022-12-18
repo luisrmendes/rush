@@ -12,4 +12,8 @@ tmux send-keys -t ambrosioBot "^C" Enter;
 cd ./src/main;
 mv main /home/lrm/sideProjs/ambrosioBot;
 tmux send-keys -t ambrosioBot "cd /home/lrm/sideProjs/ambrosioBot" Enter;
-tmux send-keys -t ambrosioBot "TELEGRAM_API_KEY=${{ secrets.TELEGRAM_API_KEY }} ESP8266_ADDRESS_PORT=${{ secrets.ESP8266_ADDRESS_PORT }} ./main" Enter
+tmux send-keys -t ambrosioBot "TELEGRAM_API_KEY=";
+tmux send-keys -t $1;
+tmux send-keys -t " ESP8266_ADDRESS_PORT=";
+tmux send-keys -t $2;
+tmux send-keys -t " ./main" Enter;
