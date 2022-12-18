@@ -11,7 +11,22 @@ type PqElement struct {
 
 type PriorityQueue []PqElement
 
-func RemoveElementFromName(pq *PriorityQueue, elemName string) {
+func SearchPQElement(pq PriorityQueue, elemName string) (int, error) {
+	if len(pq) == 0 {
+		return -1, fmt.Errorf("Cannot search an empty pq!")
+	}
+	for i, v := range pq {
+		if v.Name == elemName {
+			return i, nil
+		}
+	}
+	return -1, fmt.Errorf("Element %s not found", elemName)
+}
+
+func RemovePQElement(pq *PriorityQueue, elemName string) error {
+	if len(*pq) == 0 {
+		return fmt.Errorf("Priority Queue is empty!")
+	}
 	var i = 0
 	for _, v := range *pq {
 		if v.Name == elemName {
@@ -20,26 +35,17 @@ func RemoveElementFromName(pq *PriorityQueue, elemName string) {
 		i++
 	}
 
-	newSlice := append((*pq)[:i], (*pq)[i+1:]...)
-	copy(*pq, newSlice)
-	(*pq) = (*pq)[:len(newSlice)]
-}
-
-func RemoveElement(pq *PriorityQueue, elem PqElement) {
-	var i = 0
-	for _, v := range *pq {
-		if v.Name == elem.Name {
-			break
-		}
-		i++
+	if i == len(*pq) {
+		return fmt.Errorf("Element with name %s not found!", elemName)
 	}
 
 	newSlice := append((*pq)[:i], (*pq)[i+1:]...)
 	copy(*pq, newSlice)
 	(*pq) = (*pq)[:len(newSlice)]
+	return nil
 }
 
-func NewPqElement(priority int, name string) *PqElement {
+func NewPQElement(priority int, name string) *PqElement {
 	var newElement PqElement
 	newElement.Priority = priority
 	newElement.Name = name
@@ -54,7 +60,7 @@ func NewPriorityQueue(pqElements ...*PqElement) PriorityQueue {
 	return newPriorityQueue
 }
 
-func InsertElement(pq *PriorityQueue, newElement PqElement) {
+func InsertPQElement(pq *PriorityQueue, newElement PqElement) {
 	if len(*pq) == 0 {
 		*pq = append(*pq, newElement)
 		return
@@ -81,7 +87,7 @@ func InsertElement(pq *PriorityQueue, newElement PqElement) {
 	*pq = pqCopy2
 }
 
-func Print(pq PriorityQueue) {
+func PrintPQueue(pq PriorityQueue) {
 	fmt.Println("PriorityQueue print:")
 	for _, elem := range pq {
 		fmt.Printf("\t%d, %s\n", elem.Priority, elem.Name)

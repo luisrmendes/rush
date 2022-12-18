@@ -4,16 +4,70 @@ import (
 	"testing"
 )
 
-func TestPriorityQueueRemove1(t *testing.T) {
+func TestRemovePQ4(t *testing.T) {
+	t.Log("priorityQueue Remove test 4")
+
+	var testPq PriorityQueue = NewPriorityQueue(NewPQElement(1, "temples of syrinx"))
+
+	err := RemovePQElement(&testPq, "By Tor")
+
+	if err == nil {
+		t.Errorf("Method should throw \"Element with name %s not found!\"", "By Tor")
+		t.Fail()
+	}
+}
+
+func TestRemovePQ3(t *testing.T) {
+	t.Log("priorityQueue Remove test 3")
+
+	var testPq PriorityQueue
+
+	err := RemovePQElement(&testPq, "By Tor")
+
+	if err == nil {
+		t.Errorf("Method should throw \"Priority Queue is empty!\"")
+		t.Fail()
+	}
+}
+
+func TestRemovePQ2(t *testing.T) {
+	t.Log("priorityQueue Remove test 2")
+
+	var testPq PriorityQueue = NewPriorityQueue(NewPQElement(1, "temples of syrinx"), NewPQElement(2, "snow dog"),
+		NewPQElement(3, "By Tor"), NewPQElement(5, "2112"), NewPQElement(10, "Caravan"))
+
+	var correctPq = NewPriorityQueue(NewPQElement(2, "snow dog"),
+		NewPQElement(5, "2112"))
+
+	RemovePQElement(&testPq, "By Tor")
+	RemovePQElement(&testPq, "Caravan")
+	RemovePQElement(&testPq, "temples of syrinx")
+
+	if len(testPq) != len(correctPq) {
+		t.Errorf("priorityQueue size is %d, expected %d", len(correctPq), len(testPq))
+		t.Fail()
+	}
+
+	for i := 0; i < len(correctPq); i++ {
+		if correctPq[i] != testPq[i] {
+			t.Errorf("priorityQueue element is (%d, %s), expected (%d, %s)",
+				correctPq[i].Priority, correctPq[i].Name,
+				testPq[i].Priority, testPq[i].Name)
+			t.Fail()
+		}
+	}
+}
+
+func TestRemovePQ1(t *testing.T) {
 	t.Log("priorityQueue Remove test 1")
 
-	var testPq PriorityQueue = NewPriorityQueue(NewPqElement(1, "temples of syrinx"), NewPqElement(2, "snow dog"),
-	NewPqElement(3, "By Tor"), NewPqElement(5, "2112"), NewPqElement(10, "Caravan"))
+	var testPq PriorityQueue = NewPriorityQueue(NewPQElement(1, "temples of syrinx"), NewPQElement(2, "snow dog"),
+		NewPQElement(3, "By Tor"), NewPQElement(5, "2112"), NewPQElement(10, "Caravan"))
 
-	var correctPq = NewPriorityQueue(NewPqElement(1, "temples of syrinx"), NewPqElement(2, "snow dog"),
-		NewPqElement(3, "By Tor"), NewPqElement(10, "Caravan"))
+	var correctPq = NewPriorityQueue(NewPQElement(1, "temples of syrinx"), NewPQElement(2, "snow dog"),
+		NewPQElement(3, "By Tor"), NewPQElement(10, "Caravan"))
 
-	RemoveElement(&testPq, *NewPqElement(5, "2112"))
+	RemovePQElement(&testPq, "2112")
 
 	if len(testPq) != len(correctPq) {
 		t.Errorf("priorityQueue size is %d, expected %d", len(correctPq), len(testPq))
@@ -34,20 +88,20 @@ func TestPriorityQueueInsert3(t *testing.T) {
 	t.Log("priorityQueue Insert test 3")
 
 	var testPq PriorityQueue
-	var correctPq = NewPriorityQueue(NewPqElement(1, "temples of syrinx"), NewPqElement(2, "snow dog"),
-		NewPqElement(3, "By Tor"), NewPqElement(5, "2112"), NewPqElement(10, "Caravan"))
+	var correctPq = NewPriorityQueue(NewPQElement(1, "temples of syrinx"), NewPQElement(2, "snow dog"),
+		NewPQElement(3, "By Tor"), NewPQElement(5, "2112"), NewPQElement(10, "Caravan"))
 
-	var elem1 = *NewPqElement(3, "By Tor")
-	var elem2 = *NewPqElement(10, "Caravan")
-	var elem3 = *NewPqElement(1, "temples of syrinx")
-	var elem4 = *NewPqElement(2, "snow dog")
-	var elem5 = *NewPqElement(5, "2112")
+	var elem1 = *NewPQElement(3, "By Tor")
+	var elem2 = *NewPQElement(10, "Caravan")
+	var elem3 = *NewPQElement(1, "temples of syrinx")
+	var elem4 = *NewPQElement(2, "snow dog")
+	var elem5 = *NewPQElement(5, "2112")
 
-	InsertElement(&testPq, elem1)
-	InsertElement(&testPq, elem2)
-	InsertElement(&testPq, elem3)
-	InsertElement(&testPq, elem4)
-	InsertElement(&testPq, elem5)
+	InsertPQElement(&testPq, elem1)
+	InsertPQElement(&testPq, elem2)
+	InsertPQElement(&testPq, elem3)
+	InsertPQElement(&testPq, elem4)
+	InsertPQElement(&testPq, elem5)
 
 	if len(testPq) != len(correctPq) {
 		t.Errorf("priorityQueue size is %d, expected %d", len(correctPq), len(testPq))
@@ -68,16 +122,16 @@ func TestPriorityQueueInsert2(t *testing.T) {
 	t.Log("priorityQueue Insert test 2")
 
 	var testPq PriorityQueue
-	var correctPq = NewPriorityQueue(NewPqElement(1, "temples of syrinx"),
-		NewPqElement(2, "snow dog"), NewPqElement(3, "By Tor"))
+	var correctPq = NewPriorityQueue(NewPQElement(1, "temples of syrinx"),
+		NewPQElement(2, "snow dog"), NewPQElement(3, "By Tor"))
 
-	var elem1 = *NewPqElement(1, "temples of syrinx")
-	var elem2 = *NewPqElement(2, "snow dog")
-	var elem3 = *NewPqElement(3, "By Tor")
+	var elem1 = *NewPQElement(1, "temples of syrinx")
+	var elem2 = *NewPQElement(2, "snow dog")
+	var elem3 = *NewPQElement(3, "By Tor")
 
-	InsertElement(&testPq, elem1)
-	InsertElement(&testPq, elem2)
-	InsertElement(&testPq, elem3)
+	InsertPQElement(&testPq, elem1)
+	InsertPQElement(&testPq, elem2)
+	InsertPQElement(&testPq, elem3)
 
 	if len(testPq) != len(correctPq) {
 		t.Errorf("priorityQueue size is %d, expected %d", len(correctPq), len(testPq))
@@ -98,10 +152,10 @@ func TestPriorityQueueInsert1(t *testing.T) {
 	t.Log("priorityQueue Insert test 1")
 
 	var testPq PriorityQueue
-	var correctPq = NewPriorityQueue(NewPqElement(1, "temples of syrinx"))
+	var correctPq = NewPriorityQueue(NewPQElement(1, "temples of syrinx"))
 
-	var elem = *NewPqElement(1, "temples of syrinx")
-	InsertElement(&testPq, elem)
+	var elem = *NewPQElement(1, "temples of syrinx")
+	InsertPQElement(&testPq, elem)
 
 	if len(testPq) != len(correctPq) {
 		t.Errorf("priorityQueue size is %d, expected %d", len(testPq), len(correctPq))
@@ -121,9 +175,9 @@ func TestPriorityQueueInsert1(t *testing.T) {
 func TestPriorityQueueConstructor(t *testing.T) {
 	t.Log("PriorityQueue Constructor test")
 
-	var testPq = NewPriorityQueue(NewPqElement(1, "temples of syrinx"))
+	var testPq = NewPriorityQueue(NewPQElement(1, "temples of syrinx"))
 	var newPq [1]PqElement
-	newPq[0] = *NewPqElement(1, "temples of syrinx")
+	newPq[0] = *NewPQElement(1, "temples of syrinx")
 
 	for _, v := range testPq {
 		if v != newPq[0] {
@@ -136,7 +190,7 @@ func TestPriorityQueueConstructor(t *testing.T) {
 func TestPqElementConstructor(t *testing.T) {
 	t.Log("PqElement Constructor test")
 
-	var testElem = NewPqElement(1, "temples of syrinx")
+	var testElem = NewPQElement(1, "temples of syrinx")
 
 	var newElem PqElement
 	newElem.Priority = 1
