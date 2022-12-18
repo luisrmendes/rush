@@ -28,4 +28,4 @@ jobs:
         run: cd ./src/main && go build -v
 
       - name: deploy
-        run: ./deployScript.sh
+        run: ./.github/workflows/deployScript.sh
