@@ -11,7 +11,7 @@
 - User monitorControl in i2c group  
 - User monitor in video group
 - Add udev rule to give video group brightness control permissions
-- Add monitorcontrol write permissions to kbd_backlight (.bashrc)
+- Add monitorcontrol write permissions to kbd_backlight (eg on .bashrc, "sudo chmod 757 /sys/class/leds/tpacpi\:\:kbd_backlight/brightness")
 
 ## Ambrosio commands and description  
 desktop_wakeup - Wake up desktop WoL  
