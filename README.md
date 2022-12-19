@@ -20,3 +20,5 @@ ipv6 - Get ipv6 home address
 desktop_status - Check if desktop is online, what OS is running  
 lights_on - Turns on sockets 1 and 2  
 lights_off - Turns off sockets 1 and 2  
+disable_brightness_auto_control - Disable automatic brightness control  
+enable_brightness_auto_control - Enable automatic brightness control
