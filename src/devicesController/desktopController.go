@@ -42,7 +42,7 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 	}
 
 	switch {
-	case sensorBrightness >= 800:
+	case sensorBrightness >= 300:
 		setKbdBrightness = 0
 	case sensorBrightness < 300 && sensorBrightness >= 200:
 		setKbdBrightness = 2
