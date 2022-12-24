@@ -2,9 +2,11 @@ package devicesController
 
 import (
 	"example.com/utils"
+	"os"
 	"log"
 	"math"
 	"strconv"
+	"fmt"
 )
 
 var previousSetMonitorBrightness = 1
@@ -12,6 +14,15 @@ var setMonitorBrightness = 0
 var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var brightControlPQ = utils.NewPriorityQueue()
+
+
+// Checks if desktop is online and what OS is running
+func GetDesktopStatus() string {
+	work_laptop_address := os.Getenv("WORK_LAPTOP_ADDRESS")
+	output := utils.Execute("ping", work_laptop_address)
+	fmt.Println(output)
+	return output
+}
 
 // Checks if "disableBrightnessAutoControl" key is in the pq.
 // If true, removes
