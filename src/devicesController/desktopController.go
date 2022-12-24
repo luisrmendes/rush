@@ -19,7 +19,9 @@ var brightControlPQ = utils.NewPriorityQueue()
 // Checks if desktop is online and what OS is running
 func GetDesktopStatus() string {
 	work_laptop_address := os.Getenv("WORK_LAPTOP_ADDRESS")
-	output := utils.Execute("nc", "-z", work_laptop_address, "22")
+	utils.Execute("nc", "-z", work_laptop_address, "22", "> /dev/null")
+	output := utils.Execute("echo", "$?")
+
 	fmt.Printf("ola, %s", output)
 	return output
 }
