@@ -17,10 +17,13 @@ type Command struct {
 func (c Command) Handler() string {
 	switch c.name {
 
-	case "enableBrightnessAutoControl":
+	case "get_system_status":
+		return devicesController.GetDesktopStatus()
+		
+	case "enable_brightness_auto_control":
 		return devicesController.EnableAutomaticBrightnessControl()
 
-	case "disableBrightnessAutoControl":
+	case "disable_brightness_auto_control":
 		return devicesController.DisableAutomaticBrightnessControl()
 
 	case "ipv4":

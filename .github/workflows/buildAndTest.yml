@@ -30,4 +30,4 @@ jobs:
         run: chmod +x .github/workflows/deployScript.sh && 
           ./.github/workflows/deployScript.sh 
             $TELEGRAM_API_KEY $ESP8266_ADDRESS_PORT 
-              $WORK_LAPTOP_ADDRESS $DESKTOP_ADDRESS
+              $SYSTEM_1_ADDRESS $SYSTEM_2_ADDRESS

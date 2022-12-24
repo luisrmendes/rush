@@ -31,7 +31,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	for {
 		connection, err := net.Dial("tcp", esp8266_address_port)
 		if err != nil {
-			log.Println("Error on TCP Dial: %s", err)
+			log.Printf("Error on TCP Dial: %s\n", err)
 			continue
 		} else {
 			log.Println("Connected to " + esp8266_address_port)
@@ -77,7 +77,6 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		// Add task functions
 		go devicesController.ControlDesktopBrightness(sData.brightness)
 		go devicesController.ControlKbdBacklightLaptop(sData.brightness)
-		go devicesController.GetDesktopStatus()
 	}
 	defer wg.Done()
 }
