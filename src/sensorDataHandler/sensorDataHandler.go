@@ -2,7 +2,6 @@ package sensorDataHandler
 
 import (
 	"example.com/devicesController"
-	"github.com/joho/godotenv"
 	"log"
 	"net"
 	"os"
@@ -28,19 +27,11 @@ var logSensorDataInterval time.Duration = 2 // minutes
 func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	// Fetch environment variables
 	esp8266_address_port := os.Getenv("ESP8266_ADDRESS_PORT")
-	if esp8266_address_port == "" {
-		log.Printf("ESP8266_ADDRESS_PORT not found in env vars, checking .env")
-		err := godotenv.Load(".env")
-		if err != nil {
-			log.Panicf("Some error occured. Err: %s", err)
-		}
-	}
-	esp8266_address_port = os.Getenv("ESP8266_ADDRESS_PORT")
 	
 	for {
 		connection, err := net.Dial("tcp", esp8266_address_port)
 		if err != nil {
-			log.Println(err)
+			log.Println("Error on TCP Dial: %s", err)
 			continue
 		} else {
 			log.Println("Connected to " + esp8266_address_port)

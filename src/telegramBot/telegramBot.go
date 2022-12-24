@@ -4,7 +4,6 @@ import (
 	"example.com/devicesController"
 	"example.com/utils"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"sync"
@@ -53,14 +52,6 @@ func HandleCommands(receivedMessage *tgbotapi.Message) string {
 // Calls HandleUpdates to handle... updates
 func PollUpdates(wg *sync.WaitGroup) {
 	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
-	if telegram_api_key == "" {
-		log.Printf("TELEGRAM_API_KEY not found in env vars, checking .env")
-		err := godotenv.Load(".env")
-		if err != nil {
-			log.Panicf("Some error occured. Err: %s", err)
-		}
-	}
-	telegram_api_key = os.Getenv("TELEGRAM_API_KEY")
 
 	bot, err := tgbotapi.NewBotAPI(telegram_api_key)
 	if err != nil {

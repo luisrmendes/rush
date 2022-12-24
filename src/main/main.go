@@ -4,11 +4,12 @@ import (
 	"example.com/sensorDataHandler"
 	"example.com/telegramBot"
 	"sync"
-	// "example.com/utils"
+	"example.com/utils"
 	// "fmt"
 )
 
 func main() {
+	utils.ParseEnvVars()
 
 	var wg = &sync.WaitGroup{}
 	var sData sensorDataHandler.SensorData
