@@ -11,8 +11,8 @@ jobs:
     env:
       TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_API_KEY }}
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
-      WORK_LAPTOP_ADDRESS: ${{ secrets.WORK_LAPTOP_ADDRESS }}
-      DESKTOP_ADDRESS: ${{ secrets.DESKTOP_ADDRESS }}
+      SYSTEM_1_ADDRESS: ${{ secrets.SYSTEM_1_ADDRESS }}
+      SYSTEM_2_ADDRESS: ${{ secrets.SYSTEM_2_ADDRESS }}
 
     steps:
       - name: Install Go
