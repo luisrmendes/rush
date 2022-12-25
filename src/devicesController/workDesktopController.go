@@ -15,7 +15,7 @@ var previousSetMonitorBrightness = 1
 var setMonitorBrightness = 0
 var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
-var brightControlPQ = utils.NewPriorityQueue()
+var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
 
 // Tests if a system has rpc by checking for a daemon handling tcp port 135
 // My best solution to check for a Windows system
@@ -96,9 +96,9 @@ func GetSystemStatus() string {
 // Checks if "disableBrightnessAutoControl" key is in the pq.
 // If true, removes
 func EnableAutomaticBrightnessControl() string {
-	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
 	if err == nil {
-		utils.RemovePQElement(&brightControlPQ, "disableBrightnessAutoControl")
+		utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
 		return "Enabled brightness auto control"
 	} else {
 		return "Brightness auto control is already enabled!"
@@ -106,17 +106,17 @@ func EnableAutomaticBrightnessControl() string {
 }
 
 func DisableAutomaticBrightnessControl() string {
-	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
 	if err == nil {
 		return "Brightness auto control is already disabled!"
 	} else {
-		utils.InsertPQElement(&brightControlPQ, *utils.NewPQElement(1, "disableBrightnessAutoControl"))
+		utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(2, "disableBrightnessAutoControl"))
 		return "Disabled brightness auto control"
 	}
 }
 
 func ControlKbdBacklightLaptop(sensorBrightness int) {
-	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
 	if err == nil {
 		return
 	}
@@ -140,7 +140,7 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 }
 
 func ControlDesktopBrightness(sensorBrightness int) {
-	_, err := utils.SearchPQElement(brightControlPQ, "disableBrightnessAutoControl")
+	_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
 	if err == nil {
 		return
 	}
