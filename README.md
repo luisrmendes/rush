@@ -3,7 +3,9 @@
 ## server side dependencies
 - bind (dig...) 
 - wol  
-- Requires  desktop i2c monitor bus numbers
+- Requires  desktop i2c monitor bus numbers  
+- gnu-netcat
+
 
 ## desktop side dependencies  
 - ddcutil  

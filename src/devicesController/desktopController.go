@@ -17,11 +17,18 @@ var brightControlPQ = utils.NewPriorityQueue()
 
 
 // Checks if desktop is online and what OS is running
-func GetDesktopStatus() string {
+func GetSystemStatus() string {
 	work_laptop_address := os.Getenv("WORK_LAPTOP_ADDRESS")
-	output := utils.Execute("nc", "-z", work_laptop_address, "22", "> /dev/null", "echo", "$?")
 
-	fmt.Printf("ola, %s", output)
+	// Check if system 1 is online and using linux
+	output := utils.Execute("nc", "-zw", "1", work_laptop_address, "22", "> /dev/null;", "echo", "$?")
+	fmt.Printf("output: %s", output)
+
+	// If not, check if system 1 is online and using windows
+
+	// If not, system 1 is not online
+
+ 
 	return output
 }
 

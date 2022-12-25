@@ -18,7 +18,7 @@ func (c Command) Handler() string {
 	switch c.name {
 
 	case "get_system_status":
-		return devicesController.GetDesktopStatus()
+		return devicesController.GetSystemStatus()
 		
 	case "enable_brightness_auto_control":
 		return devicesController.EnableAutomaticBrightnessControl()
