@@ -1,10 +1,14 @@
 package utils
 
 import (
+	"bufio"
+	"context"
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func ParseEnvVars() {
@@ -23,11 +27,30 @@ func ParseEnvVars() {
 // Returns the output of the command
 // Handles errors outputted by the command call
 func Execute(name string, args ...string) string {
-	out, err := exec.Command(name, args...).Output()
+	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, name, args...)
+	err := cmd.Run()
+
 	if err != nil {
-		log.Printf("Command %s returned error: %s", name, err)
+		log.Printf("Command %s returned error: %s", name, cmd.Stderr)
+		return ""
 	}
-	output := string(out[:])
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Create a bufio.Reader from cmd.Stdout
+	r := bufio.NewReader(stdout)
+
+	// Read the output of cmd.Stdout into a string
+	output, err := r.ReadString('\n')
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return output
 }
