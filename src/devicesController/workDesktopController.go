@@ -1,14 +1,14 @@
 package devicesController
 
 import (
+	"example.com/utils"
+	"github.com/go-ping/ping"
 	"log"
 	"math"
 	"net"
 	"os"
 	"strconv"
 	"time"
-
-	"example.com/utils"
 )
 
 var previousSetMonitorBrightness = 1
@@ -17,8 +17,43 @@ var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var brightControlPQ = utils.NewPriorityQueue()
 
-// Tests if a desktop is online by checking for a daemon handling tcp port 22
-func checkIfSystemIsOnline(addressPort string) bool {
+// Tests if a system has rpc by checking for a daemon handling tcp port 135
+// My best solution to check for a Windows system
+func checksIfSystemHasRPC(address string) bool {
+	conn, err := net.DialTimeout("tcp", address+":135", 1*time.Second)
+	if err != nil {
+		return false
+	} else {
+		conn.Close()
+		return true
+	}
+}
+
+// Tests if a desktop is online by icmp packet
+// System is offline if packet loss is 100%
+func checkIfSystemIsOnline(address string) bool {
+	pinger, err := ping.NewPinger(address)
+	if err != nil {
+		log.Panicf("Could not create new pinger. Err: %s", err)
+	}
+	pinger.Count = 1
+	pinger.Timeout = 1 * time.Second
+	err = pinger.Run() // Blocks until finished.
+	if err != nil {
+		log.Panicf("Could not run pinger. Err: %s", err)
+	}
+
+	stats := pinger.Statistics().PacketLoss
+
+	if stats == 100 {
+		return false
+	} else {
+		return true
+	}
+}
+
+// Tests if a system has ssh by checking for a daemon handling tcp port 22
+func checkIfSystemHasSSH(addressPort string) bool {
 	conn, err := net.DialTimeout("tcp", addressPort, 1*time.Second)
 	if err != nil {
 		return false
@@ -30,27 +65,29 @@ func checkIfSystemIsOnline(addressPort string) bool {
 
 // Checks if desktop is online and what OS is running
 func GetSystemStatus() string {
-	system1Address := os.Getenv("SYSTEM_1_ADDRESS")
-	system2Address := os.Getenv("SYSTEM_2_ADDRESS")
+	systemAddresses := [...]string{os.Getenv("SYSTEM_1_ADDRESS"), os.Getenv("SYSTEM_2_ADDRESS")}
 
-	isSys1online := checkIfSystemIsOnline(system1Address + ":22")
-	isSys2online := checkIfSystemIsOnline(system2Address + ":22")
-
-	// Build answer
-	result := "System 1 is "
-	if isSys1online {
-		result += "online"
-	} else {
-		result += "offline"
-	}
-
-	result += "\n"
-	result += "\nSystem 2 is "
-
-	if isSys2online {
-		result += "online"
-	} else {
-		result += "offline"
+	result := ""
+	for i, v := range systemAddresses {
+		result += "System " + strconv.Itoa(i+1) + " is "
+		
+		// Logic tree to find running OS and SSH
+		if checkIfSystemIsOnline(v) {
+			result += "online "
+			if checksIfSystemHasRPC(v) {
+				result += "and running Windows"
+			} else {
+				result += ", running Linux and SSH is "
+				if checkIfSystemHasSSH(v) {
+					result += "up"
+				} else {
+					result += "down"
+				}
+			}
+		} else {
+			result += "offline"
+		}
+		result += "\n"
 	}
 
 	return result

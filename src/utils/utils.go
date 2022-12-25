@@ -22,6 +22,7 @@ func ParseEnvVars() {
 // Executes terminal calls
 // Returns the output of the command
 // Handles errors outputted by the command call
+// TODO: why do I need this?
 func Execute(name string, args ...string) string {
 	out, err := exec.Command(name, args...).Output()
 	if err != nil {
