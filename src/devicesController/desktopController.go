@@ -1,12 +1,14 @@
 package devicesController
 
 import (
-	"example.com/utils"
-	"os"
 	"log"
 	"math"
+	"net"
+	"os"
 	"strconv"
-	"fmt"
+	"time"
+
+	"example.com/utils"
 )
 
 var previousSetMonitorBrightness = 1
@@ -15,21 +17,41 @@ var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var brightControlPQ = utils.NewPriorityQueue()
 
+func checkIfSystemIsOnline(addressPort string) bool {
+	conn, err := net.DialTimeout("tcp", addressPort, 1*time.Second)
+	if err != nil {
+		return false
+	} else {
+		conn.Close()
+		return true
+	}
+}
 
 // Checks if desktop is online and what OS is running
 func GetSystemStatus() string {
-	work_laptop_address := os.Getenv("WORK_LAPTOP_ADDRESS")
+	system1Address := os.Getenv("SYSTEM_1_ADDRESS")
+	system2Address := os.Getenv("SYSTEM_2_ADDRESS")
 
-	// Check if system 1 is online and using linux
-	output := utils.Execute("nc", "-zw", "1", work_laptop_address, "22", "> /dev/null;", "echo", "$?")
-	fmt.Printf("output: %s", output)
+	isSys1online := checkIfSystemIsOnline(system1Address + ":22")
+	isSys2online := checkIfSystemIsOnline(system2Address + ":22")
 
-	// If not, check if system 1 is online and using windows
+	// Build answer
+	result := "System 1 is "
+	if isSys1online {
+		result += "online"
+	} else {
+		result += "offline"
+	}
 
-	// If not, system 1 is not online
+	result += "\n"
+	result += "\nSystem 2 is "
+	if isSys2online {
+		result += "online"
+	} else {
+		result += "offline"
+	}
 
- 
-	return output
+	return result
 }
 
 // Checks if "disableBrightnessAutoControl" key is in the pq.
