@@ -17,6 +17,7 @@ var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var brightControlPQ = utils.NewPriorityQueue()
 
+// Tests if a desktop is online by checking for a daemon handling tcp port 22
 func checkIfSystemIsOnline(addressPort string) bool {
 	conn, err := net.DialTimeout("tcp", addressPort, 1*time.Second)
 	if err != nil {
@@ -45,6 +46,7 @@ func GetSystemStatus() string {
 
 	result += "\n"
 	result += "\nSystem 2 is "
+
 	if isSys2online {
 		result += "online"
 	} else {
