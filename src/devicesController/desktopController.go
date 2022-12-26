@@ -48,9 +48,9 @@ func UpdateDesktop1Status(wg *sync.WaitGroup, brightness int, frequency float32)
 		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_1_ADDRESS"))
 
 		// Log if desktop 2 changes status
-		if isOnline && !isDesktop2online {
+		if isOnline && !isDesktop1online {
 			log.Println("Desktop 1 is online")
-		} else if !isOnline && isDesktop2online {
+		} else if !isOnline && isDesktop1online {
 			log.Println("Desktop 1 is offline")
 		}
 
