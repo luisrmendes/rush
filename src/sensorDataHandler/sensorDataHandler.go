@@ -12,7 +12,7 @@ import (
 )
 
 type SensorData struct {
-	brightness  int
+	Brightness  int
 	temperature int
 	humidity    int
 }
@@ -48,7 +48,7 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 			splitSensorData := strings.SplitAfter(string(buffer[:mLen]), " ")
 
 			// remove last element of each split value (its a space!), convert to int
-			sData.brightness, _ = strconv.Atoi(splitSensorData[1][:len(splitSensorData[1])-1])
+			sData.Brightness, _ = strconv.Atoi(splitSensorData[1][:len(splitSensorData[1])-1])
 			sData.temperature, _ = strconv.Atoi(splitSensorData[2][:len(splitSensorData[2])-1])
 			sData.humidity, _ = strconv.Atoi(splitSensorData[3])
 		}
@@ -63,20 +63,20 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		time.Sleep(handleSensorDataDelay)
 
 		// Only handle data when data is being sent
-		if sData.brightness == 0 {
+		if sData.Brightness == 0 {
 			continue
 		}
 
 		// goroutine to log sensor data
 		go func(sData *SensorData) {
 			for range ticker.C {
-				log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.brightness, sData.temperature, sData.humidity)
+				log.Printf("Brightness: %d, Temp: %dºC, Humidity: %d%%", sData.Brightness, sData.temperature, sData.humidity)
 			}
 		}(sData)
 
 		// Add task functions
-		go devicesController.ControlDesktopBrightness(sData.brightness)
-		go devicesController.ControlKbdBacklightLaptop(sData.brightness)
+		go devicesController.ControlDesktopBrightness(sData.Brightness)
+		go devicesController.ControlKbdBacklightLaptop(sData.Brightness)
 	}
 	defer wg.Done()
 }

@@ -19,7 +19,7 @@ func main() {
 
 	go telegramBot.PollUpdates(wg)
 
-	go devicesController.UpdateSystemStatus(wg, sData.brightness, os.Getenv("SYSTEM_1_ADDRESS"), 2)
+	go devicesController.UpdateSystemStatus(wg, sData.Brightness, os.Getenv("SYSTEM_1_ADDRESS"), 2)
 
 	go sensorDataHandler.ReadSensorData(wg, &sData)
 
