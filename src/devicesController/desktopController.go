@@ -30,7 +30,10 @@ func UpdateSystemStatus(wg *sync.WaitGroup, brightness int, systemAddress string
 		if isOnline && err == nil {
 			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
 			log.Println("Work Desktop is online")
-			ControlKbdBacklightLaptop(brightness) // update brightness control when changing status
+
+			// update brightness control when changing status
+			ControlKbdBacklightLaptop(brightness) 
+			ControlDesktopBrightness(brightness)
 		} else if !isOnline && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(1, pqElementName))
 			log.Println("Work Desktop is offline")
