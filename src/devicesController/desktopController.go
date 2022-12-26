@@ -20,6 +20,7 @@ var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
 
 // Pings desktop status every <frequency> secoends
 // Updates brightness control pq
+// Sends brightness control command when changing offline to online
 func UpdateSystemStatus(wg *sync.WaitGroup, brightness int, systemAddress string, frequency int) {
 	pqElementName := "offline"
 	for {
