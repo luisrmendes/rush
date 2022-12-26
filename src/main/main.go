@@ -5,7 +5,6 @@ import (
 	"example.com/sensorDataHandler"
 	"example.com/telegramBot"
 	"example.com/utils"
-	"os"
 	"sync"
 	// "fmt"
 )
@@ -19,7 +18,8 @@ func main() {
 
 	go telegramBot.PollUpdates(wg)
 
-	go devicesController.UpdateSystemStatus(wg, sData.Brightness, os.Getenv("SYSTEM_1_ADDRESS"), 1)
+	go devicesController.UpdateDesktop1Status(wg, sData.Brightness, 1)
+	go devicesController.UpdateDesktop2Status(wg, 1)
 
 	go sensorDataHandler.ReadSensorData(wg, &sData)
 

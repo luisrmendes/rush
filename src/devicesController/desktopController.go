@@ -17,26 +17,53 @@ var setMonitorBrightness = 0
 var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
+var isDesktop1online = false
+var isDesktop2online = false
 
-// Pings system status every <frequency> seconds
+// Pings for desktop 2 status every <frequency> seconds
+// Updates global isDesktop2online variable
+func UpdateDesktop2Status(wg *sync.WaitGroup, frequency float32) {
+	for {
+		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_2_ADDRESS"))
+		// Log if desktop 2 changes status
+		if isOnline && !isDesktop2online {
+			log.Println("Desktop 2 is online")
+		} else if !isOnline && isDesktop2online {
+			log.Println("Desktop 2 is offline")
+		}
+		isDesktop2online = isOnline
+		time.Sleep(time.Duration(frequency) * time.Second)
+	}
+	defer wg.Done()
+}
+
+// Pings for desktop 1 status every <frequency> seconds
+// Updates global isDesktop1online variable
 // Updates brightness control pq with (offline, 1) element
 // Sends brightness control command when changing offline to online
-func UpdateSystemStatus(wg *sync.WaitGroup, brightness int, systemAddress string, frequency float32) {
+func UpdateDesktop1Status(wg *sync.WaitGroup, brightness int, frequency float32) {
 	pqElementName := "offline"
 	for {
 		_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, pqElementName)
-		isOnline := checkIfSystemIsOnline(systemAddress)
-		// If the system is online and the pq has the offline element
-		if isOnline && err == nil {
-			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
-			log.Println("Work Desktop is online")
+		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_1_ADDRESS"))
 
+		// Log if desktop 2 changes status
+		if isOnline && !isDesktop2online {
+			log.Println("Desktop 1 is online")
+		} else if !isOnline && isDesktop2online {
+			log.Println("Desktop 1 is offline")
+		}
+
+		isDesktop1online = isOnline
+
+		// If the system is online and the pq has the offline element
+		if isDesktop1online && err == nil {
+			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
 			// update brightness control when changing status
-			ControlKbdBacklightLaptop(brightness) 
+			ControlKbdBacklightLaptop(brightness)
 			ControlWorkDesktopBrightness(brightness)
-		} else if !isOnline && err != nil {
+		} else if !isDesktop1online && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(1, pqElementName))
-			log.Println("Work Desktop is offline")
 		}
 		time.Sleep(time.Duration(frequency) * time.Second)
 	}
@@ -92,16 +119,15 @@ func checkIfSystemHasSSH(address string) bool {
 // Checks if desktop is online and what OS is running
 func GetSystemStatus() string {
 	systemAddresses := [...]string{os.Getenv("SYSTEM_1_ADDRESS"), os.Getenv("SYSTEM_2_ADDRESS")}
-
 	result := ""
 	for i, v := range systemAddresses {
 		result += "System " + strconv.Itoa(i+1) + " is "
 
 		// Logic tree to find running OS and SSH
 		if checkIfSystemIsOnline(v) {
-			result += "online "
+			result += "online"
 			if checksIfSystemHasRPC(v) {
-				result += "and running Windows"
+				result += " and running Windows"
 			} else {
 				result += ", running Linux and SSH is "
 				if checkIfSystemHasSSH(v) {
