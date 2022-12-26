@@ -20,7 +20,7 @@ var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
 
 // Pings desktop status every <frequency> secoends
 // Updates brightness control pq
-func UpdateSystemStatus(wg *sync.WaitGroup, systemAddress string, frequency int) {
+func UpdateSystemStatus(wg *sync.WaitGroup, brightness int, systemAddress string, frequency int) {
 	pqElementName := "offline"
 	for {
 		_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, pqElementName)
@@ -29,9 +29,11 @@ func UpdateSystemStatus(wg *sync.WaitGroup, systemAddress string, frequency int)
 		if isOnline && err == nil {
 			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
 			log.Println("Work Desktop is online")
+			ControlKbdBacklightLaptop(brightness) // update brightness control when changing status
 		} else if !isOnline && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(1, pqElementName))
 			log.Println("Work Desktop is offline")
+			ControlKbdBacklightLaptop(brightness) // update brightness control when changing status
 		}
 		time.Sleep(time.Duration(frequency) * time.Second)
 	}
