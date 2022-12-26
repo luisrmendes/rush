@@ -8,6 +8,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -16,6 +17,26 @@ var setMonitorBrightness = 0
 var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
+
+// Pings desktop status every <frequency> secoends
+// Updates brightness control pq
+func UpdateSystemStatus(wg *sync.WaitGroup, systemAddress string, frequency int) {
+	pqElementName := "offline"
+	for {
+		_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, pqElementName)
+		isOnline := checkIfSystemIsOnline(systemAddress)
+		// If the system is online and the pq has the offline element
+		if isOnline && err == nil {
+			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
+			log.Println("Work Desktop is online")
+		} else if !isOnline && err != nil {
+			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(1, pqElementName))
+			log.Println("Work Desktop is offline")
+		}
+		time.Sleep(time.Duration(frequency) * time.Second)
+	}
+	defer wg.Done()
+}
 
 // Tests if a system has rpc by checking for a daemon handling tcp port 135
 // My best solution to check for a Windows system
@@ -53,8 +74,8 @@ func checkIfSystemIsOnline(address string) bool {
 }
 
 // Tests if a system has ssh by checking for a daemon handling tcp port 22
-func checkIfSystemHasSSH(addressPort string) bool {
-	conn, err := net.DialTimeout("tcp", addressPort, 1*time.Second)
+func checkIfSystemHasSSH(address string) bool {
+	conn, err := net.DialTimeout("tcp", address+":22", 1*time.Second)
 	if err != nil {
 		return false
 	} else {
@@ -70,7 +91,7 @@ func GetSystemStatus() string {
 	result := ""
 	for i, v := range systemAddresses {
 		result += "System " + strconv.Itoa(i+1) + " is "
-		
+
 		// Logic tree to find running OS and SSH
 		if checkIfSystemIsOnline(v) {
 			result += "online "
@@ -116,8 +137,7 @@ func DisableAutomaticBrightnessControl() string {
 }
 
 func ControlKbdBacklightLaptop(sensorBrightness int) {
-	_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
-	if err == nil {
+	if len(workDesktopBrightnessCtrlPQ) > 0 {
 		return
 	}
 
@@ -140,8 +160,7 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 }
 
 func ControlDesktopBrightness(sensorBrightness int) {
-	_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, "disableBrightnessAutoControl")
-	if err == nil {
+	if len(workDesktopBrightnessCtrlPQ) > 0 {
 		return
 	}
 
