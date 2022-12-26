@@ -18,8 +18,8 @@ var previousSetKbdBrightness = 0
 var setKbdBrightness = 0
 var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
 
-// Pings desktop status every <frequency> secoends
-// Updates brightness control pq
+// Pings system status every <frequency> seconds
+// Updates brightness control pq with (offline, 1) element
 // Sends brightness control command when changing offline to online
 func UpdateSystemStatus(wg *sync.WaitGroup, brightness int, systemAddress string, frequency float32) {
 	pqElementName := "offline"
@@ -33,7 +33,7 @@ func UpdateSystemStatus(wg *sync.WaitGroup, brightness int, systemAddress string
 
 			// update brightness control when changing status
 			ControlKbdBacklightLaptop(brightness) 
-			ControlDesktopBrightness(brightness)
+			ControlWorkDesktopBrightness(brightness)
 		} else if !isOnline && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(1, pqElementName))
 			log.Println("Work Desktop is offline")
@@ -60,7 +60,7 @@ func checksIfSystemHasRPC(address string) bool {
 func checkIfSystemIsOnline(address string) bool {
 	pinger, err := ping.NewPinger(address)
 	if err != nil {
-		log.Panicf("Could not create new pinger. Err: %s", err)
+		log.Panicf("Could not create new pinger. Err: %s \n\t Address: %s", err, address)
 	}
 	pinger.Count = 1
 	pinger.Timeout = 1 * time.Second
@@ -164,7 +164,7 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 	}
 }
 
-func ControlDesktopBrightness(sensorBrightness int) {
+func ControlWorkDesktopBrightness(sensorBrightness int) {
 	if len(workDesktopBrightnessCtrlPQ) > 0 {
 		return
 	}
