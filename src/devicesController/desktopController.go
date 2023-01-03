@@ -226,7 +226,7 @@ func ControlWorkDesktopBrightness(sensorBrightness int) {
 
 	// Send command only if previous set value was different by two
 	// Avoid regular brightness updates
-	if math.Abs(float64(previousSetMonitorBrightness-setMonitorBrightness)) != 2 {
+	if math.Abs(float64(previousSetMonitorBrightness-setMonitorBrightness)) > 2 {
 		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
 		if laptopBrightness == 0 {
 			laptopBrightness = 1000
