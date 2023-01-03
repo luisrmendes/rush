@@ -237,7 +237,7 @@ func ControlWorkDesktopBrightness(sensorBrightness int) {
 
 		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, laptopBrightness)
 
-		go utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 14 setvcp 10 "+monBrightStr)
+		go utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 13 setvcp 10 "+monBrightStr)
 		go utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 15 setvcp 10 "+monBrightStr)
 		go utils.Execute("ssh", "thinkpadx1-extreme", "echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness")
 
