@@ -173,11 +173,11 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 	}
 
 	switch {
-	case sensorBrightness >= 300:
+	case sensorBrightness >= 250:
 		setKbdBrightness = 0
-	case sensorBrightness < 300 && sensorBrightness >= 150:
+	case sensorBrightness < 250 && sensorBrightness >= 100:
 		setKbdBrightness = 2
-	case sensorBrightness < 150:
+	case sensorBrightness < 100:
 		setKbdBrightness = 1
 	}
 
@@ -224,8 +224,9 @@ func ControlWorkDesktopBrightness(sensorBrightness int) {
 		setMonitorBrightness = 0
 	}
 
-	// Only send command if previous set value was different
-	if previousSetMonitorBrightness != setMonitorBrightness {
+	// Send command only if previous set value was different by two
+	// Avoid regular brightness updates
+	if math.Abs(float64(previousSetMonitorBrightness-setMonitorBrightness)) != 2 {
 		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
 		if laptopBrightness == 0 {
 			laptopBrightness = 1000
