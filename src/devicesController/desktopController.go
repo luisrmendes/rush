@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+var setLaptopBrightness = 0
 var previousSetMonitorBrightness = 1
 var setMonitorBrightness = 0
 var previousSetKbdBrightness = 0
@@ -218,24 +219,29 @@ func ControlWorkDesktopBrightness(sensorBrightness int) {
 	// }
 
 	var coef float64 = 0.14285714285714285
+
+	// Set minumum brightness values
 	if sensorBrightness >= 65 {
 		setMonitorBrightness = int(math.Round(float64(sensorBrightness) * coef))
+		setLaptopBrightness = (setMonitorBrightness * maxBrightnessLaptop) / 100
 	} else {
 		setMonitorBrightness = 0
+		setLaptopBrightness = 1000
+	}
+
+	// Check if values have overflowed
+	if setMonitorBrightness > 100 || setLaptopBrightness > maxBrightnessLaptop {
+		setMonitorBrightness = 100
+		setLaptopBrightness = maxBrightnessLaptop
 	}
 
 	// Send command only if previous set value was different by two
-	// Avoid regular brightness updates
+	// Intention is to avoid frequent brightness updates
 	if math.Abs(float64(previousSetMonitorBrightness-setMonitorBrightness)) > 2 {
-		laptopBrightness := (setMonitorBrightness * maxBrightnessLaptop) / 100
-		if laptopBrightness == 0 {
-			laptopBrightness = 1000 
-		}
-
 		monBrightStr := strconv.Itoa(setMonitorBrightness)
-		laptopBrightStr := strconv.Itoa(laptopBrightness)
+		laptopBrightStr := strconv.Itoa(setLaptopBrightness)
 
-		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, laptopBrightness)
+		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, setLaptopBrightness)
 
 		// go utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 13 setvcp 10 "+monBrightStr)
 		go utils.Execute("ssh", "thinkpadx1-extreme", "echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 "+monBrightStr)
