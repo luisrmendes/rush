@@ -26,7 +26,7 @@ func ParseEnvVars() {
 func Execute(name string, args ...string) string {
 	out, err := exec.Command(name, args...).Output()
 	if err != nil {
-		log.Printf("Command %s returned error: %s", name, err)
+		log.Printf("Command %s %s returned error: %s", name, args, err)
 	}
 	output := string(out[:])
 
