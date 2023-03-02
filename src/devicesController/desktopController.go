@@ -57,7 +57,7 @@ func checksIfSystemHasRPC(address string) bool {
 func checkIfSystemIsOnline(address string) bool {
 	pinger, err := ping.NewPinger(address)
 	if err != nil {
-		log.Panicf("Could not create new pinger. Err: %s", err)
+		log.Printf("Could not create new pinger. Err: %s", err)
 	}
 	pinger.Count = 1
 	pinger.Timeout = 1 * time.Second
