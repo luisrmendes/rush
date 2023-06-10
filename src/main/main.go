@@ -20,7 +20,7 @@ func main() {
 
 	go devicesController.UpdateDesktop1Status(wg, sData.Brightness, 1)
 	go devicesController.UpdateDesktop2Status(wg, 1)
-	go devicesController.UpdateDesktop3Status(wg, sData.Brightness, 1)
+	// go devicesController.UpdateDesktop3Status(wg, sData.Brightness, 1)
 
 	go sensorDataHandler.ReadSensorData(wg, &sData)
 
