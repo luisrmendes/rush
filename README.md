@@ -1,13 +1,18 @@
 # Rush
 
-## server side dependencies
+## How To Run
+```sh
+cd src/main/  
+go run main.go 
+```
+
+## Host Machine Dependencies
 - bind (dig...) 
 - wol  
 - Requires  desktop i2c monitor bus numbers  
 - gnu-netcat
 
-
-## desktop side dependencies  
+## Client Side Brightness Control Dependencies  
 - ddcutil  
 - i2c-tools  
 - User monitorControl in i2c group  

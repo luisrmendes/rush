@@ -66,7 +66,7 @@ func InsertPQElement(pq *PriorityQueue, newElement PqElement) {
 		return
 	}
 
-	// Why the f i cannot index an pass by reference array??
+	// Why the f I cannot index an pass by reference array??
 
 	var pqCopy = *pq
 	var pqCopy2 PriorityQueue

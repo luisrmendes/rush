@@ -14,12 +14,13 @@ func main() {
 
 	var wg = &sync.WaitGroup{}
 	var sData sensorDataHandler.SensorData
-	wg.Add(4)
+	wg.Add(6)
 
 	go telegramBot.PollUpdates(wg)
 
 	go devicesController.UpdateDesktop1Status(wg, sData.Brightness, 1)
 	go devicesController.UpdateDesktop2Status(wg, 1)
+	go devicesController.UpdateDesktop3Status(wg, sData.Brightness, 1)
 
 	go sensorDataHandler.ReadSensorData(wg, &sData)
 

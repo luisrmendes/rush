@@ -20,6 +20,38 @@ var setKbdBrightness = 0
 var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
 var isDesktop1online = false
 var isDesktop2online = false
+var isDesktop3online = false
+
+// Pings for desktop 3 status every <frequency> seconds
+// Updates global isDesktop3online variable
+func UpdateDesktop3Status(wg *sync.WaitGroup, brightness int, frequency float32) {
+	pqElementName := "offline"
+	for {
+		_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, pqElementName)
+		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_3_ADDRESS"))
+		// Log if desktop 2 changes status
+		if isOnline && !isDesktop3online {
+			log.Println("Desktop 3 is online")
+		} else if !isOnline && isDesktop3online {
+			log.Println("Desktop 3 is offline")
+		}
+
+		isDesktop3online = isOnline
+		time.Sleep(time.Duration(frequency) * time.Second)
+
+		// If the system is online and the pq has the offline element
+		if isDesktop3online && err == nil {
+			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
+			// update brightness control when changing status
+			ControlKbdBacklightLaptop(brightness)
+			ControlWorkDesktopBrightness(brightness)
+		} else if !isDesktop3online && err != nil {
+			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(2, pqElementName))
+		}
+		time.Sleep(time.Duration(frequency) * time.Second)
+	}
+	defer wg.Done()
+}
 
 // Pings for desktop 2 status every <frequency> seconds
 // Updates global isDesktop2online variable
@@ -40,7 +72,7 @@ func UpdateDesktop2Status(wg *sync.WaitGroup, frequency float32) {
 
 // Pings for desktop 1 status every <frequency> seconds
 // Updates global isDesktop1online variable
-// Updates brightness control pq with (offline, 1) element
+// Updates brightness control priority queue with (offline, 1) element
 // Sends brightness control command when changing offline to online
 func UpdateDesktop1Status(wg *sync.WaitGroup, brightness int, frequency float32) {
 	pqElementName := "offline"
@@ -71,8 +103,8 @@ func UpdateDesktop1Status(wg *sync.WaitGroup, brightness int, frequency float32)
 	defer wg.Done()
 }
 
-// Tests if a system has rpc by checking for a daemon handling tcp port 135
-// My best solution to check for a Windows system
+// My best solution to check if a system is running Windows
+// Test if a system has rpc by checking for a daemon handling tcp port 135
 func checksIfSystemHasRPC(address string) bool {
 	conn, err := net.DialTimeout("tcp", address+":135", 1*time.Second)
 	if err != nil {
