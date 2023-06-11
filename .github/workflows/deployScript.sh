@@ -20,4 +20,6 @@ tmux send-keys -t ambrosioBot " SYSTEM_1_ADDRESS=";
 tmux send-keys -t ambrosioBot $3;
 tmux send-keys -t ambrosioBot " SYSTEM_2_ADDRESS=";
 tmux send-keys -t ambrosioBot $4;
+tmux send-keys -t ambrosioBot " SYSTEM_3_ADDRESS=";
+tmux send-keys -t ambrosioBot $5;
 tmux send-keys -t ambrosioBot " ./main" Enter;

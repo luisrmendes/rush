@@ -43,8 +43,8 @@ func UpdateDesktop3Status(wg *sync.WaitGroup, brightness int, frequency float32)
 		if isDesktop3online && err == nil {
 			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
 			// update brightness control when changing status
-			ControlKbdBacklightLaptop(brightness)
-			ControlWorkDesktopBrightness(brightness)
+			// ControlKbdBacklightLaptop(brightness)
+			ControlWorkDesktopBrightness2(brightness)
 		} else if !isDesktop3online && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(2, pqElementName))
 		}
@@ -277,6 +277,88 @@ func ControlWorkDesktopBrightness(sensorBrightness int) {
 
 		// go utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 13 setvcp 10 "+monBrightStr)
 		go utils.Execute("ssh", "thinkpadx1-extreme", "echo "+laptopBrightStr+" > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 "+monBrightStr)
+
+		previousSetMonitorBrightness = setMonitorBrightness
+	}
+}
+
+func ControlKbdBacklightLaptop2(sensorBrightness int) {
+	if len(workDesktopBrightnessCtrlPQ) > 0 {
+		return
+	}
+
+	switch {
+	case sensorBrightness >= 250:
+		setKbdBrightness = 0
+	case sensorBrightness < 250 && sensorBrightness >= 100:
+		setKbdBrightness = 2
+	case sensorBrightness < 100:
+		setKbdBrightness = 1
+	}
+
+	// Only send command if previous set value was different
+	if previousSetKbdBrightness != setKbdBrightness {
+		setKbdBrightStr := strconv.Itoa(setKbdBrightness)
+		log.Printf("Sending kbd brightness command %d", setKbdBrightness)
+		utils.Execute("ssh", "thinkpad-t480", "echo "+setKbdBrightStr+" > /sys/class/leds/tpacpi::kbd_backlight/brightness")
+		previousSetKbdBrightness = setKbdBrightness
+	}
+}
+
+func ControlWorkDesktopBrightness2(sensorBrightness int) {
+	if len(workDesktopBrightnessCtrlPQ) > 0 {
+		return
+	}
+
+	maxBrightnessLaptop := 19393
+
+	// TODO: Maybe some linear regression stuff would be cool, increase granularity
+	// switch {
+	// case sensorBrightness >= 800:
+	// 	setMonitorBrightness = 100
+	// case sensorBrightness < 800 && sensorBrightness >= 600:
+	// 	setMonitorBrightness = 80
+	// case sensorBrightness < 600 && sensorBrightness >= 500:
+	// 	setMonitorBrightness = 60
+	// case sensorBrightness < 500 && sensorBrightness >= 350:
+	// 	setMonitorBrightness = 50
+	// case sensorBrightness < 350 && sensorBrightness >= 300:
+	// 	setMonitorBrightness = 30
+	// case sensorBrightness < 300 && sensorBrightness >= 220:
+	// 	setMonitorBrightness = 20
+	// case sensorBrightness < 220 && sensorBrightness >= 150:
+	// 	setMonitorBrightness = 10
+	// case sensorBrightness < 150:
+	// 	setMonitorBrightness = 0
+	// }
+
+	var coef float64 = 0.14285714285714285
+
+	// Set minumum brightness values
+	if sensorBrightness >= 65 {
+		setMonitorBrightness = int(math.Round(float64(sensorBrightness) * coef))
+		setLaptopBrightness = (setMonitorBrightness * maxBrightnessLaptop) / 100
+	} else {
+		setMonitorBrightness = 0
+		setLaptopBrightness = 1000
+	}
+
+	// Check if values have overflowed
+	if setMonitorBrightness > 100 || setLaptopBrightness > maxBrightnessLaptop {
+		setMonitorBrightness = 100
+		setLaptopBrightness = maxBrightnessLaptop
+	}
+
+	// Send command only if previous set value was different by two
+	// Intention is to avoid frequent brightness updates
+	if math.Abs(float64(previousSetMonitorBrightness-setMonitorBrightness)) > 2 {
+		monBrightStr := strconv.Itoa(setMonitorBrightness)
+		// laptopBrightStr := strconv.Itoa(setLaptopBrightness)
+
+		log.Printf("Sending brightness command %d, laptop = %d", setMonitorBrightness, setLaptopBrightness)
+
+		// go utils.Execute("ssh", "thinkpadx1-extreme", "ddcutil --bus 13 setvcp 10 "+monBrightStr)
+		go utils.Execute("ssh", "thinkpad-t480", "ddcutil --bus 14 setvcp 0 "+monBrightStr)
 
 		previousSetMonitorBrightness = setMonitorBrightness
 	}

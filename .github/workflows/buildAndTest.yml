@@ -13,6 +13,7 @@ jobs:
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
       SYSTEM_1_ADDRESS: ${{ secrets.SYSTEM_1_ADDRESS }}
       SYSTEM_2_ADDRESS: ${{ secrets.SYSTEM_2_ADDRESS }}
+      SYSTEM_3_ADDRESS: ${{ secrets.SYSTEM_3_ADDRESS }}
 
     steps:
       - name: Install Go
@@ -30,4 +31,4 @@ jobs:
         run: chmod +x .github/workflows/deployScript.sh && 
           ./.github/workflows/deployScript.sh 
             $TELEGRAM_API_KEY $ESP8266_ADDRESS_PORT 
-              $SYSTEM_1_ADDRESS $SYSTEM_2_ADDRESS
+              $SYSTEM_1_ADDRESS $SYSTEM_2_ADDRESS $SYSTEM_3_ADDRESS 
