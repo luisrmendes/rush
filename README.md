@@ -30,3 +30,9 @@ lights_off - Turns off sockets 1 and 2
 disable_brightness_auto_control - Disable automatic brightness control  
 enable_brightness_auto_control - Enable automatic brightness control  
 get_system_status - Get system status
+
+## ESP8266 PIN configuration
+#define LED_1_PIN 0
+#define LED_2_PIN 4
+#define LED_3_PIN 3
+#define LED_4_PIN 5
