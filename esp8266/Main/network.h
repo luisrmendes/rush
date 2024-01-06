@@ -23,8 +23,17 @@ const int serverPort = 4080;
 WiFiServer server(serverPort);
 WiFiClient client;
 
+// Set your Static IP address
+IPAddress local_IP(192, 168, 1, 69);
+// Set your Gateway IP address
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 0, 0);
 
 int setupNetwork(void) {
+  // Configures static IP address
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    Serial.println("Failed to configure static ip address");
+  }
   WiFi.mode(WIFI_STA);               /* station */
   wifi_set_sleep_type(NONE_SLEEP_T); /* LIGHT_SLEEP_T and MODE_SLEEP_T */
   Serial.print("Connecting to ");
