@@ -42,8 +42,9 @@ go run main.go
 - wol  
 - Requires desktop i2c monitor bus numbers  
 - gnu-netcat
+- Currently using .ssh/config file
 
-## Client Side Brightness Control Dependencies  
+## Desktop Brightness Control Dependencies  
 
 - ddcutil  
 - i2c-tools  
