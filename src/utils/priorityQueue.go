@@ -13,19 +13,19 @@ type PriorityQueue []PqElement
 
 func SearchPQElement(pq PriorityQueue, elemName string) (int, error) {
 	if len(pq) == 0 {
-		return -1, fmt.Errorf("Cannot search an empty pq!")
+		return -1, fmt.Errorf("cannot search an empty pq")
 	}
 	for i, v := range pq {
 		if v.Name == elemName {
 			return i, nil
 		}
 	}
-	return -1, fmt.Errorf("Element %s not found", elemName)
+	return -1, fmt.Errorf("element %s not found", elemName)
 }
 
 func RemovePQElement(pq *PriorityQueue, elemName string) error {
 	if len(*pq) == 0 {
-		return fmt.Errorf("Priority Queue is empty!")
+		return fmt.Errorf("priority Queue is empty")
 	}
 	var i = 0
 	for _, v := range *pq {
@@ -36,7 +36,7 @@ func RemovePQElement(pq *PriorityQueue, elemName string) error {
 	}
 
 	if i == len(*pq) {
-		return fmt.Errorf("Element with name %s not found!", elemName)
+		return fmt.Errorf("element with name %s not found", elemName)
 	}
 
 	newSlice := append((*pq)[:i], (*pq)[i+1:]...)
@@ -66,7 +66,7 @@ func InsertPQElement(pq *PriorityQueue, newElement PqElement) {
 		return
 	}
 
-	// Why the f I cannot index an pass by reference array??
+	// Why the f i cannot index a pass by reference array??
 
 	var pqCopy = *pq
 	var pqCopy2 PriorityQueue

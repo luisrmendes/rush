@@ -1,12 +1,12 @@
-module example.com/main
+module rush/main
 
 go 1.18
 
 require (
-	example.com/devicesController v0.0.0-00010101000000-000000000000
-	example.com/sensorDataHandler v0.0.0-00010101000000-000000000000
-	example.com/telegramBot v0.0.0-00010101000000-000000000000
-	example.com/utils v0.0.0-00010101000000-000000000000
+	rush/devicesController v0.0.0-00010101000000-000000000000
+	rush/esp8266Controller v0.0.0-00010101000000-000000000000
+	rush/telegramBot v0.0.0-00010101000000-000000000000
+	rush/utils v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -19,10 +19,10 @@ require (
 	golang.org/x/sys v0.3.0 // indirect
 )
 
-replace example.com/telegramBot => ../telegramBot
+replace rush/telegramBot => ../telegramBot
 
-replace example.com/sensorDataHandler => ../sensorDataHandler
+replace rush/esp8266Controller => ../esp8266Controller
 
-replace example.com/utils => ../utils
+replace rush/utils => ../utils
 
-replace example.com/devicesController => ../devicesController
+replace rush/devicesController => ../devicesController

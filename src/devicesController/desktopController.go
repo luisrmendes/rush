@@ -1,15 +1,15 @@
 package devicesController
 
 import (
-	"example.com/utils"
-	"github.com/go-ping/ping"
 	"log"
 	"math"
 	"net"
 	"os"
+	"rush/utils"
 	"strconv"
 	"sync"
 	"time"
+	"github.com/go-ping/ping"
 )
 
 var setLaptopBrightness = 0

@@ -1,16 +1,17 @@
-package sensorDataHandler
+package esp8266Controller
 
 import (
-	"example.com/devicesController"
 	"log"
 	"net"
 	"os"
+	"rush/devicesController"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
+// Data types received by the ESP8266 controller
 type SensorData struct {
 	Brightness  int
 	temperature int
@@ -18,16 +19,15 @@ type SensorData struct {
 }
 
 var handleSensorDataDelay time.Duration = 1000000000 // nanoseconds
-var logSensorDataInterval time.Duration = 2 // minutes
+var logSensorDataInterval time.Duration = 2          // minutes
 
-// Looping function
+// Pooling daemon
 // Reads sensor data from ESP8266 TCP server
 // Handles if TCP server shutdowns
-// Calls handleSensorData
 func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	// Fetch environment variables
 	esp8266_address_port := os.Getenv("ESP8266_ADDRESS_PORT")
-	
+
 	for {
 		connection, err := net.Dial("tcp", esp8266_address_port)
 		if err != nil {
@@ -53,10 +53,9 @@ func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
 			sData.humidity, _ = strconv.Atoi(splitSensorData[3])
 		}
 	}
-	defer wg.Done()
 }
 
-// Handle sensor data
+// Calls tasks to react to esp8266 data changes
 func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 	ticker := time.NewTicker(time.Minute * logSensorDataInterval)
 	for {
@@ -78,5 +77,4 @@ func HandleSensorData(wg *sync.WaitGroup, sData *SensorData) {
 		go devicesController.ControlWorkDesktopBrightness(sData.Brightness)
 		go devicesController.ControlKbdBacklightLaptop(sData.Brightness)
 	}
-	defer wg.Done()
 }

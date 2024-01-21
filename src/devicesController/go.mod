@@ -1,11 +1,11 @@
-module example.com/devicesController
+module rush/devicesController
 
 go 1.18
 
-replace example.com/utils => ../utils
+replace rush/utils => ../utils
 
 require (
-	example.com/utils v0.0.0-00010101000000-000000000000
+	rush/utils v0.0.0-00010101000000-000000000000
 	github.com/go-ping/ping v1.1.0
 )
 

@@ -1,4 +1,4 @@
-module example.com/utils
+module rush/utils
 
 go 1.18
 
