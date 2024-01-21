@@ -4,5 +4,5 @@ telegram/__pycache__
 telegram/__pycache__/api_key.cpython-36.pyc
 .env
 src/main/main
-esp8266/config.h
+esp8266/Main/config.h
 src/pkg
