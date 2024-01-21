@@ -104,7 +104,7 @@ func UpdateSystem1Status(wg *sync.WaitGroup, brightness int, frequency float32) 
 }
 
 // My best solution to check if a system is running Windows
-// Test if a system has rpc by checking for a daemon handling tcp port 135
+// Test if a system has RPC by checking tcp port 135
 func checksIfSystemHasRPC(address string) bool {
 	conn, err := net.DialTimeout("tcp", address+":135", 1*time.Second)
 	if err != nil {

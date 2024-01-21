@@ -18,8 +18,8 @@ func main() {
 
 	go telegramBot.PollUpdates(wg)
 
-	go devicesController.UpdateDesktop1Status(wg, sData.Brightness, 1)
-	go devicesController.UpdateDesktop2Status(wg, 1)
+	go devicesController.UpdateSystem1Status(wg, sData.Brightness, 1)
+	go devicesController.UpdateSystem2Status(wg, 1)
 	// go devicesController.UpdateDesktop3Status(wg, sData.Brightness, 1)
 
 	go esp8266Controller.ReadSensorData(wg, &sData)
