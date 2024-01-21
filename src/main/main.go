@@ -1,10 +1,10 @@
 package main
 
 import (
-	"example.com/devicesController"
-	"example.com/sensorDataHandler"
-	"example.com/telegramBot"
-	"example.com/utils"
+	"rush/devicesController"
+	"rush/esp8266Controller"
+	"rush/telegramBot"
+	"rush/utils"
 	"sync"
 	// "fmt"
 )
@@ -13,7 +13,7 @@ func main() {
 	utils.ParseEnvVars()
 
 	var wg = &sync.WaitGroup{}
-	var sData sensorDataHandler.SensorData
+	var sData esp8266Controller.SensorData
 	wg.Add(6)
 
 	go telegramBot.PollUpdates(wg)
@@ -22,9 +22,9 @@ func main() {
 	go devicesController.UpdateDesktop2Status(wg, 1)
 	// go devicesController.UpdateDesktop3Status(wg, sData.Brightness, 1)
 
-	go sensorDataHandler.ReadSensorData(wg, &sData)
+	go esp8266Controller.ReadSensorData(wg, &sData)
 
-	go sensorDataHandler.HandleSensorData(wg, &sData)
+	go esp8266Controller.HandleSensorData(wg, &sData)
 
 	wg.Wait()
 }

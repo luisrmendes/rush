@@ -1,11 +1,11 @@
 package telegramBot
 
 import (
-	"example.com/devicesController"
-	"example.com/utils"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
 	"os"
+	"rush/devicesController"
+	"rush/utils"
 	"sync"
 )
 
@@ -13,13 +13,13 @@ type Command struct {
 	name string
 }
 
-// Implements each telegram command
+// Implements functionality of each telegram command
 func (c Command) Handler() string {
 	switch c.name {
 
 	case "get_system_status":
 		return devicesController.GetSystemStatus()
-		
+
 	case "enable_brightness_auto_control":
 		return devicesController.EnableAutomaticBrightnessControl()
 
@@ -45,14 +45,14 @@ func (c Command) Handler() string {
 	}
 }
 
-func HandleCommands(receivedMessage *tgbotapi.Message) string {
+func HandleTelegramCommands(receivedMessage *tgbotapi.Message) string {
 	log.Printf("Received a command: %s", receivedMessage.Text)
 	command := Command{receivedMessage.Text[1:]}
 	return command.Handler()
 }
 
-// Polls updates from the bot API
-// Calls HandleUpdates to handle... updates
+// Pooling daemon
+// Receives telegram bot updates, calls HandleTelegramCommands
 func PollUpdates(wg *sync.WaitGroup) {
 	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
 
@@ -61,13 +61,9 @@ func PollUpdates(wg *sync.WaitGroup) {
 		log.Println(err)
 	}
 
-	// bot.Debug = true
-
 	log.Printf("Authorized on account %s", bot.Self.UserName)
-
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 10
-
 	updates := bot.GetUpdatesChan(u)
 
 	// Welcome message
@@ -77,7 +73,7 @@ func PollUpdates(wg *sync.WaitGroup) {
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 			if len(update.Message.Text) > 0 && update.Message.Text[0:1] == "/" {
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, HandleCommands(update.Message))
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, HandleTelegramCommands(update.Message))
 				// msg.ReplyToMessageID = update.Message.MessageID
 				bot.Send(msg)
 			} else {
@@ -87,5 +83,4 @@ func PollUpdates(wg *sync.WaitGroup) {
 			}
 		}
 	}
-	defer wg.Done()
 }
