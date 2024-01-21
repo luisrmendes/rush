@@ -1,7 +1,7 @@
 # Rush
 
 My monolithic project to control everything in my house.  
-Handles Telegram bot chat API and climate data through ESP8266 sensors. Controls desktop's brightness automatically, telegram chat commands and eletric outlet control with RaspberryPi and Energienie sockets.
+Handles Telegram bot chat API and climate data through ESP8266 sensors. Controls desktop's brightness automatically, telegram chat commands and electric outlet control with RaspberryPi and Energienie sockets.
 Using GitHub actions for automatic deploy.
 
 ## Telegram Bot commands and description  
