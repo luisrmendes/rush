@@ -1,6 +1,6 @@
-# Rush
-
 [![Build And Test](https://github.com/luisrmendes/rush/actions/workflows/buildAndTest.yml/badge.svg)](https://github.com/luisrmendes/rush/actions/workflows/buildAndTest.yml)
+
+# Rush
 
 My monolithic project to control everything in my house.  
 Handles Telegram bot chat API and climate data through ESP8266 sensors. Controls desktop's brightness automatically, telegram chat commands and electric outlet control with RaspberryPi and Energienie sockets.
