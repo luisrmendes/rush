@@ -21,7 +21,7 @@ type SensorData struct {
 var handleSensorDataDelay time.Duration = 1000000000 // nanoseconds
 var logSensorDataInterval time.Duration = 2          // minutes
 
-// Pooling daemon
+// Polling daemon
 // Reads sensor data from ESP8266 TCP server
 // Handles if TCP server shutdowns
 func ReadSensorData(wg *sync.WaitGroup, sData *SensorData) {
