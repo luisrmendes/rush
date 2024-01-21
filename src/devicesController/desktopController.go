@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
+	"github.com/go-ping/ping"
 )
 
 var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
