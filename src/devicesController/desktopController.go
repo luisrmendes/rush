@@ -1,6 +1,12 @@
 package devicesController
 
+// Desktop Controller
+// System 1 -> ThinkpadX1Extreme with keyboard backlight, external monitor
+// System 2 -> Ryzen 3600 Desktop running Windows
+// System 3 -> Ryzen 3600 Desktop running Arch
+
 import (
+	"github.com/go-ping/ping"
 	"log"
 	"math"
 	"net"
@@ -9,98 +15,92 @@ import (
 	"strconv"
 	"sync"
 	"time"
-	"github.com/go-ping/ping"
 )
 
-var setLaptopBrightness = 0
-var previousSetMonitorBrightness = 1
-var setMonitorBrightness = 0
-var previousSetKbdBrightness = 0
-var setKbdBrightness = 0
 var workDesktopBrightnessCtrlPQ = utils.NewPriorityQueue()
-var isDesktop1online = false
-var isDesktop2online = false
-var isDesktop3online = false
 
 // Pings for desktop 3 status every <frequency> seconds
-// Updates global isDesktop3online variable
-func UpdateDesktop3Status(wg *sync.WaitGroup, brightness int, frequency float32) {
+// Updates global isSystem3online variable
+var isSystem3online = false
+
+func UpdateSystem3Status(wg *sync.WaitGroup, brightness int, frequency float32) {
 	pqElementName := "offline"
 	for {
 		_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, pqElementName)
 		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_3_ADDRESS"))
 		// Log if desktop 2 changes status
-		if isOnline && !isDesktop3online {
+		if isOnline && !isSystem3online {
 			log.Println("Desktop 3 is online")
-		} else if !isOnline && isDesktop3online {
+		} else if !isOnline && isSystem3online {
 			log.Println("Desktop 3 is offline")
 		}
 
-		isDesktop3online = isOnline
+		isSystem3online = isOnline
 		time.Sleep(time.Duration(frequency) * time.Second)
 
 		// If the system is online and the pq has the offline element
-		if isDesktop3online && err == nil {
+		if isSystem3online && err == nil {
 			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
 			// update brightness control when changing status
 			ControlKbdBacklightLaptop(brightness)
 			ControlWorkDesktopBrightness(brightness)
-		} else if !isDesktop3online && err != nil {
+		} else if !isSystem3online && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(2, pqElementName))
 		}
 		time.Sleep(time.Duration(frequency) * time.Second)
 	}
-	defer wg.Done()
 }
 
 // Pings for desktop 2 status every <frequency> seconds
-// Updates global isDesktop2online variable
-func UpdateDesktop2Status(wg *sync.WaitGroup, frequency float32) {
+// Updates global isSystem2online variable
+var isSystem2online = false
+
+func UpdateSystem2Status(wg *sync.WaitGroup, frequency float32) {
 	for {
 		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_2_ADDRESS"))
 		// Log if desktop 2 changes status
-		if isOnline && !isDesktop2online {
+		if isOnline && !isSystem2online {
 			log.Println("Desktop 2 is online")
-		} else if !isOnline && isDesktop2online {
+		} else if !isOnline && isSystem2online {
 			log.Println("Desktop 2 is offline")
 		}
-		isDesktop2online = isOnline
+		isSystem2online = isOnline
 		time.Sleep(time.Duration(frequency) * time.Second)
 	}
-	defer wg.Done()
 }
 
 // Pings for desktop 1 status every <frequency> seconds
-// Updates global isDesktop1online variable
+// Updates global isSystem1online variable
 // Updates brightness control priority queue with (offline, 1) element
 // Sends brightness control command when changing offline to online
-func UpdateDesktop1Status(wg *sync.WaitGroup, brightness int, frequency float32) {
+var isSystem1online = false
+
+func UpdateSystem1Status(wg *sync.WaitGroup, brightness int, frequency float32) {
 	pqElementName := "offline"
 	for {
 		_, err := utils.SearchPQElement(workDesktopBrightnessCtrlPQ, pqElementName)
 		isOnline := checkIfSystemIsOnline(os.Getenv("SYSTEM_1_ADDRESS"))
 
 		// Log if desktop 2 changes status
-		if isOnline && !isDesktop1online {
+		if isOnline && !isSystem1online {
 			log.Println("Desktop 1 is online")
-		} else if !isOnline && isDesktop1online {
+		} else if !isOnline && isSystem1online {
 			log.Println("Desktop 1 is offline")
 		}
 
-		isDesktop1online = isOnline
+		isSystem1online = isOnline
 
 		// If the system is online and the pq has the offline element
-		if isDesktop1online && err == nil {
+		if isSystem1online && err == nil {
 			utils.RemovePQElement(&workDesktopBrightnessCtrlPQ, pqElementName)
 			// update brightness control when changing status
 			ControlKbdBacklightLaptop(brightness)
 			ControlWorkDesktopBrightness(brightness)
-		} else if !isDesktop1online && err != nil {
+		} else if !isSystem1online && err != nil {
 			utils.InsertPQElement(&workDesktopBrightnessCtrlPQ, *utils.NewPQElement(1, pqElementName))
 		}
 		time.Sleep(time.Duration(frequency) * time.Second)
 	}
-	defer wg.Done()
 }
 
 // My best solution to check if a system is running Windows
@@ -121,21 +121,20 @@ func checkIfSystemIsOnline(address string) bool {
 	pinger, err := ping.NewPinger(address)
 	if err != nil {
 		log.Printf("Could not create new pinger. Err: %s", err)
+		return false
 	}
+
 	pinger.Count = 1
 	pinger.Timeout = 1 * time.Second
 	err = pinger.Run() // Blocks until finished.
 	if err != nil {
-		log.Panicf("Could not run pinger. Err: %s", err)
+		log.Printf("Could not run pinger. Err: %s", err)
+		return false
 	}
 
 	stats := pinger.Statistics().PacketLoss
 
-	if stats == 100 {
-		return false
-	} else {
-		return true
-	}
+	return stats != 100
 }
 
 // Tests if a system has ssh by checking for a daemon handling tcp port 22
@@ -200,7 +199,11 @@ func DisableAutomaticBrightnessControl() string {
 	}
 }
 
+var setKbdBrightness = 0
+var previousSetKbdBrightness = 0
+
 func ControlKbdBacklightLaptop(sensorBrightness int) {
+	// ?
 	if len(workDesktopBrightnessCtrlPQ) > 0 {
 		return
 	}
@@ -223,37 +226,23 @@ func ControlKbdBacklightLaptop(sensorBrightness int) {
 	}
 }
 
+var setMonitorBrightness = 0
+var setLaptopBrightness = 0
+var previousSetMonitorBrightness = 1
+
 func ControlWorkDesktopBrightness(sensorBrightness int) {
 	if len(workDesktopBrightnessCtrlPQ) > 0 {
 		return
 	}
 
+	// Specific ThinkpadX1-Extreme value
 	maxBrightnessLaptop := 19393
 
-	// TODO: Maybe some linear regression stuff would be cool, increase granularity
-	// switch {
-	// case sensorBrightness >= 800:
-	// 	setMonitorBrightness = 100
-	// case sensorBrightness < 800 && sensorBrightness >= 600:
-	// 	setMonitorBrightness = 80
-	// case sensorBrightness < 600 && sensorBrightness >= 500:
-	// 	setMonitorBrightness = 60
-	// case sensorBrightness < 500 && sensorBrightness >= 350:
-	// 	setMonitorBrightness = 50
-	// case sensorBrightness < 350 && sensorBrightness >= 300:
-	// 	setMonitorBrightness = 30
-	// case sensorBrightness < 300 && sensorBrightness >= 220:
-	// 	setMonitorBrightness = 20
-	// case sensorBrightness < 220 && sensorBrightness >= 150:
-	// 	setMonitorBrightness = 10
-	// case sensorBrightness < 150:
-	// 	setMonitorBrightness = 0
-	// }
-
+	// Linear regression coeficient of the brightness to set and ambient brightness
 	var coef float64 = 0.14285714285714285
 
 	// Set minumum brightness values
-	if sensorBrightness >= 65 {
+	if sensorBrightness >= 60 {
 		setMonitorBrightness = int(math.Round(float64(sensorBrightness) * coef))
 		setLaptopBrightness = (setMonitorBrightness * maxBrightnessLaptop) / 100
 	} else {
@@ -268,7 +257,7 @@ func ControlWorkDesktopBrightness(sensorBrightness int) {
 	}
 
 	// Send command only if previous set value was different by two
-	// Intention is to avoid frequent brightness updates
+	// 	to avoid frequent brightness updates
 	if math.Abs(float64(previousSetMonitorBrightness-setMonitorBrightness)) > 2 {
 		monBrightStr := strconv.Itoa(setMonitorBrightness)
 		laptopBrightStr := strconv.Itoa(setLaptopBrightness)

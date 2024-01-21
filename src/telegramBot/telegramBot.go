@@ -54,9 +54,7 @@ func HandleTelegramCommands(receivedMessage *tgbotapi.Message) string {
 // Pooling daemon
 // Receives telegram bot updates, calls HandleTelegramCommands
 func PollUpdates(wg *sync.WaitGroup) {
-	telegram_api_key := os.Getenv("TELEGRAM_API_KEY")
-
-	bot, err := tgbotapi.NewBotAPI(telegram_api_key)
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_API_KEY"))
 	if err != nil {
 		log.Println(err)
 	}

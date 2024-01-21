@@ -7,6 +7,7 @@ import (
 	"os/exec"
 )
 
+// Test checks if .env file exists
 func ParseEnvVars() {
 	testEnvVar := os.Getenv("ESP8266_ADDRESS_PORT")
 
