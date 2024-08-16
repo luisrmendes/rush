@@ -8,6 +8,34 @@ pub enum Operation {
     WakeupDesktop,
 }
 
+pub mod state_machine {
+    pub struct Node<S> {
+        pub state: S,
+    }
+
+    pub struct Connecting;
+    pub struct Connected;
+    pub struct Disconnected;
+
+    impl Node<Connecting> {
+        pub fn new() -> Node<Connecting> {
+            let follower = Node {
+                state: Connecting {},
+            };
+            follower
+        }
+    }
+
+    impl From<Node<Connecting>> for Node<Connected> {
+        fn from(state: Node<Connecting>) -> Node<Connected> {
+            let candidate = Node {
+                state: Connected {},
+            };
+            candidate
+        }
+    }
+}
+
 pub mod commands {
     use crate::Operation;
 
@@ -114,6 +142,13 @@ pub mod office_env {
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
+    use crate::state_machine::*;
+
+    let follower = state_machine::Node {
+        state: Connecting {},
+    };
+    let candidate = Node::<Connected>::from(follower);
+
     let stream = TcpStream::connect("192.168.1.69:4080").await?;
     println!("Connected to the server!");
 
