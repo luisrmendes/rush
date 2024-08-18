@@ -1,6 +1,8 @@
 use tokio::net::TcpStream;
 use tokio::time::timeout;
 use tokio::time::Duration;
+
+use crate::Context;
 enum State {
     Connecting,
     Connected,
@@ -9,6 +11,7 @@ enum State {
 
 pub struct Fsm {
     state: State,
+    context: Context,
     stream: Option<TcpStream>,
 }
 
@@ -20,9 +23,10 @@ struct OfficeEnv {
 }
 
 impl Fsm {
-    pub fn new() -> Self {
+    pub fn new(ctx: Context) -> Self {
         Self {
             state: State::Disconnected,
+            context: ctx,
             stream: None,
         }
     }
@@ -38,7 +42,7 @@ impl Fsm {
     }
 
     async fn connect(&mut self) {
-        let address = "192.168.1.99:4080";
+        let address = &self.context.env_sensor_address_port;
         println!("Attempting to connect to {address}");
 
         match TcpStream::connect(address).await {
