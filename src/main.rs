@@ -10,6 +10,7 @@ use telegram_bot::TelegramBot;
 #[derive(Clone)]
 struct System {
     ip: String,
+    mac: Option<String>,
 }
 
 #[derive(Clone)]
@@ -24,9 +25,10 @@ fn load_env_vars() -> Context {
     // Check for the expected env vars
     let mut env_var_map = HashMap::from([
         ("ESP8266_ADDRESS_PORT", String::new()),
-        ("SYSTEM0", String::new()),
-        ("SYSTEM1", String::new()),
-        ("SYSTEM2", String::new()),
+        ("SYSTEM0_IP_ADDR", String::new()),
+        ("SYSTEM1_IP_ADDR", String::new()),
+        ("SYSTEM1_MAC", String::new()),
+        ("SYSTEM2_IP_ADDR", String::new()),
     ]);
 
     for (env_var, value) in env_var_map.iter_mut() {
@@ -42,12 +44,27 @@ fn load_env_vars() -> Context {
             .get("ESP8266_ADDRESS_PORT")
             .expect("Why is this empty?")
             .to_string(),
-        systems: vec![System {
-            ip: env_var_map
-                .get("SYSTEM0")
-                .expect("Why is this empty?")
-                .to_string(),
-        }],
+        systems: vec![
+            System {
+                mac: None,
+                ip: env_var_map
+                    .get("SYSTEM0_IP_ADDR")
+                    .expect("Why is this empty?")
+                    .to_string(),
+            },
+            System {
+                mac: Some(
+                    env_var_map
+                        .get("SYSTEM1_MAC")
+                        .expect("Why is this empty?")
+                        .to_string(),
+                ),
+                ip: env_var_map
+                    .get("SYSTEM1_IP_ADDR")
+                    .expect("Why is this empty?")
+                    .to_string(),
+            },
+        ],
     }
 
     //println!("Production Url: {}", &esp8266_address);

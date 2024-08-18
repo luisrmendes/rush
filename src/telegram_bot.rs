@@ -25,9 +25,15 @@ impl TelegramBot {
                 };
                 output
             }
-
-            Operation::GetIpv6 | Operation::WakeupDesktop => {
-                return Err("Not implemented".to_owned());
+            Operation::WakeupDesktop => {
+                let output =
+                    match commands::wakeup(ctx.systems[0].clone(), ctx.systems[1].clone()).await {
+                        Ok(output) => Ok(output),
+                        Err(e) => {
+                            return Err(format!("Error: {e}"));
+                        }
+                    };
+                output
             }
         }
     }
@@ -39,7 +45,6 @@ impl TelegramBot {
         };
         match parsed_msg {
             "/ipv4" => Some(Operation::GetIpv4),
-            "/ipv6" => Some(Operation::GetIpv6),
             "/desktop_wakeup" => Some(Operation::WakeupDesktop),
             _ => None,
         }
