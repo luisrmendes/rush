@@ -1,19 +1,29 @@
 mod commands;
-mod office_env_fsm;
+mod desktop_control_fsm;
+mod get_env_fsm;
 mod telegram_bot;
+
+use desktop_control_fsm::Fsm as desktop_ctrl_fsm;
 use dotenv::dotenv;
-use office_env_fsm::Fsm;
-use std::collections::HashMap;
+use get_env_fsm::Fsm as env_fsm;
+use std::{collections::HashMap, sync::Arc};
 use telegram_bot::TelegramBot;
 use tokio::{
     signal,
-    sync::{broadcast, oneshot},
+    sync::{broadcast, Mutex},
 };
 
 #[derive(Clone)]
 struct System {
     ip: String,
     mac: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+struct OfficeEnv {
+    brightness: u32,
+    temperature: u32,
+    humidity: u32,
 }
 
 #[derive(Clone)]
@@ -77,7 +87,16 @@ fn load_env_vars() -> Context {
 async fn main() {
     let ctx = load_env_vars();
 
-    let mut office_env_fsm = Fsm::new(ctx.clone());
+    // set some default data on office_env
+    let office_env = OfficeEnv {
+        brightness: 0,
+        temperature: 0,
+        humidity: 0,
+    };
+    let office_env = Arc::new(Mutex::new(office_env));
+
+    let mut env_fsm = env_fsm::new(ctx.clone(), office_env.clone());
+    let mut desktop_ctrl_fsm = desktop_ctrl_fsm::new(ctx.systems[1].clone(), office_env.clone());
     let telegram_bot = TelegramBot::new(ctx.clone());
 
     // Create a broadcast channel for shutdown signal
@@ -87,25 +106,36 @@ async fn main() {
     let mut shutdown_rx1 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle1 = tokio::spawn(async move {
         tokio::select! {
-            _ = office_env_fsm.run() => {},
+            _ = env_fsm.run() => {},
             _ = shutdown_rx1.recv() => {
-                println!("office_env_fsm received shutdown signal");
+                println!("env_fsm received shutdown signal");
             }
         }
     });
 
-    // Task 2: Telegram bot
+    // Task 2: Desktop control FSM
     let mut shutdown_rx2 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle2 = tokio::spawn(async move {
         tokio::select! {
-            _ = telegram_bot.run() => {},
+            _ = desktop_ctrl_fsm.run() => {},
             _ = shutdown_rx2.recv() => {
+                println!("desktop_ctrl_fsm received shutdown signal");
+            }
+        }
+    });
+
+    // Task 3: Telegram bot
+    let mut shutdown_rx3 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    let handle3 = tokio::spawn(async move {
+        tokio::select! {
+            _ = telegram_bot.run() => {},
+            _ = shutdown_rx3.recv() => {
                 println!("telegram_bot received shutdown signal");
             }
         }
     });
 
-    // Task 3: Listen for Ctrl-C and broadcast the shutdown signal
+    // Task 4: Listen for Ctrl-C and broadcast the shutdown signal
     let shutdown_listener = tokio::spawn(async move {
         signal::ctrl_c().await.expect("Failed to listen for Ctrl-C");
         println!("Ctrl-C received, sending shutdown signal...");
@@ -113,5 +143,5 @@ async fn main() {
     });
 
     // Await all tasks to complete
-    let _ = tokio::try_join!(handle1, handle2, shutdown_listener);
+    let _ = tokio::try_join!(handle1, handle2, handle3, shutdown_listener);
 }

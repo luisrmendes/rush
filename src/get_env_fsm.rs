@@ -1,8 +1,13 @@
+use std::sync::Arc;
+
 use tokio::net::TcpStream;
+use tokio::sync::Mutex;
+use tokio::time::sleep;
 use tokio::time::timeout;
 use tokio::time::Duration;
 
 use crate::Context;
+use crate::OfficeEnv;
 enum State {
     Connecting,
     Connected,
@@ -12,21 +17,16 @@ enum State {
 pub struct Fsm {
     state: State,
     context: Context,
+    env_data: Arc<Mutex<OfficeEnv>>,
     stream: Option<TcpStream>,
 }
 
-#[derive(Debug)]
-struct OfficeEnv {
-    brightness: u16,
-    temperature: u16,
-    humidity: u16,
-}
-
 impl Fsm {
-    pub fn new(ctx: Context) -> Self {
+    pub fn new(ctx: Context, env_data: Arc<Mutex<OfficeEnv>>) -> Self {
         Self {
             state: State::Disconnected,
             context: ctx,
+            env_data: env_data,
             stream: None,
         }
     }
@@ -34,14 +34,14 @@ impl Fsm {
     pub async fn run(&mut self) {
         loop {
             match self.state {
-                State::Connecting => self.connect().await,
+                State::Connecting => self.connecting().await,
                 State::Connected => self.connected().await,
                 State::Disconnected => self.disconnected(),
             }
         }
     }
 
-    async fn connect(&mut self) {
+    async fn connecting(&mut self) {
         let address = &self.context.env_sensor_address_port;
         println!("Attempting to connect to {address}");
 
@@ -53,7 +53,7 @@ impl Fsm {
             }
             Err(e) => {
                 println!("Failed to connect: {e}");
-                self.state = State::Disconnected;
+                sleep(Duration::from_secs(2)).await;
             }
         }
     }
@@ -77,7 +77,8 @@ impl Fsm {
                     return;
                 }
                 Ok(Ok(n)) => {
-                    println!("Received: {}", String::from_utf8_lossy(&buffer[..n]));
+                    // TODO: log into pretty logs
+                    //println!("Received: {}", String::from_utf8_lossy(&buffer[..n]));
                     n
                 }
                 Ok(Err(e)) => {
@@ -92,12 +93,12 @@ impl Fsm {
                 }
             };
 
-        let env_data: Result<Vec<u16>, _> = String::from_utf8_lossy(&buffer[..recv_length])
+        let env_data: Result<Vec<u32>, _> = String::from_utf8_lossy(&buffer[..recv_length])
             .split_whitespace()
             .map(str::parse)
             .collect();
 
-        let _env_data: OfficeEnv = match env_data {
+        let env_data: OfficeEnv = match env_data {
             Ok(env_data) => OfficeEnv {
                 brightness: env_data[1],
                 temperature: env_data[2],
@@ -108,6 +109,9 @@ impl Fsm {
                 return;
             }
         };
+
+        let mut stored_env_data = self.env_data.lock().await;
+        *stored_env_data = env_data;
 
         // TODO: Update data repositories
     }
