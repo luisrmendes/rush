@@ -38,15 +38,15 @@ impl TelegramBot {
         }
     }
 
-    fn parse_commands(text: Option<&str>) -> Option<Operation> {
+    fn parse_commands(text: Option<&str>) -> Result<Operation, String> {
         let parsed_msg: &str = match text {
             Some(msg) => msg,
             None => "",
         };
         match parsed_msg {
-            "/ipv4" => Some(Operation::GetIpv4),
-            "/desktop_wakeup" => Some(Operation::WakeupDesktop),
-            _ => None,
+            "/ipv4" => Ok(Operation::GetIpv4),
+            "/desktop_wakeup" => Ok(Operation::WakeupDesktop),
+            other => Err(format!("Unknown command {other}")),
         }
     }
 
@@ -63,9 +63,11 @@ impl TelegramBot {
                 println!("{:?}", msg.text());
 
                 let command = match Self::parse_commands(msg.text()) {
-                    Some(cmd) => cmd,
-                    None => {
-                        println!("Failed to parse command");
+                    Ok(cmd) => cmd,
+                    Err(e) => {
+                        let reply = format!("Failed to parse command. Error: {e}");
+                        println!("{reply}");
+                        bot.send_message(msg.chat.id, reply).await?;
                         return Ok(());
                     }
                 };
