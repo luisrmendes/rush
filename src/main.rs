@@ -10,11 +10,9 @@ pub enum Operation {
 pub mod commands {
     use crate::Operation;
 
-    pub fn execute_commands(op: Operation) {
+    pub fn execute(op: &Operation) {
         match op {
-            Operation::GetIpv4 => {}
-            Operation::GetIpv6 => {}
-            Operation::WakeupDesktop => {}
+            Operation::GetIpv4 | Operation::GetIpv6 | Operation::WakeupDesktop => {}
         }
     }
 }
@@ -43,7 +41,7 @@ pub mod telegram {
 
         let bot = Bot::from_env();
 
-        return teloxide::repl(bot, |bot: Bot, msg: Message| async move {
+        teloxide::repl(bot, |bot: Bot, msg: Message| async move {
             println!("{:?}", msg.text());
 
             let _command = parse_commands(msg.text());
