@@ -79,14 +79,11 @@ impl Fsm {
 
         let _laptop_mon_brightness =
             get_laptop_mon_brightness(self.env_data.lock().await.brightness);
-        let _main_mon_brightness =
-            get_main_mon_brightness(self.env_data.lock().await.brightness);
+        let _main_mon_brightness = get_main_mon_brightness(self.env_data.lock().await.brightness);
 
         // let command = "echo 1000 > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 30";
-        let command = "ls && ls";
 
-        let output = match session.command("ls").output().await {
-        // let output = match session.command("echo").arg("1000").arg(">").arg("/sys/class/backlight/intel_backlight/brightness").output().await {
+        let output = match session.shell("echo 1000 > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 30").output().await {
             Ok(output) => output,
             Err(e) => {
                 println!("Error: {e:?}");
