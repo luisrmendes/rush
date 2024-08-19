@@ -24,11 +24,11 @@ pub struct Fsm {
     session: Option<Session>,
 }
 
-fn calculate_laptop_mon_brightness(env_brightness: u32) -> u32 {
+fn get_laptop_mon_brightness(env_brightness: u32) -> u32 {
     return 0;
 }
 
-fn calculate_main_mon_brightness(env_brightness: u32) -> u32 {
+fn get_main_mon_brightness(env_brightness: u32) -> u32 {
     return 0;
 }
 
@@ -78,14 +78,15 @@ impl Fsm {
         println!("{:?}", self.env_data.lock().await);
 
         let _laptop_mon_brightness =
-            calculate_laptop_mon_brightness(self.env_data.lock().await.brightness);
+            get_laptop_mon_brightness(self.env_data.lock().await.brightness);
         let _main_mon_brightness =
-            calculate_main_mon_brightness(self.env_data.lock().await.brightness);
+            get_main_mon_brightness(self.env_data.lock().await.brightness);
 
         // let command = "echo 1000 > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 30";
         let command = "ls && ls";
 
-        let output = match session.command("echo").arg("1000").arg(">").arg("/sys/class/backlight/intel_backlight/brightness").output().await {
+        let output = match session.command("ls").output().await {
+        // let output = match session.command("echo").arg("1000").arg(">").arg("/sys/class/backlight/intel_backlight/brightness").output().await {
             Ok(output) => output,
             Err(e) => {
                 println!("Error: {e:?}");

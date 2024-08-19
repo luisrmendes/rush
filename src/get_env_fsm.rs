@@ -112,8 +112,6 @@ impl Fsm {
 
         let mut stored_env_data = self.env_data.lock().await;
         *stored_env_data = env_data;
-
-        // TODO: Update data repositories
     }
 
     fn disconnected(&mut self) {
