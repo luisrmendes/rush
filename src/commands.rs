@@ -7,11 +7,22 @@ pub enum Operation {
     WakeupDesktop,
 }
 
+// TODO: Funciton to check if system is online
+pub async fn is_online(target_sys: System) -> bool {
+    match Session::connect(&target_sys.ip, KnownHosts::Strict).await {
+        Ok(_) => return true,
+        Err(_) => return false,
+    };
+}
+
 pub async fn wakeup(executing_sys: System, target_sys: System) -> Result<String, String> {
     let session = match Session::connect(&executing_sys.ip, KnownHosts::Strict).await {
         Ok(session) => session,
         Err(e) => {
-            return Err(format!("Failed ssh connection to {0}. Error: {e}", executing_sys.ip));
+            return Err(format!(
+                "Failed ssh connection to {0}. Error: {e}",
+                executing_sys.ip
+            ));
         }
     };
 
@@ -30,6 +41,8 @@ pub async fn wakeup(executing_sys: System, target_sys: System) -> Result<String,
             return Err(format!("Failed to execute command. Error: {e}"));
         }
     };
+
+    // TODO: confirm that the pc is online
 
     let output = match String::from_utf8(output.stdout) {
         Ok(output) => output,

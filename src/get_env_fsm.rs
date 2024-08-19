@@ -62,7 +62,7 @@ impl Fsm {
         use tokio::io::AsyncReadExt;
 
         let Some(stream) = &mut self.stream else {
-            println!("Failed to connect");
+            println!("Tcp stream is unavailable");
             self.state = State::Disconnected;
             return;
         };
