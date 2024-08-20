@@ -28,29 +28,29 @@ pub struct Fsm {
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
-    let env_brightness = f64::from(env_brightness);
-    let max_mon_brightness: f64 = 19393.0;
+    let env_brightness = env_brightness as f32;
+    let max_mon_brightness: f32 = 19393.0;
     let coef = 0.142_857_15;
 
     if env_brightness <= 50.0 {
         return 1000;
     }
 
-    ((env_brightness * coef * max_mon_brightness) as u32 / 100)
+    (((env_brightness * coef * max_mon_brightness) as u32) / 100)
         .clamp(1000, max_mon_brightness as u32)
 }
 
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn get_main_mon_brightness(env_brightness: u32) -> u32 {
-    let env_brightness = f64::from(env_brightness);
+    let env_brightness = env_brightness as f32;
     let coef = 0.142_857_15;
 
     if env_brightness <= 50.0 {
         return 0;
     }
 
-    ((env_brightness * coef).to_bits()).clamp(0, 100) as u32
+    ((env_brightness * coef) as u32).clamp(0, 100)
 }
 
 /// Returns `Err()` if the calcuated brightness is the same as the previous one
