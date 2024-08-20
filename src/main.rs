@@ -22,6 +22,7 @@ struct System {
     mac: Option<String>,
 }
 
+#[allow(dead_code)]
 #[derive(Clone, Debug)]
 struct OfficeEnv {
     brightness: u32,
