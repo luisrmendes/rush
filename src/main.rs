@@ -98,6 +98,8 @@ fn load_env_vars() -> Context {
 async fn main() {
     let ctx = load_env_vars();
 
+    // TODO: Check if we have ssh access to all pcs
+
     println!("{}", commands::is_online(ctx.systems[1].clone()).await);
 
     // set some default data on office_env

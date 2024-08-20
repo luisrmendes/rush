@@ -16,6 +16,15 @@ impl TelegramBot {
 
     async fn execute(ctx: &Context, op: &Operation) -> Result<String, String> {
         match op {
+            Operation::SuspendDesktop => {
+                let output = match commands::suspend(ctx.systems[1].clone()).await {
+                    Ok(output) => Ok(output),
+                    Err(e) => {
+                        return Err(format!("Error: {e}"));
+                    }
+                };
+                output
+            }
             Operation::GetIpv4 => {
                 let output = match commands::get_ipv4(ctx.systems[0].clone()).await {
                     Ok(output) => Ok(output),
@@ -26,14 +35,18 @@ impl TelegramBot {
                 output
             }
             Operation::WakeupDesktop => {
-                let output =
-                    match commands::wakeup(ctx.systems[0].clone(), ctx.systems[1].clone()).await {
-                        Ok(output) => Ok(output),
-                        Err(e) => {
-                            return Err(format!("Error: {e}"));
-                        }
-                    };
+                let output = match commands::wakeup(ctx.systems[1].clone()).await {
+                    Ok(output) => Ok(output),
+                    Err(e) => {
+                        return Err(format!("Error: {e}"));
+                    }
+                };
                 output
+            }
+            Operation::StatusDesktop => {
+                return Ok(commands::is_online(ctx.systems[1].clone())
+                    .await
+                    .to_string());
             }
         }
     }
@@ -46,6 +59,8 @@ impl TelegramBot {
         match parsed_msg {
             "/ipv4" => Ok(Operation::GetIpv4),
             "/desktop_wakeup" => Ok(Operation::WakeupDesktop),
+            "/desktop_status" => Ok(Operation::StatusDesktop),
+            "/desktop_suspend" => Ok(Operation::SuspendDesktop),
             other => Err(format!("Unknown command {other}")),
         }
     }
