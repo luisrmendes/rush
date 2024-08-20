@@ -28,7 +28,11 @@ pub async fn suspend(sys: System) -> Result<String, String> {
     };
 
     return match session.shell("sudo systemctl suspend").output().await {
-        Ok(_) => Ok("Successful".to_string()),
+        Ok(out) => {
+            println!("stdout: {}", String::from_utf8(out.stdout).expect(""));
+            println!("stderr: {}", String::from_utf8(out.stderr).expect(""));
+            Ok("Done".to_string())
+        }
         Err(e) => {
             return Err(format!("Failed to execute command. Error: {e}"));
         }
