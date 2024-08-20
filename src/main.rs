@@ -5,7 +5,7 @@ mod thinkpad_dock_control_fsm;
 
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
-use log::{error, trace};
+use log::{error, trace, warn};
 use openssh::{KnownHosts, Session};
 use std::{collections::HashMap, sync::Arc};
 use telegram_bot::TelegramBot;
@@ -136,7 +136,7 @@ async fn main() {
     pretty_env_logger::init();
 
     if let Err(e) = check_pcs_access(&ctx.systems).await {
-        error!("Failed to check PC access. Error: {e}");
+        warn!("Failed to check PC access. Error: {e}");
     }
 
     // set some default data on office_env
