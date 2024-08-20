@@ -83,9 +83,10 @@ async fn send_brightness_cmds(env_brightness: u32, session: &Session) -> Result<
 
 impl Fsm {
     async fn connecting(&mut self) {
-        println!("Attempting ssh connect to {}", self.system.ip);
+        let session_access: &str = &(self.system.user.to_owned() + "@" + &self.system.ip);
+        println!("Attempting ssh connect to {}", session_access);
 
-        match Session::connect(self.system.ip.clone(), KnownHosts::Strict).await {
+        match Session::connect(session_access, KnownHosts::Strict).await {
             Ok(sesh) => {
                 self.session = Some(sesh);
                 self.state = State::Connected;

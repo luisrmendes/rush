@@ -1,5 +1,11 @@
+use std::{
+    net::{IpAddr, Ipv4Addr},
+    time::Duration,
+};
+
 use crate::System;
 use openssh::{KnownHosts, Session};
+use tokio::net::TcpListener;
 
 #[derive(Debug)]
 pub enum Operation {
@@ -7,21 +13,22 @@ pub enum Operation {
     WakeupDesktop,
 }
 
-// TODO: Funciton to check if system is online
 pub async fn is_online(target_sys: System) -> bool {
-    match Session::connect(&target_sys.ip, KnownHosts::Strict).await {
-        Ok(_) => return true,
-        Err(_) => return false,
-    };
+    //return TcpListener::bind(("192.168.1.71", 22)).await.is_ok();
+
+    let addr: IpAddr = target_sys.ip.parse().unwrap();
+
+    return ping_rs::send_ping(&addr, Duration::from_secs(1), &[1, 2, 3, 4], None).is_ok();
 }
 
 pub async fn wakeup(executing_sys: System, target_sys: System) -> Result<String, String> {
-    let session = match Session::connect(&executing_sys.ip, KnownHosts::Strict).await {
+    let session_access: &str = &(executing_sys.user.to_owned() + "@" + &executing_sys.ip);
+    let session = match Session::connect(session_access, KnownHosts::Strict).await {
         Ok(session) => session,
         Err(e) => {
             return Err(format!(
                 "Failed ssh connection to {0}. Error: {e}",
-                executing_sys.ip
+                session_access
             ));
         }
     };
@@ -57,10 +64,14 @@ pub async fn wakeup(executing_sys: System, target_sys: System) -> Result<String,
 }
 
 pub async fn get_ipv4(sys: System) -> Result<String, String> {
-    let session = match Session::connect(&sys.ip, KnownHosts::Strict).await {
+    let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
+    let session = match Session::connect(session_access, KnownHosts::Strict).await {
         Ok(session) => session,
         Err(e) => {
-            return Err(format!("Failed ssh connection to {0}. Error: {e}", sys.ip));
+            return Err(format!(
+                "Failed ssh connection to {0}. Error: {e}",
+                session_access
+            ));
         }
     };
 

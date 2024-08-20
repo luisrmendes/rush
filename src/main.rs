@@ -15,6 +15,7 @@ use tokio::{
 
 #[derive(Clone)]
 struct System {
+    user: String,
     ip: String,
     mac: Option<String>,
 }
@@ -38,7 +39,9 @@ fn load_env_vars() -> Context {
     // Check for the expected env vars
     let mut env_var_map = HashMap::from([
         ("ESP8266_ADDRESS_PORT", String::new()),
+        ("SYSTEM0_USER", String::new()),
         ("SYSTEM0_IP_ADDR", String::new()),
+        ("SYSTEM1_USER", String::new()),
         ("SYSTEM1_IP_ADDR", String::new()),
         ("SYSTEM1_MAC", String::new()),
         ("SYSTEM2_IP_ADDR", String::new()),
@@ -59,6 +62,10 @@ fn load_env_vars() -> Context {
             .to_string(),
         systems: vec![
             System {
+                user: env_var_map
+                    .get("SYSTEM0_USER")
+                    .expect("Why is this empty?")
+                    .to_string(),
                 mac: None,
                 ip: env_var_map
                     .get("SYSTEM0_IP_ADDR")
@@ -66,6 +73,10 @@ fn load_env_vars() -> Context {
                     .to_string(),
             },
             System {
+                user: env_var_map
+                    .get("SYSTEM1_USER")
+                    .expect("Why is this empty?")
+                    .to_string(),
                 mac: Some(
                     env_var_map
                         .get("SYSTEM1_MAC")
@@ -86,6 +97,8 @@ fn load_env_vars() -> Context {
 #[tokio::main]
 async fn main() {
     let ctx = load_env_vars();
+
+    println!("{}", commands::is_online(ctx.systems[1].clone()).await);
 
     // set some default data on office_env
     let office_env = OfficeEnv {
