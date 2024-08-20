@@ -45,13 +45,15 @@ fn get_main_mon_brightness(env_brightness: u32) -> u32 {
     return (env_brightness * coef) as u32;
 }
 
-async fn send_brightness_cmds(env_brightness: u32, session: &Session) -> Result<(), ()> {
+async fn send_brightness_cmds(env_brightness: u32) -> Result<String, ()> {
     // only send command if calculated brightness is different than the previously sent one
     static MAIN_MON_BRIGHTNESS: AtomicU32 = AtomicU32::new(0);
     let main_mon_brightness = get_main_mon_brightness(env_brightness);
-    if MAIN_MON_BRIGHTNESS.load(Ordering::SeqCst) != main_mon_brightness {
+    if MAIN_MON_BRIGHTNESS.load(Ordering::Relaxed) == main_mon_brightness {
+        //println!("Same brightness calculated. static bright: {MAIN_MON_BRIGHTNESS:?}, bright: {main_mon_brightness}");
         return Err(());
     }
+
     MAIN_MON_BRIGHTNESS.store(main_mon_brightness, Ordering::SeqCst);
 
     let laptop_mon_brightness = get_thinkpad_x1_mon_brightness(env_brightness);
@@ -64,21 +66,13 @@ async fn send_brightness_cmds(env_brightness: u32, session: &Session) -> Result<
 
     let command: String = String::from("echo ")
         + &laptop_mon_brightness.to_string()
-        + " > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 & "
+        + " > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 "
         + &main_mon_brightness.to_string()
-        + "echo "
+        + " & echo "
         + &set_kbd_brightness.to_string()
         + " > /sys/class/leds/tpacpi::kbd_backlight/brightness";
 
-    match session.shell(command).output().await {
-        Ok(output) => output,
-        Err(e) => {
-            println!("Error: {e:?}");
-            return Err(());
-        }
-    };
-
-    Ok(())
+    Ok(command)
 }
 
 impl Fsm {
@@ -109,13 +103,22 @@ impl Fsm {
         let env_brightness = self.env_data.lock().await.brightness;
         println!("{:?}", env_brightness);
 
-        if send_brightness_cmds(env_brightness, &session)
-            .await
-            .is_err()
-        {
-            sleep(Duration::from_secs(2)).await;
-            return;
-        }
+        let command = match send_brightness_cmds(env_brightness).await {
+            Ok(cmd) => cmd,
+            Err(()) => {
+                sleep(Duration::from_secs(2)).await;
+                return;
+            }
+        };
+
+        match session.shell(command).output().await {
+            Ok(output) => output,
+            Err(e) => {
+                println!("Error: {e:?}");
+                self.state = State::Disconnected;
+                return;
+            }
+        };
     }
 
     fn disconnected(&mut self) {

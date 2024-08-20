@@ -25,17 +25,8 @@ impl TelegramBot {
                 };
                 output
             }
-            Operation::GetIpv4 => {
-                let output = match commands::get_ipv4(ctx.systems[0].clone()).await {
-                    Ok(output) => Ok(output),
-                    Err(e) => {
-                        return Err(format!("Error: {e}"));
-                    }
-                };
-                output
-            }
             Operation::WakeupDesktop => {
-                let output = match commands::wakeup(ctx.systems[1].clone()).await {
+                let output = match commands::wakeup(ctx.systems[2].clone()).await {
                     Ok(output) => Ok(output),
                     Err(e) => {
                         return Err(format!("Error: {e}"));
@@ -44,9 +35,18 @@ impl TelegramBot {
                 output
             }
             Operation::StatusDesktop => {
-                return Ok(commands::is_online(ctx.systems[1].clone())
+                return Ok(commands::is_online(ctx.systems[2].clone())
                     .await
                     .to_string());
+            }
+            Operation::GetIpv4 => {
+                let output = match commands::get_ipv4(ctx.systems[0].clone()).await {
+                    Ok(output) => Ok(output),
+                    Err(e) => {
+                        return Err(format!("Error: {e}"));
+                    }
+                };
+                output
             }
         }
     }

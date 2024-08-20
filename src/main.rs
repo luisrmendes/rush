@@ -1,9 +1,9 @@
 mod commands;
-mod desktop_control_fsm;
+mod thinkpad_dock_control_fsm;
 mod get_env_fsm;
 mod telegram_bot;
 
-use desktop_control_fsm::Fsm as desktop_ctrl_fsm;
+use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
 use openssh::{KnownHosts, Session};
@@ -44,8 +44,9 @@ fn load_env_vars() -> Context {
         ("SYSTEM0_IP_ADDR", String::new()),
         ("SYSTEM1_USER", String::new()),
         ("SYSTEM1_IP_ADDR", String::new()),
-        ("SYSTEM1_MAC", String::new()),
+        ("SYSTEM2_USER", String::new()),
         ("SYSTEM2_IP_ADDR", String::new()),
+        ("SYSTEM2_MAC", String::new()),
     ]);
 
     for (env_var, value) in env_var_map.iter_mut() {
@@ -78,14 +79,25 @@ fn load_env_vars() -> Context {
                     .get("SYSTEM1_USER")
                     .expect("Why is this empty?")
                     .to_string(),
+                mac: None,
+                ip: env_var_map
+                    .get("SYSTEM1_IP_ADDR")
+                    .expect("Why is this empty?")
+                    .to_string(),
+            },
+            System {
+                user: env_var_map
+                    .get("SYSTEM2_USER")
+                    .expect("Why is this empty?")
+                    .to_string(),
                 mac: Some(
                     env_var_map
-                        .get("SYSTEM1_MAC")
+                        .get("SYSTEM2_MAC")
                         .expect("Why is this empty?")
                         .to_string(),
                 ),
                 ip: env_var_map
-                    .get("SYSTEM1_IP_ADDR")
+                    .get("SYSTEM2_IP_ADDR")
                     .expect("Why is this empty?")
                     .to_string(),
             },
@@ -97,7 +109,7 @@ fn load_env_vars() -> Context {
 
 async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
     // this can be written better
-    let mut return_str: String = "Failed to ssh connect to systems: ".to_string();
+    let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
     let mut error: bool = false;
     for (i, sys) in systems.iter().enumerate() {
         let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
@@ -128,7 +140,7 @@ async fn main() {
         }
     };
 
-    println!("{}", commands::is_online(ctx.systems[1].clone()).await);
+    // println!("{}", commands::is_online(ctx.systems[1].clone()).await);
 
     // set some default data on office_env
     let office_env = OfficeEnv {
@@ -139,7 +151,7 @@ async fn main() {
     let office_env = Arc::new(Mutex::new(office_env));
 
     let mut env_fsm = env_fsm::new(ctx.clone(), office_env.clone());
-    let mut desktop_ctrl_fsm = desktop_ctrl_fsm::new(ctx.systems[1].clone(), office_env.clone());
+    let mut thinkpad_ctrl_fsm = thinkpad_ctrl_fsm::new(ctx.systems[1].clone(), office_env.clone());
     let telegram_bot = TelegramBot::new(ctx.clone());
 
     // Create a broadcast channel for shutdown signal
@@ -160,7 +172,7 @@ async fn main() {
     let mut shutdown_rx2 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle2 = tokio::spawn(async move {
         tokio::select! {
-            _ = desktop_ctrl_fsm.run() => {},
+            _ = thinkpad_ctrl_fsm.run() => {},
             _ = shutdown_rx2.recv() => {
                 println!("desktop_ctrl_fsm received shutdown signal");
             }
