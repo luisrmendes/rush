@@ -17,47 +17,39 @@ pub enum Operation {
 pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Result<String, String> {
     trace!("Sending command: {}", command);
     match ssh_session {
-        Some(sesh) => {
-            match sesh.shell(command).output().await {
-                Ok(out) => {
-                    let stdout = String::from_utf8(out.stdout.clone()).expect("");
-                    let stderr = String::from_utf8(out.stderr.clone()).expect("");
+        Some(sesh) => match sesh.shell(command).output().await {
+            Ok(out) => {
+                let stdout = String::from_utf8(out.stdout.clone()).expect("");
+                let stderr = String::from_utf8(out.stderr.clone()).expect("");
 
-                    if !stderr.is_empty() {
-                        return Err(stderr);
-                    }
+                if !stderr.is_empty() {
+                    return Err(stderr);
+                }
 
-                    Ok(stdout)
-                }
-                Err(e) => {
-                    Err(format!("Failed to execute command. Error: {e}"))
-                }
+                Ok(stdout)
             }
-        }
-        None => {
-            match Command::new("sh").arg("-c").arg(command).output().await {
-                Ok(out) => {
-                    let stdout = String::from_utf8(out.stdout.clone()).expect("");
-                    let stderr = String::from_utf8(out.stderr.clone()).expect("");
-                    trace!("stdout: {stdout}");
-                    trace!("stderr: {stderr}");
+            Err(e) => Err(format!("Failed to execute command. Error: {e}")),
+        },
+        None => match Command::new("sh").arg("-c").arg(command).output().await {
+            Ok(out) => {
+                let stdout = String::from_utf8(out.stdout.clone()).expect("");
+                let stderr = String::from_utf8(out.stderr.clone()).expect("");
+                trace!("stdout: {stdout}");
+                trace!("stderr: {stderr}");
 
-                    if !stderr.is_empty() {
-                        return Err(stderr);
-                    }
+                if !stderr.is_empty() {
+                    return Err(stderr);
+                }
 
-                    Ok(stdout)
-                }
-                Err(e) => {
-                    Err(format!("Failed to execute command. Error: {e}"))
-                }
+                Ok(stdout)
             }
-        }
+            Err(e) => Err(format!("Failed to execute command. Error: {e}")),
+        },
     }
 }
 
 pub async fn suspend(sys: System) -> Result<String, String> {
-    let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
+    let session_access: &str = &(sys.user.clone() + "@" + &sys.ip);
     let session = match Session::connect(session_access, KnownHosts::Strict).await {
         Ok(session) => session,
         Err(e) => {
@@ -70,7 +62,7 @@ pub async fn suspend(sys: System) -> Result<String, String> {
     send_command("sudo systemctl suspend", Some(&session)).await
 }
 
-pub async fn is_online(target_sys: System) -> bool {
+pub fn is_online(target_sys: &System) -> bool {
     ping_rs::send_ping(
         &target_sys.ip.parse().unwrap(),
         Duration::from_millis(100),
@@ -81,11 +73,8 @@ pub async fn is_online(target_sys: System) -> bool {
 }
 
 pub async fn wakeup(target_sys: System) -> Result<String, String> {
-    let mac = match target_sys.mac {
-        Some(mac) => mac,
-        None => {
-            return Err("Trying to wakup a system without a associated MAC address".to_string());
-        }
+    let Some(mac) = target_sys.mac else {
+        return Err("Trying to wakup a system without a associated MAC address".to_string());
     };
 
     send_command(&format!("wol {}", &mac), None).await

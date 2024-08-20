@@ -50,11 +50,9 @@ fn load_env_vars() -> Context {
         ("SYSTEM2_MAC", String::new()),
     ]);
 
-    for (env_var, value) in env_var_map.iter_mut() {
+    for (env_var, value) in &mut env_var_map {
         let val = std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
-        if val.is_empty() {
-            panic!("{env_var} is empty. Please set it.");
-        }
+        assert!(!val.is_empty(), "{env_var} is empty. Please set it.");
         *value = val;
     }
 
@@ -113,13 +111,14 @@ async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
     let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
     let mut error: bool = false;
     for (i, sys) in systems.iter().enumerate() {
-        let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
-        match Session::connect(session_access, KnownHosts::Strict).await {
-            Ok(_) => {}
-            Err(_) => {
-                return_str += &("system".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
-                error = true;
-            }
+        let session_access: &str = &(sys.user.clone() + "@" + &sys.ip);
+        if Session::connect(session_access, KnownHosts::Strict)
+            .await
+            .is_ok()
+        {
+        } else {
+            return_str += &("system".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
+            error = true;
         };
     }
 
@@ -159,7 +158,7 @@ async fn main() {
     let mut shutdown_rx1 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle1 = tokio::spawn(async move {
         tokio::select! {
-            _ = env_fsm.run() => {},
+            () = env_fsm.run() => {},
             _ = shutdown_rx1.recv() => {
                 trace!("env_fsm received shutdown signal");
             }
@@ -170,7 +169,7 @@ async fn main() {
     let mut shutdown_rx2 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle2 = tokio::spawn(async move {
         tokio::select! {
-            _ = thinkpad_ctrl_fsm.run() => {},
+            () = thinkpad_ctrl_fsm.run() => {},
             _ = shutdown_rx2.recv() => {
                 trace!("desktop_ctrl_fsm received shutdown signal");
             }
@@ -181,7 +180,7 @@ async fn main() {
     let mut shutdown_rx3 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle3 = tokio::spawn(async move {
         tokio::select! {
-            _ = telegram_bot.run() => {},
+            () = telegram_bot.run() => {},
             _ = shutdown_rx3.recv() => {
                 trace!("telegram_bot received shutdown signal");
             }
