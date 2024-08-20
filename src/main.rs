@@ -6,6 +6,7 @@ mod telegram_bot;
 use desktop_control_fsm::Fsm as desktop_ctrl_fsm;
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
+use openssh::{KnownHosts, Session};
 use std::{collections::HashMap, sync::Arc};
 use telegram_bot::TelegramBot;
 use tokio::{
@@ -94,11 +95,38 @@ fn load_env_vars() -> Context {
     //println!("Production Url: {}", &esp8266_address);
 }
 
+async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
+    // this can be written better
+    let mut return_str: String = "Failed to ssh connect to systems: ".to_string();
+    let mut error: bool = false;
+    for (i, sys) in systems.iter().enumerate() {
+        let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
+        match Session::connect(session_access, KnownHosts::Strict).await {
+            Ok(_) => {}
+            Err(_) => {
+                return_str += &("system".to_owned() + &i.to_string());
+                error = true;
+            }
+        };
+    }
+
+    if error {
+        return Err(return_str);
+    } else {
+        return Ok(());
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let ctx = load_env_vars();
 
-    // TODO: Check if we have ssh access to all pcs
+    match check_pcs_access(&ctx.systems).await {
+        Ok(()) => {}
+        Err(e) => {
+            println!("Failed check PC access. Error: {e}");
+        }
+    };
 
     println!("{}", commands::is_online(ctx.systems[1].clone()).await);
 
