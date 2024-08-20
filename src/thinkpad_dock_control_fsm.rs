@@ -28,8 +28,8 @@ pub struct Fsm {
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
-    let env_brightness = env_brightness as f32;
-    let max_mon_brightness: f32 = 19393.0;
+    let env_brightness = f64::from(env_brightness);
+    let max_mon_brightness: f64 = 19393.0;
     let coef = 0.142_857_15;
 
     if env_brightness <= 50.0 {
@@ -43,7 +43,7 @@ fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn get_main_mon_brightness(env_brightness: u32) -> u32 {
-    let env_brightness = env_brightness as f32;
+    let env_brightness = f64::from(env_brightness);
     let coef = 0.142_857_15;
 
     if env_brightness <= 50.0 {
