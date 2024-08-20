@@ -28,7 +28,7 @@ impl Fsm {
         Self {
             state: State::Disconnected,
             context: ctx,
-            env_data: env_data,
+            env_data,
             stream: None,
         }
     }

@@ -5,7 +5,7 @@ mod thinkpad_dock_control_fsm;
 
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
-use log::{error, trace, warn};
+use log::{trace, warn};
 use openssh::{KnownHosts, Session};
 use std::{collections::HashMap, sync::Arc};
 use telegram_bot::TelegramBot;
@@ -51,7 +51,7 @@ fn load_env_vars() -> Context {
     ]);
 
     for (env_var, value) in env_var_map.iter_mut() {
-        let val = std::env::var(env_var).expect(&format!("{env_var} must be set."));
+        let val = std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
         if val.is_empty() {
             panic!("{env_var} is empty. Please set it.");
         }
@@ -108,7 +108,7 @@ fn load_env_vars() -> Context {
     //trace!("Production Url: {}", &esp8266_address);
 }
 
-async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
+async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
     // this can be written better
     let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
     let mut error: bool = false;
@@ -124,9 +124,9 @@ async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
     }
 
     if error {
-        return Err(return_str);
+        Err(return_str)
     } else {
-        return Ok(());
+        Ok(())
     }
 }
 

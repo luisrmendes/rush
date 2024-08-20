@@ -17,45 +17,27 @@ impl TelegramBot {
     async fn execute(ctx: &Context, op: &Operation) -> Result<String, String> {
         match op {
             Operation::SuspendDesktop => {
-                let output = match commands::suspend(ctx.systems[1].clone()).await {
-                    Ok(output) => Ok(output),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                };
-                output
+                
+                commands::suspend(ctx.systems[1].clone()).await
             }
             Operation::WakeupDesktop => {
-                let output = match commands::wakeup(ctx.systems[2].clone()).await {
-                    Ok(output) => Ok(output),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                };
-                output
+                
+                commands::wakeup(ctx.systems[2].clone()).await
             }
             Operation::StatusDesktop => {
-                return Ok(commands::is_online(ctx.systems[2].clone())
+                Ok(commands::is_online(ctx.systems[2].clone())
                     .await
-                    .to_string());
+                    .to_string())
             }
             Operation::GetIpv4 => {
-                let output = match commands::get_ipv4().await {
-                    Ok(output) => Ok(output),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                };
-                output
+                
+                commands::get_ipv4().await
             }
         }
     }
 
     fn parse_commands(text: Option<&str>) -> Result<Operation, String> {
-        let parsed_msg: &str = match text {
-            Some(msg) => msg,
-            None => "",
-        };
+        let parsed_msg: &str = text.unwrap_or_default();
         match parsed_msg {
             "/ipv4" => Ok(Operation::GetIpv4),
             "/desktop_wakeup" => Ok(Operation::WakeupDesktop),
@@ -86,7 +68,7 @@ impl TelegramBot {
                     }
                 };
 
-                let cmd_output = match Self::execute(&*context_clone, &command).await {
+                let cmd_output = match Self::execute(&context_clone, &command).await {
                     Ok(output) => output,
                     Err(e) => {
                         trace!("Error executing command: {e}");

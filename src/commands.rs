@@ -23,16 +23,16 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
                     let stdout = String::from_utf8(out.stdout.clone()).expect("");
                     let stderr = String::from_utf8(out.stderr.clone()).expect("");
 
-                    if stderr.len() != 0 {
+                    if !stderr.is_empty() {
                         return Err(stderr);
                     }
 
-                    return Ok(stdout);
+                    Ok(stdout)
                 }
                 Err(e) => {
-                    return Err(format!("Failed to execute command. Error: {e}"));
+                    Err(format!("Failed to execute command. Error: {e}"))
                 }
-            };
+            }
         }
         None => {
             match Command::new("sh").arg("-c").arg(command).output().await {
@@ -42,16 +42,16 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
                     trace!("stdout: {stdout}");
                     trace!("stderr: {stderr}");
 
-                    if stderr.len() != 0 {
+                    if !stderr.is_empty() {
                         return Err(stderr);
                     }
 
-                    return Ok(stdout);
+                    Ok(stdout)
                 }
                 Err(e) => {
-                    return Err(format!("Failed to execute command. Error: {e}"));
+                    Err(format!("Failed to execute command. Error: {e}"))
                 }
-            };
+            }
         }
     }
 }
@@ -67,36 +67,34 @@ pub async fn suspend(sys: System) -> Result<String, String> {
         }
     };
 
-    return send_command("sudo systemctl suspend", Some(&session)).await;
+    send_command("sudo systemctl suspend", Some(&session)).await
 }
 
 pub async fn is_online(target_sys: System) -> bool {
-    return ping_rs::send_ping(
+    ping_rs::send_ping(
         &target_sys.ip.parse().unwrap(),
         Duration::from_millis(100),
         &[1, 2, 3, 4],
         None,
     )
-    .is_ok();
+    .is_ok()
 }
 
 pub async fn wakeup(target_sys: System) -> Result<String, String> {
     let mac = match target_sys.mac {
         Some(mac) => mac,
         None => {
-            return Err(format!(
-                "Trying to wakup a system without a associated MAC address"
-            ));
+            return Err("Trying to wakup a system without a associated MAC address".to_string());
         }
     };
 
-    return send_command(&format!("wol {}", &mac), None).await;
+    send_command(&format!("wol {}", &mac), None).await
 }
 
 pub async fn get_ipv4() -> Result<String, String> {
-    return send_command(
+    send_command(
         "dig @resolver1.opendns.com A myip.opendns.com +short -4",
         None,
     )
-    .await;
+    .await
 }

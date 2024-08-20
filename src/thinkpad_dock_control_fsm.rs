@@ -28,25 +28,25 @@ pub struct Fsm {
 fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
     let env_brightness = env_brightness as f32;
     let max_mon_brightness: f32 = 19393.0;
-    let coef = 0.14285714285714285;
+    let coef = 0.142_857_15;
 
     if env_brightness <= 50.0 {
         return 1000;
     }
 
-    return (((env_brightness * coef * max_mon_brightness) as u32) / 100)
-        .clamp(1000, max_mon_brightness as u32);
+    (((env_brightness * coef * max_mon_brightness) as u32) / 100)
+        .clamp(1000, max_mon_brightness as u32)
 }
 
 fn get_main_mon_brightness(env_brightness: u32) -> u32 {
     let env_brightness = env_brightness as f32;
-    let coef = 0.14285714285714285;
+    let coef = 0.142_857_15;
 
     if env_brightness <= 50.0 {
         return 0;
     }
 
-    return ((env_brightness * coef) as u32).clamp(0, 100);
+    ((env_brightness * coef) as u32).clamp(0, 100)
 }
 
 /// Returns Err() if the calcuated brightness is the same as the previous one
@@ -96,9 +96,8 @@ impl Fsm {
             Err(e) => {
                 trace!("Failed ssh connection to {0}. Error: {e}", self.system.ip);
                 sleep(Duration::from_secs(2)).await;
-                return;
             }
-        };
+        }
     }
 
     async fn connected(&mut self) {
@@ -121,7 +120,7 @@ impl Fsm {
             }
         };
 
-        match send_command(&command, Some(&session)).await {
+        match send_command(&command, Some(session)).await {
             Ok(out) => {
                 trace!("{out}")
             }
@@ -154,7 +153,7 @@ impl Fsm {
         Self {
             state: State::Disconnected,
             system: sys,
-            env_data: env_data,
+            env_data,
             session: None,
         }
     }
