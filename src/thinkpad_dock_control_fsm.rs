@@ -34,7 +34,8 @@ fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
         return 1000;
     }
 
-    return ((env_brightness * coef * max_mon_brightness) as u32) / 100;
+    return (((env_brightness * coef * max_mon_brightness) as u32) / 100)
+        .clamp(1000, max_mon_brightness as u32);
 }
 
 fn get_main_mon_brightness(env_brightness: u32) -> u32 {
