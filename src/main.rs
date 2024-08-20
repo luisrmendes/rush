@@ -14,7 +14,7 @@ use tokio::{
     sync::{broadcast, Mutex},
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct System {
     user: String,
     ip: String,
@@ -104,7 +104,7 @@ async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
         match Session::connect(session_access, KnownHosts::Strict).await {
             Ok(_) => {}
             Err(_) => {
-                return_str += &("system".to_owned() + &i.to_string());
+                return_str += &("system".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
                 error = true;
             }
         };
