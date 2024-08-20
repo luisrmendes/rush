@@ -18,7 +18,9 @@ impl TelegramBot {
         match op {
             Operation::SuspendDesktop => commands::suspend(ctx.systems[1].clone()).await,
             Operation::WakeupDesktop => commands::wakeup(ctx.systems[2].clone()).await,
-            Operation::StatusDesktop => Ok(commands::is_online(&ctx.systems[2].clone()).to_string()),
+            Operation::StatusDesktop => {
+                Ok(commands::is_online(&ctx.systems[2].clone()).to_string())
+            }
             Operation::GetIpv4 => commands::get_ipv4().await,
         }
     }
