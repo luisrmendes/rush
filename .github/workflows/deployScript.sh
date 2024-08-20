@@ -1,23 +1,30 @@
 #!/bin/bash
+tmuxSessionName="rush"
+tmuxSessionServerName="rushServer"
 
-if tmux list-windows | grep -q 'rushBot' 
-then
+pwd=$(pwd)
+
+# Create tmux session if its not already created
+if tmux list-sessions | grep -w "$tmuxSessionServerName" 2>/dev/null 1>&2; then
     echo "Session exists"
 else
-    echo "Session does not exist, creating sesion";
-    tmux new-session -s rushBot;
+    echo "Session does not exist, creating session \"$tmuxSessionName\""
+    tmux new-session -s $tmuxSessionServerName -d
 fi
 
-tmux send-keys -t rushBot "^C" Enter;
-cd ./src/main;
-mv main /home/lrm/sideProjs/ambrosioBot;
-tmux send-keys -t rushBot "cd /home/lrm/sideProjs/ambrosioBot" Enter;
-tmux send-keys -t rushBot "TELEGRAM_API_KEY=";
-tmux send-keys -t rushBot $1;
-tmux send-keys -t rushBot " ESP8266_ADDRESS_PORT=";
-tmux send-keys -t rushBot $2;
-tmux send-keys -t rushBot " SYSTEM_1_ADDRESS=";
-tmux send-keys -t rushBot $3;
-tmux send-keys -t rushBot " SYSTEM_2_ADDRESS=";
-tmux send-keys -t rushBot $4;
-tmux send-keys -t rushBot " ./main" Enter;
+# Create tmux session if its not already created
+if tmux list-sessions | grep -w "$tmuxSessionName" 2>/dev/null 1>&2; then
+    echo "Session exists"
+else
+    echo "Session does not exist, creating session \"$tmuxSessionName\""
+    tmux new-session -s $tmuxSessionName -d
+fi
+
+tmux send-keys -t $tmuxSessionName "^C" Enter
+
+tmuxSeshCommand=""
+tmuxSeshCommand="${tmuxSeshCommand} git pull"
+tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYSTEM0_USER=$3 SYSTEM0_IP_ADDR=$4 SYSTEM1_USER=$5 SYSTEM1_IP_ADDR=$6 SYSTEM2_USER=$7 SYSTEM2_IP_ADDR=$8 SYSTEM2_MAC=$9"
+tmuxSeshCommand="${tmuxSeshCommand} RUST_LOG=warn target/release/rush Enter"
+
+tmux send-keys -t $tmuxSessionName "${tmuxSeshCommand}" Enter

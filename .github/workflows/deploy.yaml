@@ -1,0 +1,36 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-docker:
+    runs-on: self-hosted
+
+    env:
+      TELOXIDE_TOKEN: ${{ secrets.TELOXIDE_TOKEN }}
+      ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
+      SYSTEM0_USER: ${{ secrets.SYSTEM0_USER }}
+      SYSTEM0_IP_ADDR: ${{ secrets.SYSTEM0_IP_ADDR }}
+      SYSTEM1_USER: ${{ secrets.SYSTEM1_USER }}
+      SYSTEM1_IP_ADDR: ${{ secrets.SYSTEM1_IP_ADDR }}
+      SYSTEM2_USER: ${{ secrets.SYSTEM2_USER }}
+      SYSTEM2_IP_ADDR: ${{ secrets.SYSTEM2_IP_ADDR }}
+      SYSTEM2_MAC: ${{ secrets.SYSTEM2_MAC }}
+
+    defaults:
+      run:
+        working-directory: ./
+
+    name: Build and Run Docker Image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Release
+        run: cargo build --release
+
+      - name: Run Deploy Script
+        run: chmod +x .github/workflows/deployScript.sh &&
+          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYSTEM0_USER $SYSTEM0_IP_ADDR $SYSTEM1_USER $SYSTEM1_IP_ADDR $SYSTEM2_USER $SYSTEM2_IP_ADDR $SYSTEM2_MAC
