@@ -1,16 +1,7 @@
 #!/bin/bash
-tmuxSessionName="rush"
-tmuxSessionServerName="rushServer"
+tmuxSessionName="rushServer"
 
 pwd=$(pwd)
-
-# Create tmux session if its not already created
-if tmux list-sessions | grep -w "$tmuxSessionServerName" 2>/dev/null 1>&2; then
-    echo "Session exists"
-else
-    echo "Session does not exist, creating session \"$tmuxSessionName\""
-    tmux new-session -s $tmuxSessionServerName -d
-fi
 
 # Create tmux session if its not already created
 if tmux list-sessions | grep -w "$tmuxSessionName" 2>/dev/null 1>&2; then
