@@ -1,14 +1,15 @@
 mod commands;
-mod thinkpad_dock_control_fsm;
 mod get_env_fsm;
 mod telegram_bot;
+mod thinkpad_dock_control_fsm;
 
-use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
+use log::{error, trace};
 use openssh::{KnownHosts, Session};
 use std::{collections::HashMap, sync::Arc};
 use telegram_bot::TelegramBot;
+use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
 use tokio::{
     signal,
     sync::{broadcast, Mutex},
@@ -104,7 +105,7 @@ fn load_env_vars() -> Context {
         ],
     }
 
-    //println!("Production Url: {}", &esp8266_address);
+    //trace!("Production Url: {}", &esp8266_address);
 }
 
 async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
@@ -132,15 +133,11 @@ async fn check_pcs_access(systems: &Vec<System>) -> Result<(), String> {
 #[tokio::main]
 async fn main() {
     let ctx = load_env_vars();
+    pretty_env_logger::init();
 
-    match check_pcs_access(&ctx.systems).await {
-        Ok(()) => {}
-        Err(e) => {
-            println!("Failed check PC access. Error: {e}");
-        }
-    };
-
-    // println!("{}", commands::is_online(ctx.systems[1].clone()).await);
+    if let Err(e) = check_pcs_access(&ctx.systems).await {
+        error!("Failed to check PC access. Error: {e}");
+    }
 
     // set some default data on office_env
     let office_env = OfficeEnv {
@@ -148,6 +145,7 @@ async fn main() {
         temperature: 0,
         humidity: 0,
     };
+
     let office_env = Arc::new(Mutex::new(office_env));
 
     let mut env_fsm = env_fsm::new(ctx.clone(), office_env.clone());
@@ -163,7 +161,7 @@ async fn main() {
         tokio::select! {
             _ = env_fsm.run() => {},
             _ = shutdown_rx1.recv() => {
-                println!("env_fsm received shutdown signal");
+                trace!("env_fsm received shutdown signal");
             }
         }
     });
@@ -174,7 +172,7 @@ async fn main() {
         tokio::select! {
             _ = thinkpad_ctrl_fsm.run() => {},
             _ = shutdown_rx2.recv() => {
-                println!("desktop_ctrl_fsm received shutdown signal");
+                trace!("desktop_ctrl_fsm received shutdown signal");
             }
         }
     });
@@ -185,7 +183,7 @@ async fn main() {
         tokio::select! {
             _ = telegram_bot.run() => {},
             _ = shutdown_rx3.recv() => {
-                println!("telegram_bot received shutdown signal");
+                trace!("telegram_bot received shutdown signal");
             }
         }
     });
@@ -193,7 +191,7 @@ async fn main() {
     // Task 4: Listen for Ctrl-C and broadcast the shutdown signal
     let shutdown_listener = tokio::spawn(async move {
         signal::ctrl_c().await.expect("Failed to listen for Ctrl-C");
-        println!("Ctrl-C received, sending shutdown signal...");
+        trace!("Ctrl-C received, sending shutdown signal...");
         let _ = shutdown_tx.send(()); // Broadcast the shutdown signal
     });
 

@@ -1,9 +1,9 @@
-use std::sync::Arc;
-
 use crate::{
     commands::{self, Operation},
     Context,
 };
+use log::trace;
+use std::sync::Arc;
 
 pub struct TelegramBot {
     context: Context,
@@ -20,7 +20,7 @@ impl TelegramBot {
                 let output = match commands::suspend(ctx.systems[1].clone()).await {
                     Ok(output) => Ok(output),
                     Err(e) => {
-                        return Err(format!("Error: {e}"));
+                        return Err(e);
                     }
                 };
                 output
@@ -29,7 +29,7 @@ impl TelegramBot {
                 let output = match commands::wakeup(ctx.systems[2].clone()).await {
                     Ok(output) => Ok(output),
                     Err(e) => {
-                        return Err(format!("Error: {e}"));
+                        return Err(e);
                     }
                 };
                 output
@@ -40,10 +40,10 @@ impl TelegramBot {
                     .to_string());
             }
             Operation::GetIpv4 => {
-                let output = match commands::get_ipv4(ctx.systems[0].clone()).await {
+                let output = match commands::get_ipv4().await {
                     Ok(output) => Ok(output),
                     Err(e) => {
-                        return Err(format!("Error: {e}"));
+                        return Err(e);
                     }
                 };
                 output
@@ -68,20 +68,19 @@ impl TelegramBot {
     pub async fn run(&self) {
         use teloxide::prelude::*;
 
-        pretty_env_logger::init();
         let bot = Bot::from_env();
         let context_arc = Arc::new(self.context.clone());
 
         teloxide::repl(bot, move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
             async move {
-                println!("{:?}", msg.text());
+                trace!("Received from bot: {:?}", msg.text());
 
                 let command = match Self::parse_commands(msg.text()) {
                     Ok(cmd) => cmd,
                     Err(e) => {
                         let reply = format!("Failed to parse command. Error: {e}");
-                        println!("{reply}");
+                        trace!("{reply}");
                         bot.send_message(msg.chat.id, reply).await?;
                         return Ok(());
                     }
@@ -90,11 +89,12 @@ impl TelegramBot {
                 let cmd_output = match Self::execute(&*context_clone, &command).await {
                     Ok(output) => output,
                     Err(e) => {
-                        println!("Error executing command: {e}");
-                        return Ok(());
+                        trace!("Error executing command: {e}");
+                        format!("Error: {e}")
                     }
                 };
 
+                trace!("Sending to bot: {:?}", cmd_output);
                 bot.send_message(msg.chat.id, cmd_output).await?;
                 Ok(())
             }

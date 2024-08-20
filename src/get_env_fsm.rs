@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+use log::trace;
+use log::warn;
 use tokio::net::TcpStream;
 use tokio::sync::Mutex;
 use tokio::time::sleep;
@@ -43,16 +45,16 @@ impl Fsm {
 
     async fn connecting(&mut self) {
         let address = &self.context.env_sensor_address_port;
-        println!("Attempting to connect to {address}");
+        trace!("Attempting to connect to {address}");
 
         match TcpStream::connect(address).await {
             Ok(stream) => {
-                println!("Successfully connected!");
+                trace!("Successfully connected!");
                 self.stream = Some(stream);
                 self.state = State::Connected;
             }
             Err(e) => {
-                println!("Failed to connect: {e}");
+                trace!("Failed to connect: {e}");
                 sleep(Duration::from_secs(2)).await;
             }
         }
@@ -62,7 +64,7 @@ impl Fsm {
         use tokio::io::AsyncReadExt;
 
         let Some(stream) = &mut self.stream else {
-            println!("Tcp stream is unavailable");
+            trace!("Tcp stream is unavailable");
             self.state = State::Disconnected;
             return;
         };
@@ -72,22 +74,21 @@ impl Fsm {
         let recv_length: usize =
             match timeout(Duration::from_secs(2), stream.read(&mut buffer)).await {
                 Ok(Ok(0)) => {
-                    println!("Connection gracefully closed");
+                    warn!("Connection gracefully closed");
                     self.state = State::Disconnected;
                     return;
                 }
                 Ok(Ok(n)) => {
-                    // TODO: log into pretty logs
-                    //println!("Received: {}", String::from_utf8_lossy(&buffer[..n]));
+                    trace!("Received: {}", String::from_utf8_lossy(&buffer[..n]));
                     n
                 }
                 Ok(Err(e)) => {
-                    eprintln!("Read error: {e:?}");
+                    warn!("Read error: {e:?}. Going to Disconnected");
                     self.state = State::Disconnected;
                     return;
                 }
                 Err(_) => {
-                    println!("Timed out waiting for data");
+                    warn!("Timed out waiting for data");
                     self.state = State::Disconnected;
                     return;
                 }
@@ -105,7 +106,7 @@ impl Fsm {
                 humidity: env_data[3],
             },
             Err(e) => {
-                eprintln!("Failed parse info; error = {e:?}");
+                warn!("Failed parse info. Error = {e:?}");
                 return;
             }
         };
@@ -115,7 +116,7 @@ impl Fsm {
     }
 
     fn disconnected(&mut self) {
-        println!("Disconnected");
+        trace!("Disconnected");
         // TODO: Set some state in the data repositories that makes sense
         self.state = State::Connecting;
         self.stream = None;

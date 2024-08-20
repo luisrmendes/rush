@@ -1,11 +1,8 @@
-use std::{
-    net::{IpAddr, Ipv4Addr},
-    time::Duration,
-};
-
 use crate::System;
+use log::trace;
 use openssh::{KnownHosts, Session};
-use tokio::{net::TcpListener, process::Command};
+use std::time::Duration;
+use tokio::process::Command;
 
 #[derive(Debug)]
 pub enum Operation {
@@ -15,34 +12,68 @@ pub enum Operation {
     SuspendDesktop,
 }
 
+/// Simple wrapper with the trace logs
+/// Runs in ssh if receives an ssh session, locally if not
+pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Result<String, String> {
+    trace!("Sending command: {}", command);
+    match ssh_session {
+        Some(sesh) => {
+            match sesh.shell(command).output().await {
+                Ok(out) => {
+                    let stdout = String::from_utf8(out.stdout.clone()).expect("");
+                    let stderr = String::from_utf8(out.stderr.clone()).expect("");
+
+                    if stderr.len() != 0 {
+                        return Err(stderr);
+                    }
+
+                    return Ok(stdout);
+                }
+                Err(e) => {
+                    return Err(format!("Failed to execute command. Error: {e}"));
+                }
+            };
+        }
+        None => {
+            match Command::new("sh").arg("-c").arg(command).output().await {
+                Ok(out) => {
+                    let stdout = String::from_utf8(out.stdout.clone()).expect("");
+                    let stderr = String::from_utf8(out.stderr.clone()).expect("");
+                    trace!("stdout: {stdout}");
+                    trace!("stderr: {stderr}");
+
+                    if stderr.len() != 0 {
+                        return Err(stderr);
+                    }
+
+                    return Ok(stdout);
+                }
+                Err(e) => {
+                    return Err(format!("Failed to execute command. Error: {e}"));
+                }
+            };
+        }
+    }
+}
+
 pub async fn suspend(sys: System) -> Result<String, String> {
     let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
     let session = match Session::connect(session_access, KnownHosts::Strict).await {
         Ok(session) => session,
         Err(e) => {
             return Err(format!(
-                "Failed ssh connection to {0}. Error: {e}",
-                session_access
+                "Failed ssh connection to {session_access}. Error: {e}"
             ));
         }
     };
 
-    return match session.shell("sudo systemctl suspend").output().await {
-        Ok(out) => {
-            println!("stdout: {}", String::from_utf8(out.stdout).expect(""));
-            println!("stderr: {}", String::from_utf8(out.stderr).expect(""));
-            Ok("Done".to_string())
-        }
-        Err(e) => {
-            return Err(format!("Failed to execute command. Error: {e}"));
-        }
-    };
+    return send_command("sudo systemctl suspend", Some(&session)).await;
 }
 
 pub async fn is_online(target_sys: System) -> bool {
     return ping_rs::send_ping(
         &target_sys.ip.parse().unwrap(),
-        Duration::from_secs(1),
+        Duration::from_millis(100),
         &[1, 2, 3, 4],
         None,
     )
@@ -59,55 +90,13 @@ pub async fn wakeup(target_sys: System) -> Result<String, String> {
         }
     };
 
-    match Command::new("sh")
-        .arg("-c")
-        .arg("wol ".to_string() + &mac)
-        .output()
-        .await
-    {
-        Ok(_) => return Ok("Success".to_string()),
-        Err(e) => {
-            return Err(format!("Failed to execute command. Error: {e}"));
-        }
-    };
+    return send_command(&format!("wol {}", &mac), None).await;
 }
 
-pub async fn get_ipv4(sys: System) -> Result<String, String> {
-    let session_access: &str = &(sys.user.to_owned() + "@" + &sys.ip);
-    let session = match Session::connect(session_access, KnownHosts::Strict).await {
-        Ok(session) => session,
-        Err(e) => {
-            return Err(format!(
-                "Failed ssh connection to {0}. Error: {e}",
-                session_access
-            ));
-        }
-    };
-
-    let output = match session
-        .command("dig")
-        .arg("@resolver1.opendns.com")
-        .arg("A")
-        .arg("myip.opendns.com")
-        .arg("+short")
-        .arg("-4")
-        .output()
-        .await
-    {
-        Ok(output) => output,
-        Err(e) => {
-            return Err(format!("Failed to execute command. Error: {e}"));
-        }
-    };
-
-    let output = match String::from_utf8(output.stdout) {
-        Ok(output) => output,
-        Err(e) => {
-            return Err(format!(
-                "Failed to convert command output to UTF-8. Error: {e}"
-            ));
-        }
-    };
-
-    Ok(output)
+pub async fn get_ipv4() -> Result<String, String> {
+    return send_command(
+        "dig @resolver1.opendns.com A myip.opendns.com +short -4",
+        None,
+    )
+    .await;
 }
