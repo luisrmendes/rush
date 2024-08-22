@@ -162,7 +162,6 @@ async fn main() {
     let ctx = load_env_vars();
     pretty_env_logger::init();
 
-    println! {"{ctx:?}"};
     if let Err(e) = check_pcs_access(&ctx.systems).await {
         warn!("Failed to check PC access. Error: {e}");
     }
