@@ -145,7 +145,7 @@ async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
             .is_ok()
         {
         } else {
-            return_str += &("system".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
+            return_str += &("\tsystem".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
             error = true;
         };
     }
