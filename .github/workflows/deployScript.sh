@@ -12,6 +12,7 @@ else
 fi
 
 tmux send-keys -t $tmuxSessionName "^C" Enter
+tmux send-keys -t $tmuxSessionName "^C" Enter
 
 tmuxSeshCommand=""
 tmuxSeshCommand="${tmuxSeshCommand} cd /home/lrm/sideProjs/rush && git pull && cargo build --release && "
