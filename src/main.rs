@@ -7,7 +7,7 @@ use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
 use log::{trace, warn};
 use openssh::{KnownHosts, Session};
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 use telegram_bot::TelegramBot;
 use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
 use tokio::{
@@ -30,7 +30,7 @@ struct OfficeEnv {
     humidity: u32,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Context {
     env_sensor_address_port: String,
     systems: Vec<System>,
@@ -40,71 +40,98 @@ fn load_env_vars() -> Context {
     dotenv().ok();
 
     // Check for the expected env vars
-    let mut env_var_map = HashMap::from([
-        ("ESP8266_ADDRESS_PORT", String::new()),
-        ("SYSTEM0_USER", String::new()),
-        ("SYSTEM0_IP_ADDR", String::new()),
-        ("SYSTEM1_USER", String::new()),
-        ("SYSTEM1_IP_ADDR", String::new()),
-        ("SYSTEM2_USER", String::new()),
-        ("SYSTEM2_IP_ADDR", String::new()),
-        ("SYSTEM2_MAC", String::new()),
-    ]);
+    let env_var_map = vec![
+        "ESP8266_ADDRESS_PORT",
+        "SYRINX_VARS",
+        "SNOWDOG_VARS",
+        "THINKPADX1_VARS",
+    ];
 
-    for (env_var, value) in &mut env_var_map {
-        let val = std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
-        assert!(!val.is_empty(), "{env_var} is empty. Please set it.");
-        *value = val;
+    let mut systems = vec![];
+    let mut esp8266_addr_port = String::new();
+
+    for env_var in env_var_map {
+        let system_vars =
+            std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
+        assert!(
+            !system_vars.is_empty(),
+            "{env_var} is empty. Please set it."
+        );
+
+        // Parse the SYSTEMX_VARS string
+        match env_var {
+            "ESP8266_ADDRESS_PORT" => {
+                let val =
+                    std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
+                assert!(!val.is_empty(), "{env_var} is empty. Please set it.");
+                esp8266_addr_port = val;
+            }
+            "SNOWDOG_VARS" => {
+                let mut user = String::new();
+                let mut ip = String::new();
+                let mut mac = String::new();
+
+                for part in system_vars.split(';') {
+                    let mut key_value = part.split('=');
+                    let Some(key) = key_value.next() else {
+                        panic!("{part} has no next!")
+                    };
+                    let Some(value) = key_value.next() else {
+                        panic!("{part} has no next!")
+                    };
+
+                    match key {
+                        "user" => user = value.to_string(),
+                        "ip" => ip = value.to_string(),
+                        "mac" => mac = value.to_string(),
+                        other => {
+                            panic!("Not handling key {other}")
+                        }
+                    }
+                }
+                systems.push(System {
+                    user,
+                    ip,
+                    mac: Some(mac),
+                });
+            }
+            "SYRINX_VARS" | "THINKPADX1_VARS" => {
+                let mut user = String::new();
+                let mut ip = String::new();
+
+                for part in system_vars.split(';') {
+                    let mut key_value = part.split('=');
+                    let Some(key) = key_value.next() else {
+                        panic!("{part} has no next!")
+                    };
+                    let Some(value) = key_value.next() else {
+                        panic!("{part} has no next!")
+                    };
+
+                    match key {
+                        "user" => user = value.to_string(),
+                        "ip" => ip = value.to_string(),
+                        other => {
+                            panic!("Not handling key {other}")
+                        }
+                    }
+                }
+                systems.push(System {
+                    user,
+                    ip,
+                    mac: None,
+                });
+            }
+            other => {
+                panic!("Not handling env var {other}")
+            }
+        }
     }
 
     Context {
-        env_sensor_address_port: env_var_map
-            .get("ESP8266_ADDRESS_PORT")
-            .expect("Why is this empty?")
-            .to_string(),
-        systems: vec![
-            System {
-                user: env_var_map
-                    .get("SYSTEM0_USER")
-                    .expect("Why is this empty?")
-                    .to_string(),
-                mac: None,
-                ip: env_var_map
-                    .get("SYSTEM0_IP_ADDR")
-                    .expect("Why is this empty?")
-                    .to_string(),
-            },
-            System {
-                user: env_var_map
-                    .get("SYSTEM1_USER")
-                    .expect("Why is this empty?")
-                    .to_string(),
-                mac: None,
-                ip: env_var_map
-                    .get("SYSTEM1_IP_ADDR")
-                    .expect("Why is this empty?")
-                    .to_string(),
-            },
-            System {
-                user: env_var_map
-                    .get("SYSTEM2_USER")
-                    .expect("Why is this empty?")
-                    .to_string(),
-                mac: Some(
-                    env_var_map
-                        .get("SYSTEM2_MAC")
-                        .expect("Why is this empty?")
-                        .to_string(),
-                ),
-                ip: env_var_map
-                    .get("SYSTEM2_IP_ADDR")
-                    .expect("Why is this empty?")
-                    .to_string(),
-            },
-        ],
+        env_sensor_address_port: esp8266_addr_port,
+        systems,
     }
-
-    //trace!("Production Url: {}", &esp8266_address);
 }
 
 async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
@@ -135,6 +162,7 @@ async fn main() {
     let ctx = load_env_vars();
     pretty_env_logger::init();
 
+    println! {"{ctx:?}"};
     if let Err(e) = check_pcs_access(&ctx.systems).await {
         warn!("Failed to check PC access. Error: {e}");
     }

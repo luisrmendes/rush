@@ -11,13 +11,9 @@ jobs:
     env:
       TELOXIDE_TOKEN: ${{ secrets.TELOXIDE_TOKEN }}
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
-      SYSTEM0_USER: ${{ secrets.SYSTEM0_USER }}
-      SYSTEM0_IP_ADDR: ${{ secrets.SYSTEM0_IP_ADDR }}
-      SYSTEM1_USER: ${{ secrets.SYSTEM1_USER }}
-      SYSTEM1_IP_ADDR: ${{ secrets.SYSTEM1_IP_ADDR }}
-      SYSTEM2_USER: ${{ secrets.SYSTEM2_USER }}
-      SYSTEM2_IP_ADDR: ${{ secrets.SYSTEM2_IP_ADDR }}
-      SYSTEM2_MAC: ${{ secrets.SYSTEM2_MAC }}
+      SYRINX_VARS: ${{ secrets.SYRINX_VARS }}
+      SNOWDOG_VARS: ${{ secrets.SNOWDOG_VARS }}
+      THINKPADX1_VARS: ${{ secrets.THINKPADX1_VARS }}
 
     defaults:
       run:
@@ -30,4 +26,4 @@ jobs:
 
       - name: Run Deploy Script
         run: chmod +x .github/workflows/deployScript.sh &&
-          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYSTEM0_USER $SYSTEM0_IP_ADDR $SYSTEM1_USER $SYSTEM1_IP_ADDR $SYSTEM2_USER $SYSTEM2_IP_ADDR $SYSTEM2_MAC
+          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS

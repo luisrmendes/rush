@@ -15,7 +15,7 @@ tmux send-keys -t $tmuxSessionName "^C" Enter
 
 tmuxSeshCommand=""
 tmuxSeshCommand="${tmuxSeshCommand} cd /home/lrm/sideProjs/rush && git pull && cargo build --release && "
-tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYSTEM0_USER=$3 SYSTEM0_IP_ADDR=$4 SYSTEM1_USER=$5 SYSTEM1_IP_ADDR=$6 SYSTEM2_USER=$7 SYSTEM2_IP_ADDR=$8 SYSTEM2_MAC=$9"
+tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYRINX_VARS=$3 SNOWDOG_VARS=$4 THINKPADX1_VARS=$5"
 tmuxSeshCommand="${tmuxSeshCommand} RUST_LOG=warn target/release/rush Enter"
 
 tmux send-keys -t $tmuxSessionName "${tmuxSeshCommand}" Enter
