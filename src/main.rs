@@ -39,6 +39,8 @@ pub struct Context {
 fn load_env_vars() -> Context {
     dotenv().ok();
 
+    std::env::var("TELOXIDE_TOKEN").unwrap_or_else(|_| panic!("TELOXIDE_TOKEN must be set."));
+
     // Check for the expected env vars
     let env_var_map = vec![
         "ESP8266_ADDRESS_PORT",

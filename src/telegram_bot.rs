@@ -54,6 +54,7 @@ impl TelegramBot {
             let context_clone = Arc::clone(&context_arc);
             async move {
                 trace!("Received from bot: {:?}", msg.text());
+                println!("chatId:{}", msg.chat.id);
 
                 let command = match Self::parse_commands(msg.text()) {
                     Ok(cmd) => cmd,
