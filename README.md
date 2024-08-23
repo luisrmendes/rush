@@ -6,19 +6,13 @@ My monolithic project to control everything in my house.
 Handles Telegram bot chat API and climate data through ESP8266 sensors. Controls desktops (monitor and keyboard brightness according to ambient brightness, desktop wakeup), telegram chat commands and electric outlet control with RaspberryPi and Energienie sockets.
 Using GitHub actions for automatic deploy.
 
-ESP8266_ADDRESS_PORT=192.168.1.69:4080
-
 ## Telegram Bot commands and description  
 
-desktop_wakeup - Wake up desktop WoL  
 ipv4 - Get ipv4 home address  
-ipv6 - Get ipv6 home address  
-desktop_status - Check if desktops are online, what OS are running  
-lights_on - Turns on sockets 1 and 2  
-lights_off - Turns off sockets 1 and 2  
+wakeup_snowdog - Wake up desktop WoL  
+status_snowdog - Check if Snowdog is online    
 disable_brightness_auto_control - Disable automatic brightness control  
 enable_brightness_auto_control - Enable automatic brightness control  
-get_system_status - Get system status
 
 ## ESP8266 PIN layout
 

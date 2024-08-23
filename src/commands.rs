@@ -4,14 +4,6 @@ use openssh::{KnownHosts, Session};
 use std::time::Duration;
 use tokio::process::Command;
 
-#[derive(Debug)]
-pub enum Operation {
-    GetIpv4,
-    WakeupDesktop,
-    StatusDesktop,
-    SuspendDesktop,
-}
-
 /// Simple wrapper with the trace logs
 /// Runs in ssh if receives an ssh session, locally if not
 pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Result<String, String> {

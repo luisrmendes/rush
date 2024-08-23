@@ -1,9 +1,17 @@
 use crate::{
-    commands::{self, Operation},
+    commands::{self},
     Context,
 };
 use log::trace;
 use std::sync::Arc;
+
+#[derive(Debug)]
+pub enum Operation {
+    GetIpv4,
+    WakeupSnowdog,
+    StatusSnowdog,
+    SuspendSnowdog,
+}
 
 pub struct TelegramBot {
     context: Context,
@@ -16,10 +24,10 @@ impl TelegramBot {
 
     async fn execute(ctx: &Context, op: &Operation) -> Result<String, String> {
         match op {
-            Operation::SuspendDesktop => commands::suspend(ctx.systems[1].clone()).await,
-            Operation::WakeupDesktop => commands::wakeup(ctx.systems[2].clone()).await,
-            Operation::StatusDesktop => {
-                Ok(commands::is_online(&ctx.systems[2].clone()).to_string())
+            Operation::SuspendSnowdog => commands::suspend(ctx.systems[1].clone()).await,
+            Operation::WakeupSnowdog => commands::wakeup(ctx.systems[1].clone()).await,
+            Operation::StatusSnowdog => {
+                Ok(commands::is_online(&ctx.systems[1].clone()).to_string())
             }
             Operation::GetIpv4 => commands::get_ipv4().await,
         }
@@ -29,9 +37,9 @@ impl TelegramBot {
         let parsed_msg: &str = text.unwrap_or_default();
         match parsed_msg {
             "/ipv4" => Ok(Operation::GetIpv4),
-            "/desktop_wakeup" => Ok(Operation::WakeupDesktop),
-            "/desktop_status" => Ok(Operation::StatusDesktop),
-            "/desktop_suspend" => Ok(Operation::SuspendDesktop),
+            "/snowdog_wakeup" => Ok(Operation::WakeupSnowdog),
+            "/snowdog_status" => Ok(Operation::StatusSnowdog),
+            "/snowdog_suspend" => Ok(Operation::SuspendSnowdog),
             other => Err(format!("Unknown command {other}")),
         }
     }
