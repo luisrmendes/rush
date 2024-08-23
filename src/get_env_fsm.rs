@@ -13,7 +13,6 @@ use crate::OfficeEnv;
 enum State {
     Connecting,
     Connected,
-    Disconnected,
 }
 
 pub struct Fsm {
@@ -26,7 +25,7 @@ pub struct Fsm {
 impl Fsm {
     pub fn new(ctx: Context, env_data: Arc<Mutex<OfficeEnv>>) -> Self {
         Self {
-            state: State::Disconnected,
+            state: State::Connecting,
             context: ctx,
             env_data,
             stream: None,
@@ -38,7 +37,6 @@ impl Fsm {
             match self.state {
                 State::Connecting => self.connecting().await,
                 State::Connected => self.connected().await,
-                State::Disconnected => self.disconnected(),
             }
         }
     }
@@ -65,7 +63,7 @@ impl Fsm {
 
         let Some(stream) = &mut self.stream else {
             trace!("Tcp stream is unavailable");
-            self.state = State::Disconnected;
+            self.state = State::Connecting;
             return;
         };
 
@@ -75,7 +73,7 @@ impl Fsm {
             match timeout(Duration::from_secs(2), stream.read(&mut buffer)).await {
                 Ok(Ok(0)) => {
                     warn!("Connection gracefully closed");
-                    self.state = State::Disconnected;
+                    self.state = State::Connecting;
                     return;
                 }
                 Ok(Ok(n)) => {
@@ -84,12 +82,12 @@ impl Fsm {
                 }
                 Ok(Err(e)) => {
                     warn!("Read error: {e:?}. Going to Disconnected");
-                    self.state = State::Disconnected;
+                    self.state = State::Connecting;
                     return;
                 }
                 Err(_) => {
                     warn!("Timed out waiting for data");
-                    self.state = State::Disconnected;
+                    self.state = State::Connecting;
                     return;
                 }
             };
@@ -113,12 +111,5 @@ impl Fsm {
 
         let mut stored_env_data = self.env_data.lock().await;
         *stored_env_data = env_data;
-    }
-
-    fn disconnected(&mut self) {
-        trace!("Disconnected");
-        // TODO: Set some state in the data repositories that makes sense
-        self.state = State::Connecting;
-        self.stream = None;
     }
 }

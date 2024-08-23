@@ -15,7 +15,6 @@ use tokio::time::Duration;
 enum State {
     Connecting,
     Connected,
-    Disconnected,
 }
 
 pub struct Fsm {
@@ -107,7 +106,7 @@ impl Fsm {
     async fn connected(&mut self) {
         let Some(session) = &self.session else {
             trace!("Not connected");
-            self.state = State::Disconnected;
+            self.state = State::Connecting;
             return;
         };
 
@@ -134,25 +133,18 @@ impl Fsm {
         }
     }
 
-    fn disconnected(&mut self) {
-        trace!("Disconnected");
-        self.state = State::Connecting;
-        self.session = None;
-    }
-
     pub async fn run(&mut self) {
         loop {
             match self.state {
                 State::Connecting => self.connecting().await,
                 State::Connected => self.connected().await,
-                State::Disconnected => self.disconnected(),
             }
         }
     }
 
     pub fn new(sys: System, env_data: Arc<Mutex<OfficeEnv>>) -> Self {
         Self {
-            state: State::Disconnected,
+            state: State::Connecting,
             system: sys,
             env_data,
             session: None,
