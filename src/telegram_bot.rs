@@ -37,9 +37,9 @@ impl TelegramBot {
         let parsed_msg: &str = text.unwrap_or_default();
         match parsed_msg {
             "/ipv4" => Ok(Operation::GetIpv4),
-            "/snowdog_wakeup" => Ok(Operation::WakeupSnowdog),
-            "/snowdog_status" => Ok(Operation::StatusSnowdog),
-            "/snowdog_suspend" => Ok(Operation::SuspendSnowdog),
+            "/wakeup_snowdog" => Ok(Operation::WakeupSnowdog),
+            "/status_snowdog" => Ok(Operation::StatusSnowdog),
+            "/suspend_snowdog" => Ok(Operation::SuspendSnowdog),
             other => Err(format!("Unknown command {other}")),
         }
     }
@@ -49,6 +49,8 @@ impl TelegramBot {
 
         let bot = Bot::from_env();
         let context_arc = Arc::new(self.context.clone());
+
+        let _ = bot.send_message(ChatId(322011297), "Hi!");
 
         teloxide::repl(bot, move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);

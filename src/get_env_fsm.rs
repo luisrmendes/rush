@@ -42,6 +42,7 @@ impl Fsm {
     }
 
     async fn connecting(&mut self) {
+        self.stream = None;
         let address = &self.context.env_sensor_address_port;
         trace!("Attempting to connect to {address}");
 
