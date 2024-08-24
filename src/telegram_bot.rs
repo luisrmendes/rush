@@ -50,13 +50,16 @@ impl TelegramBot {
         let bot = Bot::from_env();
         let context_arc = Arc::new(self.context.clone());
 
-        let _ = bot.send_message(ChatId(322011297), "Hi!");
+        let my_chat_id = 322_011_297;
+        let _ = bot
+            .send_message(ChatId(my_chat_id), "Hi, I'm online")
+            .send()
+            .await;
 
         teloxide::repl(bot, move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
             async move {
                 trace!("Received from bot: {:?}", msg.text());
-                println!("chatId:{}", msg.chat.id);
 
                 let command = match Self::parse_commands(msg.text()) {
                     Ok(cmd) => cmd,
