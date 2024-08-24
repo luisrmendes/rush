@@ -1,9 +1,21 @@
 use crate::{
     commands::{self},
-    Context,
+    Context, GlobalState,
 };
 use log::trace;
-use std::sync::Arc;
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
+use teloxide::{
+    prelude::{Request, Requester},
+    types::ChatId,
+    Bot,
+};
+use tokio::{sync::Mutex, time::sleep};
 
 #[derive(Debug)]
 pub enum Operation {
@@ -15,11 +27,28 @@ pub enum Operation {
 
 pub struct TelegramBot {
     context: Context,
+    global_state: Arc<Mutex<GlobalState>>,
 }
 
 impl TelegramBot {
-    pub fn new(ctx: Context) -> Self {
-        Self { context: ctx }
+    /// Loop function that messages the telegram bot when I'm home or not
+    /// I'm home if my phone is connected to the local networku
+    async fn poll_am_i_online(&self, bot: &Bot, chat_id: ChatId) -> bool {
+        loop {
+            static STORE_AM_I_ONLINE_STATE: AtomicBool = AtomicBool::new(false);
+            let state = self.global_state.lock().await.am_i_home;
+            trace!("Am I home? {state}");
+
+            if state != STORE_AM_I_ONLINE_STATE.load(Ordering::Relaxed) {
+                if state {
+                    let _ = bot.send_message(chat_id, "You are at home!").send().await;
+                } else {
+                    let _ = bot.send_message(chat_id, "You are not home!").send().await;
+                }
+                STORE_AM_I_ONLINE_STATE.store(state, Ordering::SeqCst);
+            }
+            sleep(Duration::from_millis(1000)).await;
+        }
     }
 
     async fn execute(ctx: &Context, op: &Operation) -> Result<String, String> {
@@ -50,11 +79,10 @@ impl TelegramBot {
         let bot = Bot::from_env();
         let context_arc = Arc::new(self.context.clone());
 
-        let my_chat_id = 322_011_297;
-        let _ = bot
-            .send_message(ChatId(my_chat_id), "Hi, I'm online")
-            .send()
-            .await;
+        let my_chat_id: ChatId = ChatId(322_011_297);
+        let _ = bot.send_message(my_chat_id, "Hey I am up!").send().await;
+
+        self.poll_am_i_online(&bot, my_chat_id).await;
 
         teloxide::repl(bot, move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
@@ -85,5 +113,12 @@ impl TelegramBot {
             }
         })
         .await;
+    }
+
+    pub fn new(context: Context, global_state: Arc<Mutex<GlobalState>>) -> Self {
+        Self {
+            context,
+            global_state,
+        }
     }
 }
