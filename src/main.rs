@@ -7,13 +7,12 @@ use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
 use log::{trace, warn};
 use openssh::{KnownHosts, Session};
-use std::{sync::Arc, time::Duration};
+use std::sync::Arc;
 use telegram_bot::TelegramBot;
 use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
 use tokio::{
     signal,
     sync::{broadcast, Mutex},
-    time::sleep,
 };
 
 #[derive(Clone, Debug)]
@@ -40,20 +39,6 @@ struct OfficeEnv {
     brightness: u32,
     temperature: u32,
     humidity: u32,
-}
-
-async fn get_am_i_online(global_state: Arc<Mutex<GlobalState>>) {
-    loop {
-        match commands::send_command("nmap -T5 --max-retries 5 -sn 192.168.1.0/24", None).await {
-            Ok(out) => {
-                global_state.lock().await.am_i_home = out.contains("unknownbc7fa4343f2d");
-            }
-            Err(e) => {
-                println!("err: {e}");
-            }
-        };
-        sleep(Duration::from_secs(1)).await;
-    }
 }
 
 fn load_env_vars() -> Context {
@@ -239,17 +224,18 @@ async fn main() {
         }
     });
 
+    // Task 4: Am I at home?
     let mut shutdown_rx4 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle4 = tokio::spawn(async move {
         tokio::select! {
-            () = get_am_i_online(global_state.clone()) => {},
+            () = commands::get_am_i_home(global_state.clone()) => {},
             _ = shutdown_rx4.recv() => {
                 trace!("telegram_bot received shutdown signal");
             }
         }
     });
 
-    // Task 4: Listen for Ctrl-C and broadcast the shutdown signal
+    // Task 5: Listen for Ctrl-C and broadcast the shutdown signal
     let shutdown_listener = tokio::spawn(async move {
         signal::ctrl_c().await.expect("Failed to listen for Ctrl-C");
         trace!("Ctrl-C received, sending shutdown signal...");
