@@ -22,6 +22,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
             Ok(out) => {
                 if out.contains("unknownbc7fa4343f2d") {
                     global_state.lock().await.am_i_home = true;
+                    AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
                 } else if am_i_at_home {
                     // increments the counter if does not find my phone
                     AM_I_NOT_AT_HOME_COUNTER.fetch_add(1, Ordering::Relaxed);
@@ -37,7 +38,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
         };
 
         if global_state.lock().await.am_i_home
-            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) >= 3
+            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) >= 5
         {
             global_state.lock().await.am_i_home = false;
             AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
