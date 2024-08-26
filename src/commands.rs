@@ -1,5 +1,5 @@
 use crate::{GlobalState, System};
-use log::{trace, warn};
+use log::{error, trace, warn};
 use openssh::{KnownHosts, Session};
 use std::{
     sync::{
@@ -33,7 +33,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
                 }
             }
             Err(e) => {
-                println!("Send command error: {e}");
+                error!("Send command error: {e}");
             }
         };
 
