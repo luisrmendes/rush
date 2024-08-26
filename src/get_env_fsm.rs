@@ -9,6 +9,7 @@ use tokio::time::timeout;
 use tokio::time::Duration;
 
 use crate::Context;
+use crate::GlobalState;
 use crate::OfficeEnv;
 enum State {
     Connecting,
@@ -18,16 +19,16 @@ enum State {
 pub struct Fsm {
     state: State,
     context: Context,
-    env_data: Arc<Mutex<OfficeEnv>>,
+    global_state: Arc<Mutex<GlobalState>>,
     stream: Option<TcpStream>,
 }
 
 impl Fsm {
-    pub fn new(ctx: Context, env_data: Arc<Mutex<OfficeEnv>>) -> Self {
+    pub fn new(ctx: Context, global_state: Arc<Mutex<GlobalState>>) -> Self {
         Self {
             state: State::Connecting,
             context: ctx,
-            env_data,
+            global_state,
             stream: None,
         }
     }
@@ -93,16 +94,16 @@ impl Fsm {
                 }
             };
 
-        let env_data: Result<Vec<u32>, _> = String::from_utf8_lossy(&buffer[..recv_length])
+        let office_env: Result<Vec<u32>, _> = String::from_utf8_lossy(&buffer[..recv_length])
             .split_whitespace()
             .map(str::parse)
             .collect();
 
-        let env_data: OfficeEnv = match env_data {
-            Ok(env_data) => OfficeEnv {
-                brightness: env_data[1],
-                temperature: env_data[2],
-                humidity: env_data[3],
+        let office_env: OfficeEnv = match office_env {
+            Ok(office_env) => OfficeEnv {
+                brightness: office_env[1],
+                temperature: office_env[2],
+                humidity: office_env[3],
             },
             Err(e) => {
                 warn!("Failed parse info. Error = {e:?}");
@@ -110,7 +111,7 @@ impl Fsm {
             }
         };
 
-        let mut stored_env_data = self.env_data.lock().await;
-        *stored_env_data = env_data;
+        let mut global_state = self.global_state.lock().await;
+        global_state.office_env = office_env;
     }
 }

@@ -1,6 +1,6 @@
 use crate::{GlobalState, System};
-use log::{trace, warn};
-use openssh::{KnownHosts, Session};
+use log::{error, trace, warn};
+use openssh::{KnownHosts, Session, SessionBuilder};
 use std::{
     sync::{
         atomic::{AtomicI16, Ordering},
@@ -10,9 +10,37 @@ use std::{
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
+pub async fn check_pc_ssh_access(systems: &[System]) -> Result<(), String> {
+    trace!("checking for PC accesses");
+
+    // this can be written better
+    let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
+    let mut error: bool = false;
+    for (i, sys) in systems.iter().enumerate() {
+        let session_access: String = sys.user.clone() + "@" + &sys.ip;
+
+        let mut sesh_builder = SessionBuilder::default();
+        sesh_builder.user("lrm".to_owned());
+        sesh_builder.connect_timeout(Duration::from_secs(2));
+
+        if sesh_builder.connect(session_access).await.is_ok() {
+        } else {
+            return_str += &("\tsystem".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
+            error = true;
+        };
+    }
+
+    if error {
+        Err(return_str)
+    } else {
+        Ok(())
+    }
+}
+
 /// Polling function that updates global state if i am at home or nor
 /// I am at home if my phone is connected to the local network
 /// Assumes i am not at home if my phone is not in the network in three consecutive searches
+/// TODO: Check if dependencies exist. If not, install (nmap)
 pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
     loop {
         static AM_I_NOT_AT_HOME_COUNTER: AtomicI16 = AtomicI16::new(0);
@@ -33,7 +61,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
                 }
             }
             Err(e) => {
-                println!("Send command error: {e}");
+                error!("Send command error: {e}");
             }
         };
 

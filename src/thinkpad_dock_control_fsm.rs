@@ -1,5 +1,5 @@
 use crate::commands::send_command;
-use crate::OfficeEnv;
+use crate::GlobalState;
 use crate::System;
 use log::error;
 use log::trace;
@@ -20,7 +20,7 @@ enum State {
 pub struct Fsm {
     state: State,
     system: System,
-    env_data: Arc<Mutex<OfficeEnv>>,
+    global_state: Arc<Mutex<GlobalState>>,
     session: Option<Session>,
 }
 
@@ -110,7 +110,7 @@ impl Fsm {
             return;
         };
 
-        let env_brightness = self.env_data.lock().await.brightness;
+        let env_brightness = self.global_state.lock().await.office_env.brightness;
 
         let command = if let Ok(cmd) = get_brightness_cmds(env_brightness) {
             trace!("Sending command: {cmd}");
@@ -142,11 +142,11 @@ impl Fsm {
         }
     }
 
-    pub fn new(sys: System, env_data: Arc<Mutex<OfficeEnv>>) -> Self {
+    pub fn new(sys: System, global_state: Arc<Mutex<GlobalState>>) -> Self {
         Self {
             state: State::Connecting,
             system: sys,
-            env_data,
+            global_state,
             session: None,
         }
     }
