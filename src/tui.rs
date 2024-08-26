@@ -4,7 +4,7 @@ use ratatui::{
     backend::CrosstermBackend,
     crossterm::{
         self, execute,
-        terminal::{Clear, ClearType},
+        terminal::{Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
     },
     layout::{Constraint, Direction, Layout},
     widgets::{Block, Borders, Paragraph},
@@ -24,6 +24,7 @@ impl Tui {
 
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         execute!(std::io::stdout(), Clear(ClearType::All))?;
+        execute!(io::stdout(), EnterAlternateScreen)?;
 
         let stdout = io::stdout();
         let backend = CrosstermBackend::new(stdout);
@@ -86,14 +87,14 @@ impl Tui {
             if event::poll(Duration::from_millis(16))? {
                 if let Event::Key(key) = event::read()? {
                     if key.code == KeyCode::Char('q') {
-                        break;
+                        terminal.clear()?;
+                        terminal.show_cursor()?;
+                        execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
+                        execute!(std::io::stdout(), Clear(ClearType::All))?;
+                        std::process::exit(0);
                     }
                 }
             }
         }
-
-        // Cleanup the terminal
-        terminal.clear()?;
-        Ok(())
     }
 }
