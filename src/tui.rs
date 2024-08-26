@@ -2,7 +2,10 @@ use crate::GlobalState;
 use crossterm::event::{self, Event, KeyCode};
 use ratatui::{
     backend::CrosstermBackend,
-    crossterm,
+    crossterm::{
+        self, execute,
+        terminal::{Clear, ClearType},
+    },
     layout::{Constraint, Direction, Layout},
     style::{Color, Style},
     widgets::{Block, Borders, Gauge, Paragraph},
@@ -21,6 +24,8 @@ impl Tui {
     }
 
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+        execute!(std::io::stdout(), Clear(ClearType::All))?;
+
         let stdout = io::stdout();
         let backend = CrosstermBackend::new(stdout);
         let mut terminal = Terminal::new(backend)?;
@@ -61,11 +66,11 @@ impl Tui {
                     ])
                     .split(chunks[2]);
 
-                let value1_paragraph = Paragraph::new(format!("{}", brightness))
+                let value1_paragraph = Paragraph::new(format!("{brightness}"))
                     .block(Block::default().borders(Borders::ALL).title("Brightness"));
-                let value2_paragraph = Paragraph::new(format!("{}", temp))
+                let value2_paragraph = Paragraph::new(format!("{temp}"))
                     .block(Block::default().borders(Borders::ALL).title("Temperature"));
-                let value3_paragraph = Paragraph::new(format!("{}", am_i_home))
+                let value3_paragraph = Paragraph::new(format!("{am_i_home}"))
                     .block(Block::default().borders(Borders::ALL).title("Am I home?"));
 
                 f.render_widget(value1_paragraph, inner_chunks[0]);

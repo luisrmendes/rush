@@ -147,6 +147,9 @@ fn load_env_vars() -> Context {
 async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
     trace!("checking for PC accesses");
 
+    // TODO: Add a timeout and restructure
+    return Ok(());
+
     // this can be written better
     let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
     let mut error: bool = false;
@@ -185,10 +188,9 @@ async fn main() {
 
     // TODO: Are the systems online?
 
-    // TODO: Add a timeout and restructure
-    // if let Err(e) = check_pcs_access(&ctx.systems).await {
-    //     warn!("Failed to check PC access. Error: {e}");
-    // }
+    if let Err(e) = check_pcs_access(&ctx.systems).await {
+        warn!("Failed to check PC access. Error: {e}");
+    }
 
     let mut env_fsm = env_fsm::new(ctx.clone(), global_state.clone());
     let mut thinkpad_ctrl_fsm =
@@ -244,15 +246,15 @@ async fn main() {
     });
 
     // Task 5: TUI
-    // let mut shutdown_rx5 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
-    // let handle5 = tokio::spawn(async move {
-    //     tokio::select! {
-    //         _ = tui.run() => {},
-    //         _ = shutdown_rx5.recv() => {
-    //             trace!("tui received shutdown signal");
-    //         }
-    //     }
-    // });
+    let mut shutdown_rx5 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    let handle5 = tokio::spawn(async move {
+        tokio::select! {
+            _ = tui.run() => {},
+            _ = shutdown_rx5.recv() => {
+                trace!("tui received shutdown signal");
+            }
+        }
+    });
 
     // Listen for Ctrl-C and broadcast the shutdown signal
     let shutdown_listener = tokio::spawn(async move {
@@ -267,7 +269,7 @@ async fn main() {
         handle2,
         handle3,
         handle4,
-        // handle5,
+        handle5,
         shutdown_listener
     );
 }
