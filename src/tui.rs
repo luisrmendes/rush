@@ -7,8 +7,7 @@ use ratatui::{
         terminal::{Clear, ClearType},
     },
     layout::{Constraint, Direction, Layout},
-    style::{Color, Style},
-    widgets::{Block, Borders, Gauge, Paragraph},
+    widgets::{Block, Borders, Paragraph},
     Terminal,
 };
 use std::{io, sync::Arc, time::Duration};
@@ -33,6 +32,7 @@ impl Tui {
         loop {
             let brightness = self.global_state.lock().await.office_env.brightness;
             let temp = self.global_state.lock().await.office_env.temperature;
+            let humidity = self.global_state.lock().await.office_env.humidity;
             let am_i_home = self.global_state.lock().await.am_i_home;
 
             // Draw the terminal UI
@@ -41,28 +41,29 @@ impl Tui {
                 let chunks = Layout::default()
                     .direction(Direction::Vertical)
                     .constraints([
-                        Constraint::Percentage(30), // For progress bar
-                        Constraint::Percentage(30), // For value rectangles
-                        Constraint::Percentage(30), // For value rectangles
+                        Constraint::Percentage(10), // For progress bar
+                        Constraint::Percentage(10), // For value rectangles
+                        Constraint::Percentage(10), // For value rectangles
+                        Constraint::Percentage(10), // For value rectangles
                     ])
                     .split(size);
 
-                let progress_value = 0.2;
-
-                // Draw the progress bar
-                let gauge = Gauge::default()
-                    .block(Block::default().borders(Borders::ALL).title("Progress"))
-                    .gauge_style(Style::default().fg(Color::Green))
-                    .ratio(progress_value);
-                f.render_widget(gauge, chunks[0]);
+                // // Draw the progress bar
+                // let progress_value = 0.2;
+                // let gauge = Gauge::default()
+                //     .block(Block::default().borders(Borders::ALL).title("Progress"))
+                //     .gauge_style(Style::default().fg(Color::Green))
+                //     .ratio(progress_value);
+                // f.render_widget(gauge, chunks[0]);
 
                 // Draw the value rectangles
                 let inner_chunks = Layout::default()
                     .direction(Direction::Horizontal)
                     .constraints([
-                        Constraint::Percentage(20),
-                        Constraint::Percentage(20),
-                        Constraint::Percentage(20),
+                        Constraint::Percentage(10),
+                        Constraint::Percentage(10),
+                        Constraint::Percentage(10),
+                        Constraint::Percentage(10),
                     ])
                     .split(chunks[2]);
 
@@ -70,12 +71,15 @@ impl Tui {
                     .block(Block::default().borders(Borders::ALL).title("Brightness"));
                 let value2_paragraph = Paragraph::new(format!("{temp}"))
                     .block(Block::default().borders(Borders::ALL).title("Temperature"));
-                let value3_paragraph = Paragraph::new(format!("{am_i_home}"))
+                let value3_paragraph = Paragraph::new(format!("{humidity}"))
+                    .block(Block::default().borders(Borders::ALL).title("Humidity"));
+                let value4_paragraph = Paragraph::new(format!("{am_i_home}"))
                     .block(Block::default().borders(Borders::ALL).title("Am I home?"));
 
                 f.render_widget(value1_paragraph, inner_chunks[0]);
                 f.render_widget(value2_paragraph, inner_chunks[1]);
                 f.render_widget(value3_paragraph, inner_chunks[2]);
+                f.render_widget(value4_paragraph, inner_chunks[3]);
             })?;
 
             // Handle user input to exit the loop

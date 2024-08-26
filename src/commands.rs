@@ -1,6 +1,6 @@
 use crate::{GlobalState, System};
 use log::{error, trace, warn};
-use openssh::{KnownHosts, Session};
+use openssh::{KnownHosts, Session, SessionBuilder};
 use std::{
     sync::{
         atomic::{AtomicI16, Ordering},
@@ -9,6 +9,33 @@ use std::{
     time::Duration,
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
+
+pub async fn check_pc_ssh_access(systems: &[System]) -> Result<(), String> {
+    trace!("checking for PC accesses");
+
+    // this can be written better
+    let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
+    let mut error: bool = false;
+    for (i, sys) in systems.iter().enumerate() {
+        let session_access: String = sys.user.clone() + "@" + &sys.ip;
+
+        let mut sesh_builder = SessionBuilder::default();
+        sesh_builder.user("lrm".to_owned());
+        sesh_builder.connect_timeout(Duration::from_secs(2));
+
+        if sesh_builder.connect(session_access).await.is_ok() {
+        } else {
+            return_str += &("\tsystem".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
+            error = true;
+        };
+    }
+
+    if error {
+        Err(return_str)
+    } else {
+        Ok(())
+    }
+}
 
 /// Polling function that updates global state if i am at home or nor
 /// I am at home if my phone is connected to the local network

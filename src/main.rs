@@ -7,7 +7,6 @@ mod tui;
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
 use log::{trace, warn};
-use openssh::{KnownHosts, Session};
 use std::sync::Arc;
 use telegram_bot::TelegramBot;
 use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
@@ -144,34 +143,6 @@ fn load_env_vars() -> Context {
     }
 }
 
-async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
-    trace!("checking for PC accesses");
-
-    // TODO: Add a timeout and restructure
-    return Ok(());
-
-    // this can be written better
-    let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
-    let mut error: bool = false;
-    for (i, sys) in systems.iter().enumerate() {
-        let session_access: &str = &(sys.user.clone() + "@" + &sys.ip);
-        if Session::connect(session_access, KnownHosts::Strict)
-            .await
-            .is_ok()
-        {
-        } else {
-            return_str += &("\tsystem".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
-            error = true;
-        };
-    }
-
-    if error {
-        Err(return_str)
-    } else {
-        Ok(())
-    }
-}
-
 #[tokio::main]
 async fn main() {
     let global_state: Arc<Mutex<GlobalState>> = Arc::new(Mutex::new(GlobalState {
@@ -188,8 +159,8 @@ async fn main() {
 
     // TODO: Are the systems online?
 
-    if let Err(e) = check_pcs_access(&ctx.systems).await {
-        warn!("Failed to check PC access. Error: {e}");
+    if let Err(e) = commands::check_pc_ssh_access(&ctx.systems).await {
+        warn!("Failed to check PC SSH access. Error: {e}");
     }
 
     let mut env_fsm = env_fsm::new(ctx.clone(), global_state.clone());
