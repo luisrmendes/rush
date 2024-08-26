@@ -142,6 +142,8 @@ fn load_env_vars() -> Context {
 }
 
 async fn check_pcs_access(systems: &[System]) -> Result<(), String> {
+    trace!("checking for PC accesses");
+
     // this can be written better
     let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
     let mut error: bool = false;
@@ -173,9 +175,10 @@ async fn main() {
 
     // TODO: Are the systems online?
 
-    if let Err(e) = check_pcs_access(&ctx.systems).await {
-        warn!("Failed to check PC access. Error: {e}");
-    }
+    // TODO: Add a timeout and restructure
+    // if let Err(e) = check_pcs_access(&ctx.systems).await {
+    //     warn!("Failed to check PC access. Error: {e}");
+    // }
 
     // set some default data on office_env
     let office_env = OfficeEnv {
