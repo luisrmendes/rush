@@ -40,6 +40,7 @@ pub async fn check_pc_ssh_access(systems: &[System]) -> Result<(), String> {
 /// Polling function that updates global state if i am at home or nor
 /// I am at home if my phone is connected to the local network
 /// Assumes i am not at home if my phone is not in the network in three consecutive searches
+/// TODO: Check if dependencies exist. If not, install (nmap)
 pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
     loop {
         static AM_I_NOT_AT_HOME_COUNTER: AtomicI16 = AtomicI16::new(0);
