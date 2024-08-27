@@ -201,18 +201,19 @@ async fn main() {
         }
     });
 
-    // Task 3: Telegram bot
+    // Task 3: Telegram bot answer commands
     let mut shutdown_rx3 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    let bot_clone = telegram_bot.clone();
     let handle3 = tokio::spawn(async move {
         tokio::select! {
-            () = telegram_bot.run() => {},
+            () = bot_clone.answer_commands() => {},
             _ = shutdown_rx3.recv() => {
-                debug!("telegram_bot received shutdown signal");
+                debug!("telegram_bot.answer_commands received shutdown signal");
             }
         }
     });
 
-    // Task 4: Am I at home?
+    // Task 4: Get Am I home
     let mut shutdown_rx4 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle4 = tokio::spawn(async move {
         tokio::select! {
@@ -222,13 +223,24 @@ async fn main() {
             }
         }
     });
-
-    // Task 5: TUI
+    
+    // Task 5: Telegram Bot Update Am I Home
     let mut shutdown_rx5 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle5 = tokio::spawn(async move {
         tokio::select! {
-            _ = tui.run() => {},
+            () = telegram_bot.update_am_i_home() => {},
             _ = shutdown_rx5.recv() => {
+                debug!("telegram_bot.update_am_i_home received shutdown signal");
+            }
+        }
+    });
+
+    // Task 6: TUI
+    let mut shutdown_rx6 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    let handle6 = tokio::spawn(async move {
+        tokio::select! {
+            _ = tui.run() => {},
+            _ = shutdown_rx6.recv() => {
                 debug!("tui received shutdown signal");
             }
         }
@@ -248,6 +260,7 @@ async fn main() {
         handle3,
         handle4,
         handle5,
+        handle6,
         shutdown_listener
     );
 }
