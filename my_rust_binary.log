@@ -1,0 +1,1979 @@
+21:27:56 [DEBUG] (1) rush::commands: checking for PC accesses
+21:27:58 [WARN] Failed to check PC SSH access. Error: Failed to ssh connect to systems:
+	system1: System { user: "lrm", ip: "192.168.1.71", mac: Some("00:D8:61:a1:CE:00") }
+	system2: System { user: "monitorControl", ip: "192.168.1.77", mac: None }
+
+21:27:58 [DEBUG] (12) rush::thinkpad_dock_control_fsm: Connecting
+21:27:58 [DEBUG] (12) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:27:58 [DEBUG] (10) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:27:58 [DEBUG] (13) rush::get_env_fsm: Attempting to connect to 192.168.1.99:4080
+21:27:58 [DEBUG] (2) rush::get_env_fsm: Successfully connected!
+21:27:58 [DEBUG] (11) reqwest::connect: starting new connection: https://api.telegram.org/
+21:27:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:27:58 [DEBUG] (2) rush::telegram_bot: Am I home? false
+21:27:59 [DEBUG] (13) rush::get_env_fsm: Received: 0 10 27 14
+21:27:59 [DEBUG] (13) rush::get_env_fsm: Received: 0 27 27 12
+21:27:59 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:00 [DEBUG] (13) rush::get_env_fsm: Received: 0 29 33 14
+21:28:00 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:27 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000080s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00021s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.036s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0045s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00051s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00011s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00032s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0068s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.000097s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0063s latency).
+Nmap done: 256 IP addresses (10 hosts up) scanned in 1.92 seconds
+
+21:28:00 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:00 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:00 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:00 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:00 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:00 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:01 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 30 11
+21:28:01 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:01 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:01 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:02 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:02 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:02 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:02 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:02 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:03 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:03 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:03 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:03 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:04 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 28 14
+21:28:04 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 29 12
+21:28:04 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:05 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:05 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:05 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:05 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 28 12
+21:28:05 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:05 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:06 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:06 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:06 [DEBUG] (13) rush::telegram_bot: Am I home? false
+21:28:07 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.0053s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.20s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00010s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00016s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0076s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.060s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.14s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00035s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00014s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0043s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00017s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.010s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 5.48 seconds
+
+21:28:07 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:07 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:07 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:07 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:07 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:07 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:07 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:08 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:08 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 14
+21:28:08 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 29 12
+21:28:09 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:09 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:09 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:09 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:09 [DEBUG] (13) rush::get_env_fsm: Received: 0 31 27 12
+21:28:09 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:10 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:10 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:10 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:11 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:11 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:11 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:11 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:11 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:11 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:12 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.095s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.13s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000045s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00014s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.012s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.033s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0084s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00036s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00022s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.012s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00024s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.012s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 3.89 seconds
+
+21:28:12 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:12 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:12 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 26 15
+21:28:12 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:13 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:13 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:13 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:13 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:13 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:13 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 11
+21:28:13 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:14 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:14 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:14 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:15 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:15 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:15 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:15 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:15 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:15 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 30 13
+21:28:16 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:16 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 14
+21:28:16 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 12
+21:28:17 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:17 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.17s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.26s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000049s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00018s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0024s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.049s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0043s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00050s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00011s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00014s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0061s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00023s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.029s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 4.25 seconds
+
+21:28:17 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:17 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:17 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:17 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:17 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:17 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:18 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:18 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:18 [DEBUG] (13) rush::get_env_fsm: Received: 0 33 27 12
+21:28:18 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:19 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:19 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:19 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:19 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:19 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:19 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:20 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:20 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:20 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:21 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:21 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:21 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:21 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:21 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:21 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:22 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:22 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.074s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.0020s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00013s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.0014s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0026s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.069s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.075s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00092s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00080s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00072s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.043s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00055s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0055s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 3.92 seconds
+
+21:28:22 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:22 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:22 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:23 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:23 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:23 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:23 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:23 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:23 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:23 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:24 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:24 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:24 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 12
+21:28:25 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:25 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:25 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:25 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:25 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:25 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:26 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:26 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:26 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:27 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:27 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:27 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:27 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:27 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:27 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.051s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.38s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000039s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00012s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.060s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.034s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0042s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00052s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00015s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00017s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.017s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00021s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0037s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 4.62 seconds
+
+21:28:27 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:27 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:28 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:28 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 12
+21:28:28 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:28 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:29 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:29 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 31 12
+21:28:29 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:29 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:29 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:29 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:30 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:30 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:30 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 14
+21:28:31 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:31 [DEBUG] (13) rush::get_env_fsm: Received: 0 33 27 12
+21:28:31 [DEBUG] (13) rush::get_env_fsm: Received: 0 33 29 13
+21:28:31 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:31 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:32 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:32 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:32 [DEBUG] (13) rush::get_env_fsm: Received: 0 33 27 14
+21:28:32 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 26 14
+21:28:33 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:33 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:33 [DEBUG] (13) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.032s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.19s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000080s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00019s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.032s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.044s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0085s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00051s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00017s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00028s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0021s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00081s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.014s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 4.86 seconds
+
+21:28:33 [DEBUG] (13) rush::commands: stderr: 
+
+21:28:33 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:34 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:34 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:34 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:34 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:34 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:34 [DEBUG] (13) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:34 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:35 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:35 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 14
+21:28:35 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:36 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Connecting
+21:28:36 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:36 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:36 [DEBUG] (13) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:36 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 29 13
+21:28:36 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 30 12
+21:28:37 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:37 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 30 11
+21:28:37 [DEBUG] (13) rush::get_env_fsm: Received: 0 32 27 12
+21:28:38 [DEBUG] (13) rush::telegram_bot: Am I home? true
+21:28:38 [DEBUG] (11) rush::thinkpad_dock_control_fsm: Connecting
+21:28:38 [DEBUG] (11) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:38 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:38 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:38 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:39 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:39 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:39 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:28:39 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.11s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.16s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000058s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00027s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0062s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.069s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.13s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00037s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00020s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0064s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00019s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00096s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 5.28 seconds
+
+21:28:39 [DEBUG] (2) rush::commands: stderr: 
+
+21:28:40 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:40 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:40 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:40 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:40 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:28:40 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:28:40 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:41 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:41 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:41 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:28:42 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:42 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:42 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:42 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:42 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:42 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:43 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.011s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00018s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00013s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.012s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.028s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.022s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00034s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0088s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00010s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00015s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.012s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00043s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.018s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 2.08 seconds
+
+21:28:43 [DEBUG] (2) rush::commands: stderr: 
+
+21:28:43 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:43 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:28:43 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:44 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:44 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:44 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:44 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:44 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:44 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 13
+21:28:44 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:28:45 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:45 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:28:45 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:46 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:46 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:46 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:46 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:46 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 33 14
+21:28:46 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:47 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:47 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:28:47 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:48 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:48 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:48 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:48 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:48 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:48 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:28:49 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:49 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:49 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.14s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.23s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00015s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00018s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0025s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.068s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0047s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00036s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.016s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00019s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0023s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00021s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.010s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 5.37 seconds
+
+21:28:49 [DEBUG] (2) rush::commands: stderr: 
+
+21:28:49 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:50 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:50 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:50 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:50 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:50 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:50 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:50 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:28:51 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:51 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:28:51 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:28:52 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:52 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:28:52 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:52 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:52 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:52 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:28:53 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:53 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 11
+21:28:53 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:28:54 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:54 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:54 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:54 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:54 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:54 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:28:55 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:55 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:55 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:28:56 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:56 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:56 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.047s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.17s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000066s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00016s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0077s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.092s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.17s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00035s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0025s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00073s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00014s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0054s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00054s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0053s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 6.07 seconds
+
+21:28:56 [DEBUG] (2) rush::commands: stderr: 
+
+21:28:56 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:56 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:56 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:56 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:28:57 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:57 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:57 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:28:57 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:58 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:58 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 33 14
+21:28:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:28:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:28:58 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:28:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:28:59 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:28:59 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:28:59 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:28 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000039s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00018s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.010s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.041s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0090s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00040s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0083s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00013s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.034s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00016s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00097s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 2.00 seconds
+
+21:28:59 [DEBUG] (2) rush::commands: stderr: 
+
+21:28:59 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 1
+21:28:59 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:00 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:00 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:00 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:00 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:29:00 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:00 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:00 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:01 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:01 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 11
+21:29:01 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:02 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:02 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:02 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:02 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:02 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:02 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:03 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:03 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:03 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 33 14
+21:29:04 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:04 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:29:04 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.16s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.21s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00020s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00015s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.016s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.016s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.12s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00062s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.016s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00019s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00016s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.026s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00016s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.012s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 3.84 seconds
+
+21:29:04 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:04 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 13
+21:29:04 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:04 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:04 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:05 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:05 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:05 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:05 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:06 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:06 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:29:06 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:06 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:06 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:06 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:07 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:07 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:29:07 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000046s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00023s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.014s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0028s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.040s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00044s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.020s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00010s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00015s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0093s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00016s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0064s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 1.90 seconds
+
+21:29:07 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:07 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 1
+21:29:07 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:08 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:08 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:29:08 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:08 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:29:08 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:08 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:08 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:09 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:09 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 11
+21:29:09 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:10 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:10 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:10 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:10 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:10 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:10 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:11 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:11 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:29:11 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:29:12 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:12 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:12 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 13
+21:29:12 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:12 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:12 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:13 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:13 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:13 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:13 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.083s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.033s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000093s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00015s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.013s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.12s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.10s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00040s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0021s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00015s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0034s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00015s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0043s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 5.51 seconds
+
+21:29:13 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:14 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:14 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:14 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:14 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:14 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:14 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:14 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:15 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:15 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:15 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:16 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:16 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:16 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 12
+21:29:16 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:16 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:17 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:17 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:17 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.0027s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000099s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00016s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.048s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.013s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0045s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00067s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.013s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00012s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00026s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.016s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00016s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0075s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 2.43 seconds
+
+21:29:17 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:17 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 31 12
+21:29:17 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:18 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:18 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:18 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:18 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:19 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:19 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:19 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:19 [DEBUG] (2) rush::get_env_fsm: Received: 0 33 35 13
+21:29:19 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:19 [DEBUG] (2) rush::get_env_fsm: Received: 0 33 27 12
+21:29:20 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:20 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.018s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000075s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.000098s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0030s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.039s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0049s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00052s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0082s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00011s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00012s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0092s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00020s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0094s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 1.93 seconds
+
+21:29:20 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:20 [DEBUG] (2) rush::get_env_fsm: Received: 0 33 29 13
+21:29:20 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:29:21 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:21 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:21 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 31 12
+21:29:21 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:21 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:21 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:21 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:22 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:22 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:22 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:23 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:23 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:29:23 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:23 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:23 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:23 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:29:24 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:24 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:24 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 12
+21:29:24 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.020s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.13s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000069s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00017s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.013s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.10s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.15s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00034s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0016s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00016s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0024s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00025s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0074s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 3.72 seconds
+
+21:29:24 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:25 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:25 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:29:25 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:25 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:25 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:25 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:25 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:26 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:26 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 11
+21:29:26 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:27 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:27 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:27 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:27 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:27 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:27 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:28 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:28 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:28 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 28 13
+21:29:29 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:29 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:29 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:29 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:29 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:29 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:30 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:30 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:30 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.061s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.21s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00046s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00038s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.016s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.058s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.11s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00072s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.013s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00015s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00038s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.000098s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00065s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 4.42 seconds
+
+21:29:30 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:30 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:31 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:31 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:31 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:31 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:29:31 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:31 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:31 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:32 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:32 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 13
+21:29:32 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:33 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:33 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:33 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.020s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000038s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00012s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.017s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.017s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.019s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00053s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.016s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00017s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.017s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00025s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.012s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 1.93 seconds
+
+21:29:33 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:33 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:33 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:33 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:33 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:34 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:34 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 14
+21:29:34 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:34 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:35 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:35 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:35 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:35 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:35 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:35 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:36 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:36 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:29:36 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 12
+21:29:37 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:37 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 11
+21:29:37 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:37 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:37 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:37 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:38 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:38 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:38 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.13s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.21s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00012s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00022s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0078s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.076s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.14s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00028s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0052s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00010s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00034s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0045s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00015s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00065s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 4.22 seconds
+
+21:29:38 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:38 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:39 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:39 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:39 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:39 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:39 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:39 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:39 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:40 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:40 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:29:40 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:29:41 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:41 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 28 12
+21:29:41 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00018s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00012s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.026s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0046s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0044s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00065s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.023s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00047s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00035s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.025s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00023s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.016s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 2.13 seconds
+
+21:29:41 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:41 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 1
+21:29:41 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:29:41 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:41 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:41 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:42 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:42 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:29:42 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:42 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:29:43 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:43 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:43 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:43 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:43 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:43 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:44 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:44 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 31 12
+21:29:44 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.047s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.028s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000072s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00018s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0054s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0024s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0053s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00034s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0022s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00038s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0023s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00034s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00064s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 1.98 seconds
+
+21:29:44 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:44 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 32 12
+21:29:45 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:45 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:45 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:45 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 13
+21:29:45 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:45 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:46 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:46 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:46 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:46 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 31 12
+21:29:47 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:47 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:47 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:29:48 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:48 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:48 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 26 15
+21:29:48 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:48 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:48 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 32 12
+21:29:49 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:49 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:49 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000071s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00016s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.025s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0036s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0048s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00036s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0036s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00025s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00021s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0020s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00032s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00084s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 3.97 seconds
+
+21:29:49 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:49 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 1
+21:29:49 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:50 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:50 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:50 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:50 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:50 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:50 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:50 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:51 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:51 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:51 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 34 14
+21:29:52 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:29:52 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:52 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:52 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:52 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:52 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:53 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 28 12
+21:29:53 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:53 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:54 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:54 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:54 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:54 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:54 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:54 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:55 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.079s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.17s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000080s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00030s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.010s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0079s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.13s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00051s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0060s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.000098s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00013s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.012s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00018s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0030s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 4.41 seconds
+
+21:29:55 [DEBUG] (2) rush::commands: stderr: 
+
+21:29:55 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:55 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:55 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:56 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:29:56 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:29:56 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:56 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:56 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:56 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:56 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 12
+21:29:57 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:29:57 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:57 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:29:58 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:29:58 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:29:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:29:58 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:29:58 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:29:59 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:29:59 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:29:59 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:00 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:00 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:00 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:29 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.55s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.22s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00028s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00021s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.040s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.033s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.082s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00036s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.029s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00023s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00051s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.018s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00024s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0056s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 4.33 seconds
+
+21:30:00 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:00 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:00 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:00 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:00 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:01 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 12
+21:30:01 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:01 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:01 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:02 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 32 12
+21:30:02 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:02 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:02 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:02 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:02 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:03 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:30:03 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:03 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:03 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000039s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00017s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.011s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.011s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0041s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00040s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0085s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00017s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.010s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00023s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0049s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 2.39 seconds
+
+21:30:03 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:03 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 1
+21:30:04 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:30:04 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:04 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:04 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:04 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:04 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 13
+21:30:04 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:05 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 11
+21:30:05 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:05 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:06 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:06 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:06 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:06 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:06 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:06 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:06 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000057s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00013s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.013s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.011s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0041s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00059s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.011s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00012s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00023s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00024s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00065s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 2.19 seconds
+
+21:30:06 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:06 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 2
+21:30:07 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:07 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:07 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:07 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:08 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:30:08 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:08 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:08 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:08 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:08 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 35 11
+21:30:09 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:30:09 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:09 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:10 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:30:10 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000075s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00016s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.043s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.041s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0046s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00062s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.016s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00014s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00023s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.018s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00036s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.015s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 2.25 seconds
+
+21:30:10 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:10 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 3
+21:30:10 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:10 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:10 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:10 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:10 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:11 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:30:11 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:11 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:11 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:30:12 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 13
+21:30:12 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:12 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 12
+21:30:12 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:12 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:12 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:13 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 33 14
+21:30:13 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:13 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:14 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:30:14 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:14 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000035s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00027s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0025s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0018s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0046s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00035s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0018s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00015s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00019s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0016s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00028s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0041s latency).
+Nmap done: 256 IP addresses (12 hosts up) scanned in 3.02 seconds
+
+21:30:14 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:14 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 4
+21:30:14 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:14 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:14 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:15 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:15 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:30:15 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:15 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:15 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:30:16 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 28 14
+21:30:16 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:16 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 12
+21:30:17 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:17 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:17 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 28 12
+21:30:17 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:17 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:17 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:18 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:18 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:18 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:19 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:19 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:19 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:19 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:19 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:19 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.11s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.22s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00010s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.000082s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.049s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0018s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0045s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00041s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0024s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00015s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00020s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0025s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00019s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00067s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 4.24 seconds
+
+21:30:19 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:19 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:20 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:30:20 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:20 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:20 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:21 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 11
+21:30:21 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:21 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:21 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:21 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:21 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:22 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:22 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:22 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.0036s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000045s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00018s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.017s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0093s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0054s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00049s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0076s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00010s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00028s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0087s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00023s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0019s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 2.10 seconds
+
+21:30:22 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:22 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:30:23 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:23 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:23 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:23 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:23 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:23 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:23 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:24 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:24 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:24 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 13
+21:30:25 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 28 12
+21:30:25 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:25 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:25 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:25 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:25 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 30 13
+21:30:26 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:30:26 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:26 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:27 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:30:27 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:27 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:27 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:27 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:27 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 29 13
+21:30:27 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.18s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.16s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.000094s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00039s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0069s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.11s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.082s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00042s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0021s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00012s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00020s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0085s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00017s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.0054s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 4.36 seconds
+
+21:30:27 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:28 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 14
+21:30:28 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:28 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 13
+21:30:28 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:29 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:29 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:29 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:29 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:29 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:29 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:30 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:30 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:30 [DEBUG] (2) rush::get_env_fsm: Received: 0 31 27 12
+21:30:31 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:30:31 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:31 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:31 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:31 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:31 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.041s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00034s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00011s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.028s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.023s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.0043s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00054s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.028s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00022s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00016s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0037s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00023s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.015s latency).
+Nmap done: 256 IP addresses (13 hosts up) scanned in 2.43 seconds
+
+21:30:31 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:31 [DEBUG] (2) rush::commands: adding 1 to not at home counter. Counter: 1
+21:30:31 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:32 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:30:32 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:32 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:32 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:33 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:33 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:33 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:33 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:33 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:33 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:34 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:34 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:34 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:35 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:30:35 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:35 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:35 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:35 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:35 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:30:36 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 14
+21:30:36 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:36 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 12
+21:30:37 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:37 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:37 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:37 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:37 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:37 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:37 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.25s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.30s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00031s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00024s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.0066s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.0086s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.15s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00035s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.0061s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00013s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00014s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.0081s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00026s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.00064s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 5.42 seconds
+
+21:30:37 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:38 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:38 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:38 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:38 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:39 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:39 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:39 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:39 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:39 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:39 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:40 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:30:40 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:40 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:41 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:30:41 [DEBUG] (2) rush::commands: stdout: 
+Starting Nmap 7.95 ( https://nmap.org ) at 2024-08-27 22:30 WEST
+Illegal character(s) in hostname -- replacing with '*'
+Nmap scan report for RedmiNote9S-Lu*sRed.Home (192.168.1.66)
+Host is up (0.031s latency).
+Nmap scan report for A53-de-Francisco.Home (192.168.1.69)
+Host is up (0.014s latency).
+Nmap scan report for DESKTOP-E621AOL.Home (192.168.1.71)
+Host is up (0.00015s latency).
+Nmap scan report for rpi5.Home (192.168.1.73)
+Host is up (0.00060s latency).
+Nmap scan report for NULL.Home (192.168.1.74)
+Host is up (0.031s latency).
+Nmap scan report for A55-de-Cristina.Home (192.168.1.75)
+Host is up (0.027s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.80)
+Host is up (0.010s latency).
+Nmap scan report for raspberrypi.Home (192.168.1.82)
+Host is up (0.00041s latency).
+Nmap scan report for Samsung.Home (192.168.1.85)
+Host is up (0.027s latency).
+Nmap scan report for rpi5.Home (192.168.1.91)
+Host is up (0.00022s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.97)
+Host is up (0.00013s latency).
+Nmap scan report for 192.168.1.99
+Host is up (0.030s latency).
+Nmap scan report for toshibal50-server.Home (192.168.1.170)
+Host is up (0.00020s latency).
+Nmap scan report for meo.Home (192.168.1.254)
+Host is up (0.034s latency).
+Nmap done: 256 IP addresses (14 hosts up) scanned in 2.32 seconds
+
+21:30:41 [DEBUG] (2) rush::commands: stderr: 
+
+21:30:41 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:41 [DEBUG] (2) rush::get_env_fsm: Received: 0 33 27 12
+21:30:41 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:41 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:41 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:42 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 28 14
+21:30:42 [DEBUG] (2) rush::commands: Sending command: nmap -T5 -sn 192.168.1.0/24
+21:30:42 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:42 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:43 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 27 12
+21:30:43 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:43 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:30:43 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Connecting
+21:30:43 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Attempting ssh connect to lrm@192.168.1.71
+21:30:43 [DEBUG] (2) rush::thinkpad_dock_control_fsm: Failed ssh connection to 192.168.1.71. Error: failed to connect to the remote host
+21:30:44 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 29 13
+21:30:44 [DEBUG] (2) rush::telegram_bot: Am I home? true
+21:30:44 [DEBUG] (2) rush::get_env_fsm: Received: 0 32 30 12

@@ -2,7 +2,7 @@ use crate::{
     commands::{self},
     Context, GlobalState,
 };
-use log::trace;
+use log::debug;
 use std::{
     sync::{
         atomic::{AtomicBool, Ordering},
@@ -37,7 +37,7 @@ impl TelegramBot {
         loop {
             static STORE_AM_I_ONLINE_STATE: AtomicBool = AtomicBool::new(false);
             let state = self.global_state.lock().await.am_i_home;
-            trace!("Am I home? {state}");
+            debug!("Am I home? {state}");
 
             if state != STORE_AM_I_ONLINE_STATE.load(Ordering::Relaxed) {
                 if state {
@@ -87,13 +87,13 @@ impl TelegramBot {
         teloxide::repl(bot, move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
             async move {
-                trace!("Received from bot: {:?}", msg.text());
+                debug!("Received from bot: {:?}", msg.text());
 
                 let command = match Self::parse_commands(msg.text()) {
                     Ok(cmd) => cmd,
                     Err(e) => {
                         let reply = format!("Failed to parse command. Error: {e}");
-                        trace!("{reply}");
+                        debug!("{reply}");
                         bot.send_message(msg.chat.id, reply).await?;
                         return Ok(());
                     }
@@ -102,12 +102,12 @@ impl TelegramBot {
                 let cmd_output = match Self::execute(&context_clone, &command).await {
                     Ok(output) => output,
                     Err(e) => {
-                        trace!("Error executing command: {e}");
+                        debug!("Error executing command: {e}");
                         format!("Error: {e}")
                     }
                 };
 
-                trace!("Sending to bot: {:?}", cmd_output);
+                debug!("Sending to bot: {:?}", cmd_output);
                 bot.send_message(msg.chat.id, cmd_output).await?;
                 Ok(())
             }

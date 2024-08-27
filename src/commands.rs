@@ -1,5 +1,5 @@
 use crate::{GlobalState, System};
-use log::{error, trace, warn};
+use log::{debug, error, warn};
 use openssh::{KnownHosts, Session, SessionBuilder};
 use std::{
     sync::{
@@ -11,7 +11,7 @@ use std::{
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
 pub async fn check_pc_ssh_access(systems: &[System]) -> Result<(), String> {
-    trace!("checking for PC accesses");
+    debug!("checking for PC accesses");
 
     // this can be written better
     let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
@@ -54,7 +54,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
                 } else if am_i_at_home {
                     // increments the counter if does not find my phone
                     AM_I_NOT_AT_HOME_COUNTER.fetch_add(1, Ordering::Relaxed);
-                    trace!(
+                    debug!(
                         "adding 1 to not at home counter. Counter: {}",
                         AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed)
                     );
@@ -78,7 +78,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
 /// Simple wrapper with the trace logs
 /// Runs in ssh if receives an ssh session, locally if not
 pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Result<String, String> {
-    trace!("Sending command: {}", command);
+    debug!("Sending command: {}", command);
     match ssh_session {
         Some(sesh) => match sesh.shell(command).output().await {
             Ok(out) => {
@@ -120,8 +120,8 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
                     String::new()
                 };
 
-                trace!("stdout: \n{stdout}");
-                trace!("stderr: \n{stderr}");
+                debug!("stdout: \n{stdout}");
+                debug!("stderr: \n{stderr}");
 
                 if !stderr.is_empty() {
                     return Err(stderr);

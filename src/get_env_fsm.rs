@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use log::trace;
+use log::debug;
 use log::warn;
 use tokio::net::TcpStream;
 use tokio::sync::Mutex;
@@ -45,16 +45,16 @@ impl Fsm {
     async fn connecting(&mut self) {
         self.stream = None;
         let address = &self.context.env_sensor_address_port;
-        trace!("Attempting to connect to {address}");
+        debug!("Attempting to connect to {address}");
 
         match TcpStream::connect(address).await {
             Ok(stream) => {
-                trace!("Successfully connected!");
+                debug!("Successfully connected!");
                 self.stream = Some(stream);
                 self.state = State::Connected;
             }
             Err(e) => {
-                trace!("Failed to connect: {e}");
+                debug!("Failed to connect: {e}");
                 sleep(Duration::from_secs(2)).await;
             }
         }
@@ -64,7 +64,7 @@ impl Fsm {
         use tokio::io::AsyncReadExt;
 
         let Some(stream) = &mut self.stream else {
-            trace!("Tcp stream is unavailable");
+            debug!("Tcp stream is unavailable");
             self.state = State::Connecting;
             return;
         };
@@ -79,7 +79,7 @@ impl Fsm {
                     return;
                 }
                 Ok(Ok(n)) => {
-                    trace!("Received: {}", String::from_utf8_lossy(&buffer[..n]));
+                    debug!("Received: {}", String::from_utf8_lossy(&buffer[..n]));
                     n
                 }
                 Ok(Err(e)) => {

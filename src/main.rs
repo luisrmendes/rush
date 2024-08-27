@@ -6,8 +6,9 @@ mod tui;
 
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
-use log::{trace, warn};
-use std::sync::Arc;
+use log::{debug, warn, LevelFilter};
+use simplelog::{CombinedLogger, Config, WriteLogger};
+use std::{fs::File, sync::Arc};
 use telegram_bot::TelegramBot;
 use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
 use tokio::{
@@ -45,6 +46,13 @@ struct OfficeEnv {
 
 fn load_env_vars() -> Context {
     dotenv().ok();
+
+    CombinedLogger::init(vec![WriteLogger::new(
+        LevelFilter::Debug,
+        Config::default(),
+        File::create("/tmp/rush.log").unwrap(),
+    )])
+    .unwrap();
 
     std::env::var("TELOXIDE_TOKEN").unwrap_or_else(|_| panic!("TELOXIDE_TOKEN must be set."));
 
@@ -155,7 +163,6 @@ async fn main() {
     }));
 
     let ctx = load_env_vars();
-    pretty_env_logger::init();
 
     // TODO: Are the systems online?
 
@@ -178,7 +185,7 @@ async fn main() {
         tokio::select! {
             () = env_fsm.run() => {},
             _ = shutdown_rx1.recv() => {
-                trace!("env_fsm received shutdown signal");
+                debug!("env_fsm received shutdown signal");
             }
         }
     });
@@ -189,7 +196,7 @@ async fn main() {
         tokio::select! {
             () = thinkpad_ctrl_fsm.run() => {},
             _ = shutdown_rx2.recv() => {
-                trace!("desktop_ctrl_fsm received shutdown signal");
+                debug!("desktop_ctrl_fsm received shutdown signal");
             }
         }
     });
@@ -200,7 +207,7 @@ async fn main() {
         tokio::select! {
             () = telegram_bot.run() => {},
             _ = shutdown_rx3.recv() => {
-                trace!("telegram_bot received shutdown signal");
+                debug!("telegram_bot received shutdown signal");
             }
         }
     });
@@ -211,7 +218,7 @@ async fn main() {
         tokio::select! {
             () = commands::get_am_i_home(global_state.clone()) => {},
             _ = shutdown_rx4.recv() => {
-                trace!("get_am_i_home received shutdown signal");
+                debug!("get_am_i_home received shutdown signal");
             }
         }
     });
@@ -222,7 +229,7 @@ async fn main() {
         tokio::select! {
             _ = tui.run() => {},
             _ = shutdown_rx5.recv() => {
-                trace!("tui received shutdown signal");
+                debug!("tui received shutdown signal");
             }
         }
     });
@@ -230,7 +237,7 @@ async fn main() {
     // Listen for Ctrl-C and broadcast the shutdown signal
     let shutdown_listener = tokio::spawn(async move {
         signal::ctrl_c().await.expect("Failed to listen for Ctrl-C");
-        trace!("Ctrl-C received, sending shutdown signal...");
+        debug!("Ctrl-C received, sending shutdown signal...");
         let _ = shutdown_tx.send(()); // Broadcast the shutdown signal
     });
 
