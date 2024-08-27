@@ -24,7 +24,7 @@ impl Tui {
 
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         if std::env::var("RUST_LOG") == Ok("trace".to_owned()) {
-            return Ok(())
+            return Ok(());
         }
         execute!(std::io::stdout(), Clear(ClearType::All))?;
         execute!(io::stdout(), EnterAlternateScreen)?;
