@@ -1,6 +1,6 @@
 use crate::{
     commands::{self},
-    Systems, GlobalState,
+    GlobalState, Systems,
 };
 use log::debug;
 use std::{

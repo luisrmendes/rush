@@ -8,9 +8,9 @@ use tokio::time::sleep;
 use tokio::time::timeout;
 use tokio::time::Duration;
 
-use crate::Systems;
 use crate::GlobalState;
 use crate::OfficeEnv;
+use crate::Systems;
 enum State {
     Connecting,
     Connected,

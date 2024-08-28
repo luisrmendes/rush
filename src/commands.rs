@@ -17,10 +17,7 @@ pub async fn get_ssh_status(target_pc: &Pc) -> bool {
     sesh_builder.user(target_pc.user.clone());
     sesh_builder.connect_timeout(Duration::from_secs(1));
 
-    match sesh_builder.connect(session_access).await {
-        Ok(_) => true,
-        Err(_) => false,
-    }
+    sesh_builder.connect(session_access).await.is_ok()
 }
 
 #[allow(clippy::cast_sign_loss)]
