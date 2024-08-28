@@ -11,6 +11,19 @@ use std::{
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
+#[allow(clippy::cast_sign_loss)]
+#[allow(clippy::cast_possible_truncation)]
+pub fn calculate_ddc_mon_brightness(env_brightness: u32) -> u32 {
+    let env_brightness = f64::from(env_brightness);
+    let coef = 0.142_857_15;
+
+    if env_brightness <= 50.0 {
+        return 0;
+    }
+
+    ((env_brightness * coef) as u32).clamp(0, 100)
+}
+
 pub async fn check_external_system_connection(systems: &[System]) -> Result<String, String> {
     debug!("checking for PC accesses");
     let mut return_str: String = String::new();
@@ -81,7 +94,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
         };
 
         if global_state.lock().await.am_i_home
-            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 9
+            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 14
         {
             global_state.lock().await.am_i_home = false;
             AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);

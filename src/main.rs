@@ -1,16 +1,19 @@
 mod commands;
 mod get_env_fsm;
+mod snowdog_ctrl_fsm;
 mod telegram_bot;
-mod thinkpad_dock_control_fsm;
+mod thinkpad_ctrl_fsm;
 mod tui;
 
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
 use log::{debug, info, warn, LevelFilter};
 use simplelog::{CombinedLogger, Config, WriteLogger};
+use snowdog_ctrl_fsm::Fsm as snowdog_fsm;
 use std::{fs::File, sync::Arc};
 use telegram_bot::TelegramBot;
-use thinkpad_dock_control_fsm::Fsm as thinkpad_ctrl_fsm;
+use thinkpad_ctrl_fsm::Fsm as thinkpad_fsm;
+
 use tokio::{
     signal,
     sync::{broadcast, Mutex},
@@ -166,16 +169,14 @@ async fn main() {
 
     let ctx = load_env_vars();
 
-    // TODO: Are the systems online?
-
     match commands::check_external_system_connection(&ctx.systems).await {
         Ok(out) => info!("{}", out),
         Err(e) => warn!("{}", e),
     };
 
     let mut env_fsm = env_fsm::new(ctx.clone(), global_state.clone());
-    let mut thinkpad_ctrl_fsm =
-        thinkpad_ctrl_fsm::new(ctx.systems[1].clone(), global_state.clone());
+    let mut thinkpad_fsm = thinkpad_fsm::new(ctx.systems[2].clone(), global_state.clone());
+    let mut snowdog_fsm = snowdog_fsm::new(ctx.systems[1].clone(), global_state.clone());
     let telegram_bot = TelegramBot::new(ctx.clone(), global_state.clone()).await;
     let tui = Tui::new(global_state.clone());
 
@@ -199,9 +200,9 @@ async fn main() {
     let mut shutdown_rx2 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle2 = tokio::spawn(async move {
         tokio::select! {
-            () = thinkpad_ctrl_fsm.run() => {},
+            () = thinkpad_fsm.run() => {},
             _ = shutdown_rx2.recv() => {
-                debug!("desktop_ctrl_fsm received shutdown signal");
+                debug!("thinkpad_fsm received shutdown signal");
             }
         }
     });
@@ -251,6 +252,17 @@ async fn main() {
         }
     });
 
+    // Task 7: Snowdog FSM
+    let mut shutdown_rx7 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    let handle7 = tokio::spawn(async move {
+        tokio::select! {
+            () = snowdog_fsm.run() => {},
+            _ = shutdown_rx7.recv() => {
+                debug!("snowdog_fsm received shutdown signal");
+            }
+        }
+    });
+
     // Listen for Ctrl-C and broadcast the shutdown signal
     let shutdown_listener = tokio::spawn(async move {
         signal::ctrl_c().await.expect("Failed to listen for Ctrl-C");
@@ -266,6 +278,7 @@ async fn main() {
         handle4,
         handle5,
         handle6,
+        handle7,
         shutdown_listener
     );
 }

@@ -1,3 +1,4 @@
+use crate::commands;
 use crate::commands::send_command;
 use crate::GlobalState;
 use crate::System;
@@ -39,26 +40,13 @@ fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
         .clamp(1000, max_mon_brightness as u32)
 }
 
-#[allow(clippy::cast_sign_loss)]
-#[allow(clippy::cast_possible_truncation)]
-fn get_main_mon_brightness(env_brightness: u32) -> u32 {
-    let env_brightness = f64::from(env_brightness);
-    let coef = 0.142_857_15;
-
-    if env_brightness <= 50.0 {
-        return 0;
-    }
-
-    ((env_brightness * coef) as u32).clamp(0, 100)
-}
-
 /// Returns `Err()` if the calcuated brightness is the same as the previous one
 fn get_brightness_cmds(env_brightness: u32) -> Result<String, ()> {
     static MAIN_MON_BRIGHTNESS: AtomicU32 = AtomicU32::new(0);
     debug!("Environment brightness: {:?}", env_brightness);
 
     // only send command if calculated brightness is different than the previously sent one
-    let main_mon_brightness = get_main_mon_brightness(env_brightness);
+    let main_mon_brightness = commands::calculate_ddc_mon_brightness(env_brightness);
     if MAIN_MON_BRIGHTNESS.load(Ordering::Relaxed) == main_mon_brightness {
         debug!("Same brightness calculated. Static brightness: {MAIN_MON_BRIGHTNESS:?}, brightness: {main_mon_brightness}");
         return Err(());
