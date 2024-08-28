@@ -1,7 +1,7 @@
-use std::sync::Arc;
-
 use log::debug;
 use log::warn;
+use std::net::ToSocketAddrs;
+use std::sync::Arc;
 use tokio::net::TcpStream;
 use tokio::sync::Mutex;
 use tokio::time::sleep;
@@ -44,10 +44,41 @@ impl Fsm {
 
     async fn connecting(&mut self) {
         self.stream = None;
-        let address = &self.context.env_sensor_address_port;
-        debug!("Attempting to connect to {address}");
+        let hostname = &self.context.esp8266_rush.hostname;
 
-        match TcpStream::connect(address).await {
+        // Resolve the hostname to an IP address
+        let mut addr = match (hostname.clone(), 0).to_socket_addrs() {
+            Ok(addr) => addr,
+            Err(e) => {
+                warn!(
+                    "{}",
+                    format!("Error resolving hostname \'{hostname}\', error: {e}")
+                );
+
+                sleep(Duration::from_secs(1)).await;
+                return;
+            }
+        };
+
+        let addr = match addr.next().ok_or("Failed to resolve hostname") {
+            Ok(addr) => addr.to_string(),
+            Err(e) => {
+                warn!("{}", e.to_string(),);
+                sleep(Duration::from_secs(1)).await;
+                return;
+            }
+        };
+
+        let addr = addr
+            .split(':')
+            .next()
+            .expect("Cannot parse the address correctly");
+
+        let addr_port = addr.to_owned() + ":" + &self.context.esp8266_rush.port;
+
+        debug!("Attempting to connect to {addr_port}");
+
+        match TcpStream::connect(addr_port).await {
             Ok(stream) => {
                 debug!("Successfully connected!");
                 self.stream = Some(stream);

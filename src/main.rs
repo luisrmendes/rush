@@ -28,7 +28,7 @@ pub struct GlobalState {
 
 #[derive(Clone, Debug)]
 pub struct Context {
-    env_sensor_address_port: String,
+    esp8266_rush: Embedded,
     systems: Vec<System>,
 }
 
@@ -37,6 +37,12 @@ struct System {
     user: String,
     ip: String,
     mac: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+struct Embedded {
+    hostname: String,
+    port: String,
 }
 
 #[allow(dead_code)]
@@ -70,7 +76,10 @@ fn load_env_vars() -> Context {
     ];
 
     let mut systems = vec![];
-    let mut esp8266_addr_port = String::new();
+    let mut esp8266_rush = Embedded {
+        hostname: String::new(),
+        port: String::new(),
+    };
 
     for env_var in env_var_map {
         let system_vars =
@@ -86,7 +95,28 @@ fn load_env_vars() -> Context {
                 let val =
                     std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
                 assert!(!val.is_empty(), "{env_var} is empty. Please set it.");
-                esp8266_addr_port = val;
+
+                let mut hostname: String = String::new();
+                let mut port: String = String::new();
+
+                for part in system_vars.split(';') {
+                    let mut key_value = part.split('=');
+                    let Some(key) = key_value.next() else {
+                        panic!("{part} has no next!")
+                    };
+                    let Some(value) = key_value.next() else {
+                        panic!("{part} has no next!")
+                    };
+
+                    match key {
+                        "hostname" => hostname = value.to_string(),
+                        "port" => port = value.to_string(),
+                        other => {
+                            panic!("Not handling key {other}")
+                        }
+                    }
+                }
+                esp8266_rush = Embedded { hostname, port };
             }
             "SNOWDOG_VARS" => {
                 let mut user = String::new();
@@ -151,7 +181,7 @@ fn load_env_vars() -> Context {
     }
 
     Context {
-        env_sensor_address_port: esp8266_addr_port,
+        esp8266_rush,
         systems,
     }
 }
