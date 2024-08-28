@@ -14,6 +14,9 @@ jobs:
       SYRINX_VARS: ${{ secrets.SYRINX_VARS }}
       SNOWDOG_VARS: ${{ secrets.SNOWDOG_VARS }}
       THINKPADX1_VARS: ${{ secrets.THINKPADX1_VARS }}
+      RPI5_VARS: ${{ secrets.RPI5_VARS }}
+      RPI3_VARS: ${{ secrets.RPI3_VARS }}
+
 
     defaults:
       run:
@@ -26,4 +29,4 @@ jobs:
 
       - name: Run Deploy Script
         run: chmod +x .github/workflows/deployScript.sh &&
-          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS
+          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS $RPI5_VARS $RPI3_VARS
