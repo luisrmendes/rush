@@ -66,9 +66,10 @@ impl TelegramBot {
         match op {
             Operation::SuspendSnowdog => commands::suspend(ctx.systems[1].clone()).await,
             Operation::WakeupSnowdog => commands::wakeup(ctx.systems[1].clone()).await,
-            Operation::StatusSnowdog => {
-                Ok(commands::is_online(&ctx.systems[1].clone()).to_string())
-            }
+            Operation::StatusSnowdog => match commands::is_online(&ctx.systems[1].clone()) {
+                Ok(out) => Ok(out.to_string()),
+                Err(e) => Err(e),
+            },
             Operation::GetIpv4 => commands::get_ipv4().await,
         }
     }
@@ -88,7 +89,6 @@ impl TelegramBot {
         use teloxide::prelude::*;
 
         let context_arc = Arc::new(self.context.clone());
-        let _ = self.bot.send_message(CHAT_ID, "Hey I am up!").send().await;
 
         teloxide::repl(self.bot.clone(), move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
@@ -121,8 +121,9 @@ impl TelegramBot {
         .await;
     }
 
-    pub fn new(context: Context, global_state: Arc<Mutex<GlobalState>>) -> Self {
+    pub async fn new(context: Context, global_state: Arc<Mutex<GlobalState>>) -> Self {
         let bot = Bot::from_env();
+        let _ = bot.send_message(CHAT_ID, "Hey I am up!").send().await;
 
         Self {
             bot,

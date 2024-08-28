@@ -1,6 +1,7 @@
 use crate::{GlobalState, System};
 use log::{debug, error, warn};
 use openssh::{KnownHosts, Session, SessionBuilder};
+use std::net::ToSocketAddrs;
 use std::{
     sync::{
         atomic::{AtomicI16, Ordering},
@@ -10,30 +11,44 @@ use std::{
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
-pub async fn check_pc_ssh_access(systems: &[System]) -> Result<(), String> {
+pub async fn check_external_system_connection(systems: &[System]) -> Result<String, String> {
     debug!("checking for PC accesses");
+    let mut return_str: String = String::new();
+    let mut is_there_some_error: bool = false; // used to return Result Err
 
-    // this can be written better
-    let mut return_str: String = "Failed to ssh connect to systems:\n".to_string();
-    let mut error: bool = false;
-    for (i, sys) in systems.iter().enumerate() {
-        let session_access: String = sys.user.clone() + "@" + &sys.ip;
-
-        let mut sesh_builder = SessionBuilder::default();
-        sesh_builder.user("lrm".to_owned());
-        sesh_builder.connect_timeout(Duration::from_secs(2));
-
-        if sesh_builder.connect(session_access).await.is_ok() {
-        } else {
-            return_str += &("\tsystem".to_owned() + &i.to_string() + &format!(": {sys:?}\n"));
-            error = true;
+    // check if systems are online
+    for sys in systems {
+        let online_status: &str = match is_online(sys) {
+            Ok(true) => "online",
+            Ok(false) => {
+                is_there_some_error = true;
+                "offline"
+            }
+            Err(e) => return Err(e),
         };
+
+        let session_access: String = sys.user.clone() + "@" + &sys.ip;
+        let mut sesh_builder = SessionBuilder::default();
+        sesh_builder.user(sys.user.clone());
+        sesh_builder.connect_timeout(Duration::from_secs(1));
+
+        let ssh_status: String = match sesh_builder.connect(session_access).await {
+            Ok(_) => "Ok".to_owned(),
+            Err(e) => {
+                is_there_some_error = true;
+                format!("Failed ssh access, error: {e}.\n\tSystem: {sys:?}")
+            }
+        };
+        return_str += &format!(
+            "\nSystem \'{}\' is {online_status}, ssh status: {ssh_status}",
+            &sys.ip
+        );
     }
 
-    if error {
+    if is_there_some_error {
         Err(return_str)
     } else {
-        Ok(())
+        Ok(return_str)
     }
 }
 
@@ -148,14 +163,19 @@ pub async fn suspend(sys: System) -> Result<String, String> {
     send_command("sudo systemctl suspend", Some(&session)).await
 }
 
-pub fn is_online(target_sys: &System) -> bool {
-    ping_rs::send_ping(
-        &target_sys.ip.parse().unwrap(),
-        Duration::from_millis(100),
-        &[1, 2, 3, 4],
-        None,
-    )
-    .is_ok()
+pub fn is_online(target_sys: &System) -> Result<bool, String> {
+    // Resolve the hostname to an IP address
+    let mut addr = match (target_sys.ip.clone(), 0).to_socket_addrs() {
+        Ok(addr) => addr,
+        Err(e) => return Err(format!("Error resolving hostname, error: {e}")),
+    };
+
+    let addr = match addr.next().ok_or("Failed to resolve hostname") {
+        Ok(addr) => addr,
+        Err(e) => return Err(e.to_string()),
+    };
+
+    Ok(ping_rs::send_ping(&addr.ip(), Duration::from_millis(100), &[1, 2, 3, 4], None).is_ok())
 }
 
 pub async fn wakeup(target_sys: System) -> Result<String, String> {

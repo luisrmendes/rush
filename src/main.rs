@@ -6,7 +6,7 @@ mod tui;
 
 use dotenv::dotenv;
 use get_env_fsm::Fsm as env_fsm;
-use log::{debug, warn, LevelFilter};
+use log::{debug, info, warn, LevelFilter};
 use simplelog::{CombinedLogger, Config, WriteLogger};
 use std::{fs::File, sync::Arc};
 use telegram_bot::TelegramBot;
@@ -62,6 +62,8 @@ fn load_env_vars() -> Context {
         "SYRINX_VARS",
         "SNOWDOG_VARS",
         "THINKPADX1_VARS",
+        "RPI5_VARS",
+        "RPI3_VARS",
     ];
 
     let mut systems = vec![];
@@ -112,7 +114,7 @@ fn load_env_vars() -> Context {
                     mac: Some(mac),
                 });
             }
-            "SYRINX_VARS" | "THINKPADX1_VARS" => {
+            "SYRINX_VARS" | "THINKPADX1_VARS" | "RPI5_VARS" | "RPI3_VARS" => {
                 let mut user = String::new();
                 let mut ip = String::new();
 
@@ -166,15 +168,18 @@ async fn main() {
 
     // TODO: Are the systems online?
 
-    if let Err(e) = commands::check_pc_ssh_access(&ctx.systems).await {
-        warn!("Failed to check PC SSH access. Error: {e}");
-    }
+    match commands::check_external_system_connection(&ctx.systems).await {
+        Ok(out) => info!("{}", out),
+        Err(e) => warn!("{}", e),
+    };
 
     let mut env_fsm = env_fsm::new(ctx.clone(), global_state.clone());
     let mut thinkpad_ctrl_fsm =
         thinkpad_ctrl_fsm::new(ctx.systems[1].clone(), global_state.clone());
-    let telegram_bot = TelegramBot::new(ctx.clone(), global_state.clone());
+    let telegram_bot = TelegramBot::new(ctx.clone(), global_state.clone()).await;
     let tui = Tui::new(global_state.clone());
+
+    // TODO: Simplify the task spawning
 
     // Create a broadcast channel for shutdown signal
     let (shutdown_tx, _) = broadcast::channel(1);
@@ -223,7 +228,7 @@ async fn main() {
             }
         }
     });
-    
+
     // Task 5: Telegram Bot Update Am I Home
     let mut shutdown_rx5 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
     let handle5 = tokio::spawn(async move {
