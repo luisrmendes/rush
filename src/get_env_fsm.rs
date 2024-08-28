@@ -8,7 +8,7 @@ use tokio::time::sleep;
 use tokio::time::timeout;
 use tokio::time::Duration;
 
-use crate::Context;
+use crate::Systems;
 use crate::GlobalState;
 use crate::OfficeEnv;
 enum State {
@@ -18,13 +18,13 @@ enum State {
 
 pub struct Fsm {
     state: State,
-    context: Context,
+    context: Systems,
     global_state: Arc<Mutex<GlobalState>>,
     stream: Option<TcpStream>,
 }
 
 impl Fsm {
-    pub fn new(ctx: Context, global_state: Arc<Mutex<GlobalState>>) -> Self {
+    pub fn new(ctx: Systems, global_state: Arc<Mutex<GlobalState>>) -> Self {
         Self {
             state: State::Connecting,
             context: ctx,

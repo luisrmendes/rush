@@ -1,4 +1,4 @@
-use crate::{GlobalState, System};
+use crate::{GlobalState, Pc};
 use log::{debug, error, warn};
 use openssh::{KnownHosts, Session, SessionBuilder};
 use std::net::ToSocketAddrs;
@@ -10,6 +10,18 @@ use std::{
     time::Duration,
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
+
+pub async fn get_ssh_status(target_pc: &Pc) -> bool {
+    let session_access: String = target_pc.user.clone() + "@" + &target_pc.ip;
+    let mut sesh_builder = SessionBuilder::default();
+    sesh_builder.user(target_pc.user.clone());
+    sesh_builder.connect_timeout(Duration::from_secs(1));
+
+    match sesh_builder.connect(session_access).await {
+        Ok(_) => true,
+        Err(_) => false,
+    }
+}
 
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
@@ -24,7 +36,7 @@ pub fn calculate_ddc_mon_brightness(env_brightness: u32) -> u32 {
     ((env_brightness * coef) as u32).clamp(0, 100)
 }
 
-pub async fn check_external_system_connection(systems: &[System]) -> Result<String, String> {
+pub async fn check_external_system_connection(systems: &[Pc]) -> Result<String, String> {
     debug!("checking for PC accesses");
     let mut return_str: String = String::new();
     let mut is_there_some_error: bool = false; // used to return Result Err
@@ -40,18 +52,13 @@ pub async fn check_external_system_connection(systems: &[System]) -> Result<Stri
             Err(e) => return Err(e),
         };
 
-        let session_access: String = sys.user.clone() + "@" + &sys.ip;
-        let mut sesh_builder = SessionBuilder::default();
-        sesh_builder.user(sys.user.clone());
-        sesh_builder.connect_timeout(Duration::from_secs(1));
-
-        let ssh_status: String = match sesh_builder.connect(session_access).await {
-            Ok(_) => "Ok".to_owned(),
-            Err(e) => {
-                is_there_some_error = true;
-                format!("Failed ssh access, error: {e}.\n\tSystem: {sys:?}")
-            }
+        let ssh_status: String = if get_ssh_status(sys).await {
+            "Ok".to_owned()
+        } else {
+            is_there_some_error = true;
+            format!("Failed ssh access. \n\tSystem: {sys:?}")
         };
+
         return_str += &format!(
             "\nSystem \'{}\' is {online_status}, ssh status: {ssh_status}",
             &sys.ip
@@ -162,7 +169,7 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
     }
 }
 
-pub async fn suspend(sys: System) -> Result<String, String> {
+pub async fn suspend(sys: Pc) -> Result<String, String> {
     let session_access: &str = &(sys.user.clone() + "@" + &sys.ip);
     let session = match Session::connect(session_access, KnownHosts::Strict).await {
         Ok(session) => session,
@@ -176,7 +183,7 @@ pub async fn suspend(sys: System) -> Result<String, String> {
     send_command("sudo systemctl suspend", Some(&session)).await
 }
 
-pub fn is_online(target_sys: &System) -> Result<bool, String> {
+pub fn is_online(target_sys: &Pc) -> Result<bool, String> {
     // Resolve the hostname to an IP address
     let mut addr = match (target_sys.ip.clone(), 0).to_socket_addrs() {
         Ok(addr) => addr,
@@ -191,7 +198,7 @@ pub fn is_online(target_sys: &System) -> Result<bool, String> {
     Ok(ping_rs::send_ping(&addr.ip(), Duration::from_millis(100), &[1, 2, 3, 4], None).is_ok())
 }
 
-pub async fn wakeup(target_sys: System) -> Result<String, String> {
+pub async fn wakeup(target_sys: Pc) -> Result<String, String> {
     let Some(mac) = target_sys.mac else {
         return Err("Trying to wakup a system without a associated MAC address".to_string());
     };

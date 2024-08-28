@@ -1,5 +1,6 @@
-use crate::GlobalState;
+use crate::{commands, GlobalState, Systems};
 use crossterm::event::{self, Event, KeyCode};
+use log::warn;
 use ratatui::{
     backend::CrosstermBackend,
     crossterm::{
@@ -15,11 +16,15 @@ use tokio::sync::Mutex;
 
 pub struct Tui {
     global_state: Arc<Mutex<GlobalState>>,
+    systems: Systems,
 }
 
 impl Tui {
-    pub fn new(global_state: Arc<Mutex<GlobalState>>) -> Self {
-        Self { global_state }
+    pub fn new(global_state: Arc<Mutex<GlobalState>>, systems: Systems) -> Self {
+        Self {
+            global_state,
+            systems,
+        }
     }
 
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -35,6 +40,12 @@ impl Tui {
             let temp = self.global_state.lock().await.office_env.temperature;
             let humidity = self.global_state.lock().await.office_env.humidity;
             let am_i_home = self.global_state.lock().await.am_i_home;
+            let sys1_is_online = if let Ok(out) = commands::is_online(&self.systems.pcs[0]) {
+                out
+            } else {
+                warn!("Falied to get is_online");
+                false
+            };
 
             // Draw the terminal UI
             terminal.draw(|f| {
@@ -43,6 +54,7 @@ impl Tui {
                     .direction(Direction::Vertical)
                     .constraints([
                         Constraint::Percentage(10), // For progress bar
+                        Constraint::Percentage(10), // For value rectangles
                         Constraint::Percentage(10), // For value rectangles
                         Constraint::Percentage(10), // For value rectangles
                         Constraint::Percentage(10), // For value rectangles
@@ -65,8 +77,9 @@ impl Tui {
                         Constraint::Percentage(10),
                         Constraint::Percentage(10),
                         Constraint::Percentage(10),
+                        Constraint::Percentage(10), // For value rectangles
                     ])
-                    .split(chunks[2]);
+                    .split(chunks[3]);
 
                 let value1_paragraph = Paragraph::new(format!("{brightness}"))
                     .block(Block::default().borders(Borders::ALL).title("Brightness"));
@@ -76,11 +89,17 @@ impl Tui {
                     .block(Block::default().borders(Borders::ALL).title("Humidity"));
                 let value4_paragraph = Paragraph::new(format!("{am_i_home}"))
                     .block(Block::default().borders(Borders::ALL).title("Am I home?"));
+                let value5_paragraph = Paragraph::new(format!("{sys1_is_online}")).block(
+                    Block::default()
+                        .borders(Borders::ALL)
+                        .title("Snowdog Status"),
+                );
 
                 f.render_widget(value1_paragraph, inner_chunks[0]);
                 f.render_widget(value2_paragraph, inner_chunks[1]);
                 f.render_widget(value3_paragraph, inner_chunks[2]);
                 f.render_widget(value4_paragraph, inner_chunks[3]);
+                f.render_widget(value5_paragraph, inner_chunks[4]);
             })?;
 
             // Handle user input to exit the loop

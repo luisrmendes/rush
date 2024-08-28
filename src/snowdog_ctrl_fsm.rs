@@ -1,7 +1,7 @@
 use crate::commands::calculate_ddc_mon_brightness;
 use crate::commands::send_command;
 use crate::GlobalState;
-use crate::System;
+use crate::Pc;
 use log::debug;
 use log::error;
 use openssh::KnownHosts;
@@ -20,7 +20,7 @@ enum State {
 
 pub struct Fsm {
     state: State,
-    system: System,
+    pc: Pc,
     global_state: Arc<Mutex<GlobalState>>,
     session: Option<Session>,
 }
@@ -28,7 +28,7 @@ pub struct Fsm {
 impl Fsm {
     async fn connecting(&mut self) {
         debug!("Connecting");
-        let session_access: &str = &(self.system.user.clone() + "@" + &self.system.ip);
+        let session_access: &str = &(self.pc.user.clone() + "@" + &self.pc.ip);
         debug!("Attempting ssh connect to {}", session_access);
 
         match Session::connect(session_access, KnownHosts::Strict).await {
@@ -37,7 +37,7 @@ impl Fsm {
                 self.state = State::Connected;
             }
             Err(e) => {
-                debug!("Failed ssh connection to {0}. Error: {e}", self.system.ip);
+                debug!("Failed ssh connection to {0}. Error: {e}", self.pc.ip);
                 sleep(Duration::from_secs(2)).await;
             }
         }
@@ -84,10 +84,10 @@ impl Fsm {
         }
     }
 
-    pub fn new(sys: System, global_state: Arc<Mutex<GlobalState>>) -> Self {
+    pub fn new(pc: Pc, global_state: Arc<Mutex<GlobalState>>) -> Self {
         Self {
             state: State::Connecting,
-            system: sys,
+            pc,
             global_state,
             session: None,
         }

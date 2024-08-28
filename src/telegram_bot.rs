@@ -1,6 +1,6 @@
 use crate::{
     commands::{self},
-    Context, GlobalState,
+    Systems, GlobalState,
 };
 use log::debug;
 use std::{
@@ -27,7 +27,7 @@ pub enum Operation {
 #[derive(Clone)]
 pub struct TelegramBot {
     bot: Bot,
-    context: Context,
+    context: Systems,
     global_state: Arc<Mutex<GlobalState>>,
 }
 
@@ -62,11 +62,11 @@ impl TelegramBot {
         }
     }
 
-    async fn execute(ctx: &Context, op: &Operation) -> Result<String, String> {
+    async fn execute(ctx: &Systems, op: &Operation) -> Result<String, String> {
         match op {
-            Operation::SuspendSnowdog => commands::suspend(ctx.systems[1].clone()).await,
-            Operation::WakeupSnowdog => commands::wakeup(ctx.systems[1].clone()).await,
-            Operation::StatusSnowdog => match commands::is_online(&ctx.systems[1].clone()) {
+            Operation::SuspendSnowdog => commands::suspend(ctx.pcs[1].clone()).await,
+            Operation::WakeupSnowdog => commands::wakeup(ctx.pcs[1].clone()).await,
+            Operation::StatusSnowdog => match commands::is_online(&ctx.pcs[1].clone()) {
                 Ok(out) => Ok(out.to_string()),
                 Err(e) => Err(e),
             },
@@ -121,7 +121,7 @@ impl TelegramBot {
         .await;
     }
 
-    pub async fn new(context: Context, global_state: Arc<Mutex<GlobalState>>) -> Self {
+    pub async fn new(context: Systems, global_state: Arc<Mutex<GlobalState>>) -> Self {
         let bot = Bot::from_env();
         let _ = bot.send_message(CHAT_ID, "Hey I am up!").send().await;
 

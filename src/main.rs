@@ -27,13 +27,13 @@ pub struct GlobalState {
 }
 
 #[derive(Clone, Debug)]
-pub struct Context {
+pub struct Systems {
     esp8266_rush: Embedded,
-    systems: Vec<System>,
+    pcs: Vec<Pc>,
 }
 
 #[derive(Clone, Debug)]
-struct System {
+struct Pc {
     user: String,
     ip: String,
     mac: Option<String>,
@@ -45,7 +45,6 @@ struct Embedded {
     port: String,
 }
 
-#[allow(dead_code)]
 #[derive(Clone, Debug)]
 struct OfficeEnv {
     brightness: u32,
@@ -53,7 +52,8 @@ struct OfficeEnv {
     humidity: u32,
 }
 
-fn load_env_vars() -> Context {
+//TODO: this needs a refactor
+fn load_env_vars() -> Systems {
     dotenv().ok();
 
     CombinedLogger::init(vec![WriteLogger::new(
@@ -75,7 +75,7 @@ fn load_env_vars() -> Context {
         "RPI3_VARS",
     ];
 
-    let mut systems = vec![];
+    let mut pcs = vec![];
     let mut esp8266_rush = Embedded {
         hostname: String::new(),
         port: String::new(),
@@ -141,7 +141,7 @@ fn load_env_vars() -> Context {
                         }
                     }
                 }
-                systems.push(System {
+                pcs.push(Pc {
                     user,
                     ip,
                     mac: Some(mac),
@@ -168,7 +168,7 @@ fn load_env_vars() -> Context {
                         }
                     }
                 }
-                systems.push(System {
+                pcs.push(Pc {
                     user,
                     ip,
                     mac: None,
@@ -180,10 +180,7 @@ fn load_env_vars() -> Context {
         }
     }
 
-    Context {
-        esp8266_rush,
-        systems,
-    }
+    Systems { esp8266_rush, pcs }
 }
 
 #[tokio::main]
@@ -197,18 +194,18 @@ async fn main() {
         },
     }));
 
-    let ctx = load_env_vars();
+    let systems = load_env_vars();
 
-    match commands::check_external_system_connection(&ctx.systems).await {
+    match commands::check_external_system_connection(&systems.pcs).await {
         Ok(out) => info!("{}", out),
         Err(e) => warn!("{}", e),
     };
 
-    let mut env_fsm = env_fsm::new(ctx.clone(), global_state.clone());
-    let mut thinkpad_fsm = thinkpad_fsm::new(ctx.systems[2].clone(), global_state.clone());
-    let mut snowdog_fsm = snowdog_fsm::new(ctx.systems[1].clone(), global_state.clone());
-    let telegram_bot = TelegramBot::new(ctx.clone(), global_state.clone()).await;
-    let tui = Tui::new(global_state.clone());
+    let mut env_fsm = env_fsm::new(systems.clone(), global_state.clone());
+    let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
+    let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
+    let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone()).await;
+    let tui = Tui::new(global_state.clone(), systems);
 
     // TODO: Simplify the task spawning
 
