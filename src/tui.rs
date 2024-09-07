@@ -53,11 +53,11 @@ impl Tui {
                 let chunks = Layout::default()
                     .direction(Direction::Vertical)
                     .constraints([
-                        Constraint::Percentage(10), // For progress bar
-                        Constraint::Percentage(10), // For value rectangles
-                        Constraint::Percentage(10), // For value rectangles
-                        Constraint::Percentage(10), // For value rectangles
-                        Constraint::Percentage(10), // For value rectangles
+                        Constraint::Percentage(20), // For progress bar
+                        Constraint::Percentage(20), // For value rectangles
+                        Constraint::Percentage(20), // For value rectangles
+                        Constraint::Percentage(20), // For value rectangles
+                        Constraint::Percentage(20), // For value rectangles
                     ])
                     .split(size);
 
