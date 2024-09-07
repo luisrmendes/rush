@@ -40,12 +40,13 @@ impl Tui {
             let temp = self.global_state.lock().await.office_env.temperature;
             let humidity = self.global_state.lock().await.office_env.humidity;
             let am_i_home = self.global_state.lock().await.am_i_home;
-            let sys1_is_online = if let Ok(out) = commands::is_online(&self.systems.pcs[0]) {
-                out
-            } else {
-                warn!("Falied to get is_online");
-                false
-            };
+            // let sys1_is_online = if let Ok(out) = commands::is_online(&self.systems.pcs[0]) {
+            //     out
+            // } else {
+            //     warn!("Falied to get is_online");
+            //     false
+            // };
+            let sys1_is_online = false;
 
             // Draw the terminal UI
             terminal.draw(|f| {

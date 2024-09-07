@@ -63,7 +63,7 @@ impl Fsm {
 
         MON_BRIGHTNESS.store(mon_brightness, Ordering::SeqCst);
 
-        let command: String = format!("ddcutil --bus 5 setvcp 10 {mon_brightness}");
+        let command: String = format!("ddcutil --bus 6 setvcp 10 {mon_brightness}");
 
         match send_command(&command, Some(session)).await {
             Ok(out) => {

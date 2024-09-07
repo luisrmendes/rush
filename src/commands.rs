@@ -80,7 +80,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
 
         match send_command("nmap -T5 -sn 192.168.1.0/24", None).await {
             Ok(out) => {
-                if out.contains("unknownbc7fa4343f2d") || out.contains("RedmiNote9S-Lu*sRed") {
+                if out.contains("Galaxy-S22") {
                     global_state.lock().await.am_i_home = true;
                     AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
                 } else if am_i_at_home {
@@ -98,7 +98,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
         };
 
         if global_state.lock().await.am_i_home
-            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 14
+            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 5
         {
             global_state.lock().await.am_i_home = false;
             AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
