@@ -1,5 +1,6 @@
 use crate::{
     commands::{self},
+    llm_wrapper::Llm,
     GlobalState, Systems,
 };
 use log::debug;
@@ -29,6 +30,7 @@ pub struct TelegramBot {
     bot: Bot,
     context: Systems,
     global_state: Arc<Mutex<GlobalState>>,
+    llm: Llm,
 }
 
 const CHAT_ID: ChatId = ChatId(322_011_297);
@@ -84,13 +86,16 @@ impl TelegramBot {
         }
     }
 
-    pub async fn answer_commands(&self) {
+    pub async fn run_repl(&self) {
         use teloxide::prelude::*;
 
         let context_arc = Arc::new(self.context.clone());
+        let llm_arc = Arc::new(self.llm.clone());
 
         teloxide::repl(self.bot.clone(), move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
+            let llm_clone = Arc::clone(&llm_arc);
+
             async move {
                 debug!("Received from bot: {:?}", msg.text());
 
@@ -119,6 +124,8 @@ impl TelegramBot {
                         bot.send_message(msg.chat.id, cmd_output).await?;
                         return Ok(());
                     }
+                    bot.send_message(CHAT_ID, &llm_clone.send_prompt(text).await)
+                        .await?;
                 } else {
                     bot.send_message(msg.chat.id, "?").await?;
                     return Ok(());
@@ -130,7 +137,7 @@ impl TelegramBot {
         .await;
     }
 
-    pub async fn new(context: Systems, global_state: Arc<Mutex<GlobalState>>) -> Self {
+    pub async fn new(context: Systems, global_state: Arc<Mutex<GlobalState>>, llm: Llm) -> Self {
         let bot = Bot::from_env();
         let _ = bot.send_message(CHAT_ID, "Hey I am up!").send().await;
 
@@ -138,6 +145,7 @@ impl TelegramBot {
             bot,
             context,
             global_state,
+            llm,
         }
     }
 }

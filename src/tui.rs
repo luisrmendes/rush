@@ -16,14 +16,14 @@ use tokio::sync::Mutex;
 
 pub struct Tui {
     global_state: Arc<Mutex<GlobalState>>,
-    systems: Systems,
+    _systems: Systems,
 }
 
 impl Tui {
     pub fn new(global_state: Arc<Mutex<GlobalState>>, systems: Systems) -> Self {
         Self {
             global_state,
-            systems,
+            _systems: systems,
         }
     }
 
