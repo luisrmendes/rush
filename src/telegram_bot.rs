@@ -74,9 +74,8 @@ impl TelegramBot {
         }
     }
 
-    fn parse_commands(text: Option<&str>) -> Result<Operation, String> {
-        let parsed_msg: &str = text.unwrap_or_default();
-        match parsed_msg {
+    fn parse_commands(text: &str) -> Result<Operation, String> {
+        match text {
             "/ipv4" => Ok(Operation::GetIpv4),
             "/wakeup_snowdog" => Ok(Operation::WakeupSnowdog),
             "/status_snowdog" => Ok(Operation::StatusSnowdog),
@@ -95,26 +94,36 @@ impl TelegramBot {
             async move {
                 debug!("Received from bot: {:?}", msg.text());
 
-                let command = match Self::parse_commands(msg.text()) {
-                    Ok(cmd) => cmd,
-                    Err(e) => {
-                        let reply = format!("Failed to parse command. Error: {e}");
-                        debug!("{reply}");
-                        bot.send_message(msg.chat.id, reply).await?;
+                let Some(text) = msg.text() else {
+                    bot.send_message(msg.chat.id, "?").await?;
+                    return Ok(());
+                };
+
+                if let Some(char) = text.chars().next() {
+                    if char == '/' {
+                        let Ok(command) = Self::parse_commands(text) else {
+                            let reply = "Failed to parse command".to_owned();
+                            debug!("{reply}");
+                            bot.send_message(msg.chat.id, reply).await?;
+                            return Ok(());
+                        };
+
+                        let cmd_output = match Self::execute(&context_clone, &command).await {
+                            Ok(output) => output,
+                            Err(e) => {
+                                debug!("Error executing command: {e}");
+                                format!("Error: {e}")
+                            }
+                        };
+                        debug!("Sending to bot: {:?}", cmd_output);
+                        bot.send_message(msg.chat.id, cmd_output).await?;
                         return Ok(());
                     }
-                };
+                } else {
+                    bot.send_message(msg.chat.id, "?").await?;
+                    return Ok(());
+                }
 
-                let cmd_output = match Self::execute(&context_clone, &command).await {
-                    Ok(output) => output,
-                    Err(e) => {
-                        debug!("Error executing command: {e}");
-                        format!("Error: {e}")
-                    }
-                };
-
-                debug!("Sending to bot: {:?}", cmd_output);
-                bot.send_message(msg.chat.id, cmd_output).await?;
                 Ok(())
             }
         })

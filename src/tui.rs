@@ -1,6 +1,6 @@
-use crate::{commands, GlobalState, Systems};
+use crate::{GlobalState, Systems};
 use crossterm::event::{self, Event, KeyCode};
-use log::warn;
+
 use ratatui::{
     backend::CrosstermBackend,
     crossterm::{
