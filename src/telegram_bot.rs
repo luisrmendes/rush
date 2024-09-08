@@ -99,6 +99,8 @@ impl TelegramBot {
             async move {
                 debug!("Received from bot: {:?}", msg.text());
 
+                bot.send_message(msg.chat.id, "...").await?;
+
                 let Some(text) = msg.text() else {
                     bot.send_message(msg.chat.id, "?").await?;
                     return Ok(());
