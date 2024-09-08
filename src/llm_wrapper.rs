@@ -22,6 +22,17 @@ impl fmt::Display for CustomError {
 impl StdError for CustomError {}
 
 impl Llm {
+    fn format_response(text: &str) -> String {
+        // Replace escape sequences with actual symbols and format the string
+        let formatted_text = text
+            .replace("\\n", "\n") // Replace `\n` with actual newlines
+            .replace("\\\"", "\"") // Replace escaped quotes
+            .replace("\\\\", "\\") // Replace double backslashes with a single one
+            .replace("```", "\n```"); // Ensure proper line breaks before code blocks
+
+        formatted_text
+    }
+
     pub async fn send_prompt(&self, prompt: &str) -> String {
         let json_body = json!({
             "model": &self.model,
@@ -61,9 +72,11 @@ impl Llm {
                             let data = parsed
                                 .get("response")
                                 .expect("No `data` field found")
-                                .to_string()
-                                .replace('\"', "");
-                            result_builder += &data;
+                                .to_string();
+
+                            let trimmed_data = &data[1..data.len() - 1];
+
+                            result_builder += &Self::format_response(trimmed_data);
                         } else {
                             println!("Failed to parse a chunk of the response");
                         }
