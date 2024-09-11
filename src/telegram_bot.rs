@@ -90,11 +90,11 @@ impl TelegramBot {
         use teloxide::prelude::*;
 
         let context_arc = Arc::new(self.context.clone());
-        let llm_arc = Arc::new(self.llm.clone());
+        let llm_mutex = Arc::new(Mutex::new(self.llm.clone()));
 
         teloxide::repl(self.bot.clone(), move |bot: Bot, msg: Message| {
             let context_clone = Arc::clone(&context_arc);
-            let llm_clone = Arc::clone(&llm_arc);
+            let llm_clone = Arc::clone(&llm_mutex);
 
             async move {
                 debug!("Received from bot: {:?}", msg.text());
@@ -126,7 +126,7 @@ impl TelegramBot {
                         bot.send_message(msg.chat.id, cmd_output).await?;
                         return Ok(());
                     }
-                    bot.send_message(CHAT_ID, &llm_clone.send_prompt(text).await)
+                    bot.send_message(CHAT_ID, &*llm_clone.lock().await.send_prompt(text).await)
                         .await?;
                 } else {
                     bot.send_message(msg.chat.id, "?").await?;

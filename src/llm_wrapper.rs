@@ -8,6 +8,7 @@ pub struct Llm {
     url: &'static str,
     model: &'static str,
     client: Client,
+    prompt_context: String,
 }
 
 #[derive(Debug)]
@@ -33,10 +34,18 @@ impl Llm {
         formatted_text
     }
 
-    pub async fn send_prompt(&self, prompt: &str) -> String {
+    pub async fn send_prompt(&mut self, prompt: &str) -> String {
+        let prompt_context_builder =
+            "Here is context of this user. Base the following prompt on this: \'".to_owned()
+                + &self.prompt_context
+                + "\n"
+                + "Do not mention this context on your following answers\n"
+                + "Prompt: "
+                + prompt;
+
         let json_body = json!({
             "model": &self.model,
-            "prompt": prompt
+            "prompt": prompt_context_builder
         });
 
         // Send a POST request with the JSON body
@@ -90,11 +99,19 @@ impl Llm {
             println!("Request failed with status: {}", response.status());
         }
 
+        self.prompt_context += prompt;
+
         result_builder
     }
 
     pub fn new(url: &'static str, model: &'static str) -> Self {
         let client = Client::new();
-        Self { url, model, client }
+        let prompt_context = String::new();
+        Self {
+            url,
+            model,
+            client,
+            prompt_context,
+        }
     }
 }
