@@ -202,67 +202,11 @@ async fn main() {
         Err(e) => warn!("{}", e),
     };
 
-    /////////////////////////////
-
-    // // Create a new reqwest HTTP client
-    // let client = Client::new();
-
-    // // Define the URL and the JSON body
-    // let url = "http://localhost:11434/api/generate";
-    // let json_body = json!({
-    //     "model": "llama3",
-    //     "prompt": "Why is the sky blue?"
-    // });
-
-    // // Send a POST request with the JSON body
-    // let response = client
-    //     .post(url)
-    //     .json(&json_body) // Send the JSON body
-    //     .send()
-    //     .await; // Unwrap the Result to get the response
-
-    // // Check if the request was successful
-    // let response = match response {
-    //     Ok(rep) => rep,
-    //     Err(e) => {
-    //         println!("Request failed with status: {e:?}");
-    //         return;
-    //     }
-    // };
-
-    // // Ensure the response was successful
-    // if response.status().is_success() {
-    //     // Get the response body as a stream of bytes
-    //     let mut stream = response.bytes_stream();
-
-    //     // Process each chunk as it arrives
-    //     while let Some(chunk_result) = stream.next().await {
-    //         match chunk_result {
-    //             Ok(chunk) => {
-    //                 // Convert the chunk into a valid JSON string
-    //                 if let Ok(json_chunk) = serde_json::from_slice::<Value>(&chunk) {
-    //                     println!("Received JSON: {}", json_chunk);
-    //                 } else {
-    //                     println!("Failed to parse a chunk of the response");
-    //                 }
-    //             }
-    //             Err(e) => {
-    //                 println!("Error receiving chunk: {}", e);
-    //             }
-    //         }
-    //     }
-    // } else {
-    //     println!("Request failed with status: {}", response.status());
-    // }
-
-    // return;
-
-    ////////////////////////////
-
     let mut env_fsm = env_fsm::new(systems.clone(), global_state.clone());
     let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
     let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
-    let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), Llm::new("http://localhost:11434/api/generate", "llama3")).await;
+    let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3");
+    let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
     let tui = Tui::new(global_state.clone(), systems);
 
     // TODO: Simplify the task spawning

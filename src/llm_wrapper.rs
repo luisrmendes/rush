@@ -26,10 +26,10 @@ impl Llm {
     fn format_response(text: &str) -> String {
         // Replace escape sequences with actual symbols and format the string
         let formatted_text = text
-            .replace("\\n", "\n") // Replace `\n` with actual newlines
-            .replace("\\\"", "\"") // Replace escaped quotes
-            .replace("\\\\", "\\") // Replace double backslashes with a single one
-            .replace("```", "\n```"); // Ensure proper line breaks before code blocks
+            .replace("\\n", "\n")
+            .replace("\\\"", "\"")
+            .replace("\\\\", "\\")
+            .replace("```", "\n```");
 
         formatted_text
     }
