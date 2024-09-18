@@ -1,14 +1,16 @@
 use futures::StreamExt;
+use log::error;
 use reqwest::Client;
 use serde_json::{json, Value};
+use std::fs::File;
+use std::io::{Read, Write};
 use std::{error::Error as StdError, fmt};
 
-#[derive(Clone)]
 pub struct Llm {
     url: &'static str,
     model: &'static str,
     client: Client,
-    prompt_context: String,
+    prompt_context_storage: File,
 }
 
 #[derive(Debug)]
@@ -35,9 +37,21 @@ impl Llm {
     }
 
     pub async fn send_prompt(&mut self, prompt: &str) -> String {
+        let mut prompt_context = String::new();
+        match self
+            .prompt_context_storage
+            .read_to_string(&mut prompt_context)
+        {
+            Ok(_) => {}
+            Err(e) => {
+                error!("Failed to read from prompt_context_file! Error: {e}");
+                todo!("do some sensible stuff here");
+            }
+        }
+
         let prompt_context_builder =
             "Here is context of this user. Base the following prompt on this: \'".to_owned()
-                + &self.prompt_context
+                + &prompt_context
                 + "\n"
                 + "Do not mention this context on your following answers\n"
                 + "Prompt: "
@@ -99,19 +113,25 @@ impl Llm {
             println!("Request failed with status: {}", response.status());
         }
 
-        self.prompt_context += prompt;
+        let _ = self.prompt_context_storage.write(prompt.as_bytes());
 
         result_builder
     }
 
     pub fn new(url: &'static str, model: &'static str) -> Self {
         let client = Client::new();
-        let prompt_context = String::new();
+        let prompt_context_storage = match File::create("rush_context_storage.txt") {
+            Ok(f) => f,
+            Err(e) => {
+                panic!("Failed to open context storage file. Error: {e}")
+            }
+        };
+
         Self {
             url,
             model,
             client,
-            prompt_context,
+            prompt_context_storage,
         }
     }
 }
