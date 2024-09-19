@@ -19,7 +19,7 @@ jobs:
 
   clippy:
     name: Clippy
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: fmt
     steps:
       - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
   
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: clippy
     steps:
       - uses: actions/checkout@v3
@@ -54,3 +54,27 @@ jobs:
   #     - name: Generate code coverage
   #       run: |
   #         cargo tarpaulin --verbose --workspace
+
+  deploy:
+    name: Build and Deploy
+    runs-on: self-hosted
+    env:
+      TELOXIDE_TOKEN: ${{ secrets.TELOXIDE_TOKEN }}
+      ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
+      SYRINX_VARS: ${{ secrets.SYRINX_VARS }}
+      SNOWDOG_VARS: ${{ secrets.SNOWDOG_VARS }}
+      THINKPADX1_VARS: ${{ secrets.THINKPADX1_VARS }}
+      RPI5_VARS: ${{ secrets.RPI5_VARS }}
+      RPI3_VARS: ${{ secrets.RPI3_VARS }}
+
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run Deploy Script
+        run: chmod +x .github/workflows/deployScript.sh &&
+          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS $RPI5_VARS $RPI3_VARS
