@@ -25,13 +25,10 @@ impl StdError for CustomError {}
 impl Llm {
     fn format_response(text: &str) -> String {
         // Replace escape sequences with actual symbols and format the string
-        let formatted_text = text
-            .replace("\\n", "\n")
+        text.replace("\\n", "\n")
             .replace("\\\"", "\"")
             .replace("\\\\", "\\")
-            .replace("```", "\n```");
-
-        formatted_text
+            .replace("```", "\n```")
     }
 
     pub async fn send_prompt(&mut self, prompt: &str) -> String {

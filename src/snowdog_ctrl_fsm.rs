@@ -6,7 +6,6 @@ use log::debug;
 use log::error;
 use openssh::KnownHosts;
 use openssh::Session;
-use ping_rs::send_ping_async;
 use regex::Regex;
 use std::sync::atomic::AtomicU32;
 use std::sync::atomic::Ordering;

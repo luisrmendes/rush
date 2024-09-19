@@ -271,15 +271,15 @@ async fn main() {
     });
 
     // Task 6: TUI
-    // let mut shutdown_rx6 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
-    // let handle6 = tokio::spawn(async move {
-    //     tokio::select! {
-    //         _ = tui.run() => {},
-    //         _ = shutdown_rx6.recv() => {
-    //             debug!("tui received shutdown signal");
-    //         }
-    //     }
-    // });
+    let mut shutdown_rx6 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    let handle6 = tokio::spawn(async move {
+        tokio::select! {
+            _ = tui.run() => {},
+            _ = shutdown_rx6.recv() => {
+                debug!("tui received shutdown signal");
+            }
+        }
+    });
 
     // Task 7: Snowdog FSM
     let mut shutdown_rx7 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
@@ -306,7 +306,7 @@ async fn main() {
         handle3,
         handle4,
         handle5,
-        // handle6,
+        handle6,
         handle7,
         shutdown_listener
     );
