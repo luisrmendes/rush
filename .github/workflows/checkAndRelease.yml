@@ -10,44 +10,20 @@ defaults:
     working-directory: /home/lrm/sideProjs/rush
 
 jobs:
-  checkout:
-    name: Checkout
+  checksAndBuild:
+    name: ChecksAndBuild
     runs-on: self-hosted
     steps:
       - name: Git Pull
         run: git pull
-
-  fmt:
-    name: Formatting
-    needs: checkout
-    runs-on: self-hosted
-    steps:
       - name: Enforce formatting
         run: cargo fmt --check
-
-  clippy:
-    name: Linting
-    runs-on: self-hosted
-    needs: fmt
-    steps:
       - name: Linting
         run: cargo clippy -- -D warnings
-  
-  test:
-    name: Test
-    runs-on: self-hosted
-    needs: clippy
-    steps:
       - name: Run tests
         run: cargo test  
-
-  build:
-    name: Build Release
-    runs-on: self-hosted
-    needs: test
-    steps:
       - name: Run Build Release
-        run: cargo build --release  
+        run: cargo build --release 
 
   # coverage:
   #   name: Code coverage
@@ -66,7 +42,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: self-hosted
-    needs: build
+    needs: checksAndBuild
     env:
       TELOXIDE_TOKEN: ${{ secrets.TELOXIDE_TOKEN }}
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
