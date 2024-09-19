@@ -58,7 +58,7 @@ fn load_env_vars() -> Systems {
     dotenv().ok();
 
     CombinedLogger::init(vec![WriteLogger::new(
-        LevelFilter::Debug,
+        LevelFilter::Info,
         Config::default(),
         File::create("/tmp/rush.log").unwrap(),
     )])
