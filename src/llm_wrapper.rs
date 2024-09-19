@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use futures::StreamExt;
 use reqwest::Client;
 use serde_json::{json, Value};
@@ -19,7 +21,7 @@ impl Llm {
             .replace("```", "\n```")
     }
 
-    pub async fn send_prompt(&mut self, prompt: &str) -> String {
+    pub async fn send_prompt(&mut self, prompt: &str) -> Result<String, Box<dyn Error>> {
         let prompt_context_builder =
             "Here is context of this user. Base the following prompt on this: \'".to_owned()
                 + &self.prompt_context
@@ -39,16 +41,16 @@ impl Llm {
             .post(self.url)
             .json(&json_body) // Send the JSON body
             .send()
-            .await;
+            .await?;
 
         // Check if the request was successful
-        let response = match response {
-            Ok(rep) => rep,
-            Err(e) => {
-                eprintln!("Request failed with error: {e:?}");
-                return String::new();
-            }
-        };
+        // let response = match response {
+        //     Ok(rep) => rep,
+        //     Err(e) => {
+        //         eprintln!("Request failed with error: {e:?}");
+        //         return Err(e);
+        //     }
+        // };
 
         let mut result_builder = String::new();
         if response.status().is_success() {
@@ -86,7 +88,7 @@ impl Llm {
 
         self.prompt_context += prompt;
 
-        result_builder
+        Ok(result_builder)
     }
 
     pub fn new(url: &'static str, model: &'static str) -> Self {

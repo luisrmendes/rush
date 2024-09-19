@@ -126,7 +126,15 @@ impl TelegramBot {
                         bot.send_message(msg.chat.id, cmd_output).await?;
                         return Ok(());
                     }
-                    bot.send_message(CHAT_ID, &*llm_clone.lock().await.send_prompt(text).await)
+
+                    let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
+                        Ok(res) => res,
+                        Err(e) => {
+                            format!("Something bad happened connecting to my brain. Error: {e}")
+                        }
+                    };
+
+                    bot.send_message(CHAT_ID, prompt_result)
                         .await?;
                 } else {
                     bot.send_message(msg.chat.id, "?").await?;
