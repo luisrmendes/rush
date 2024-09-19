@@ -1,7 +1,6 @@
 use futures::StreamExt;
 use reqwest::Client;
 use serde_json::{json, Value};
-use std::{error::Error as StdError, fmt};
 
 #[derive(Clone)]
 pub struct Llm {
@@ -10,17 +9,6 @@ pub struct Llm {
     client: Client,
     prompt_context: String,
 }
-
-#[derive(Debug)]
-struct CustomError(String);
-
-impl fmt::Display for CustomError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl StdError for CustomError {}
 
 impl Llm {
     fn format_response(text: &str) -> String {
