@@ -19,6 +19,7 @@ jobs:
 
   fmt:
     name: Rustfmt
+    needs: checkout
     runs-on: self-hosted
     steps:
       - name: Enforce formatting
