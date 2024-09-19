@@ -1,4 +1,4 @@
-name: CodeChecks
+name: RushAction
 
 on: [push, pull_request]
 
