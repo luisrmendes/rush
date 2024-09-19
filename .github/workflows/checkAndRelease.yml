@@ -58,6 +58,7 @@ jobs:
   deploy:
     name: Build and Deploy
     runs-on: self-hosted
+    needs: test
     env:
       TELOXIDE_TOKEN: ${{ secrets.TELOXIDE_TOKEN }}
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
