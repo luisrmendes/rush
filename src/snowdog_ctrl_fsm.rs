@@ -82,6 +82,7 @@ impl Fsm {
 
         // only send command if calculated brightness is different than the previously sent one
         if MON_BRIGHTNESS.load(Ordering::Relaxed) == mon_brightness {
+            debug!("Same brightness calculated. Static brightness: {MON_BRIGHTNESS:?}, brightness: {mon_brightness}");
             sleep(Duration::from_millis(500)).await;
             return;
         }
