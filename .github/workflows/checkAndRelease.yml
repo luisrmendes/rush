@@ -41,6 +41,14 @@ jobs:
       - name: Run tests
         run: cargo test  
 
+  build:
+    name: Build Release
+    runs-on: self-hosted
+    needs: test
+    steps:
+      - name: Run Build Release
+        run: cargo build --release  
+
   # coverage:
   #   name: Code coverage
   #   runs-on: ubuntu-latest
@@ -56,9 +64,9 @@ jobs:
   #         cargo tarpaulin --verbose --workspace
 
   deploy:
-    name: Build and Deploy
+    name: Deploy
     runs-on: self-hosted
-    needs: test
+    needs: build
     env:
       TELOXIDE_TOKEN: ${{ secrets.TELOXIDE_TOKEN }}
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
@@ -68,14 +76,7 @@ jobs:
       RPI5_VARS: ${{ secrets.RPI5_VARS }}
       RPI3_VARS: ${{ secrets.RPI3_VARS }}
 
-    defaults:
-      run:
-        working-directory: ./
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Run Deploy Script
         run: chmod +x .github/workflows/deployScript.sh &&
           ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS $RPI5_VARS $RPI3_VARS
