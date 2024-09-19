@@ -205,7 +205,7 @@ async fn main() {
     let mut env_fsm = env_fsm::new(systems.clone(), global_state.clone());
     let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
     let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
-    let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3");
+    let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3.1");
     let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
     let tui = Tui::new(global_state.clone(), systems);
 

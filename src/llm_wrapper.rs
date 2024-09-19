@@ -43,15 +43,6 @@ impl Llm {
             .send()
             .await?;
 
-        // Check if the request was successful
-        // let response = match response {
-        //     Ok(rep) => rep,
-        //     Err(e) => {
-        //         eprintln!("Request failed with error: {e:?}");
-        //         return Err(e);
-        //     }
-        // };
-
         let mut result_builder = String::new();
         if response.status().is_success() {
             // Get the response body as a stream of bytes
