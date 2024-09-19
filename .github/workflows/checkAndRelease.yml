@@ -5,16 +5,22 @@ on: [push, pull_request]
 env:
   CARGO_TERM_COLOR: always
 
+defaults:
+  run:
+    working-directory: /home/lrm/sideProjs/rush
+
 jobs:
+  checkout:
+    name: Checkout
+    runs-on: self-hosted
+    steps:
+      - name: Git Pull
+        run: git pull
+
   fmt:
     name: Rustfmt
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with:
-          components: rustfmt
       - name: Enforce formatting
         run: cargo fmt --check
 
@@ -23,11 +29,6 @@ jobs:
     runs-on: self-hosted
     needs: fmt
     steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy
-      - uses: Swatinem/rust-cache@v2
       - name: Linting
         run: cargo clippy -- -D warnings
   
@@ -36,9 +37,6 @@ jobs:
     runs-on: self-hosted
     needs: clippy
     steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo test  
 
