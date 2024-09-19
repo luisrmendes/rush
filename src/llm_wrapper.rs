@@ -1,5 +1,5 @@
 use futures::StreamExt;
-use log::error;
+use log::warn;
 use reqwest::Client;
 use serde_json::{json, Value};
 use std::fs::File;
@@ -44,13 +44,12 @@ impl Llm {
         {
             Ok(_) => {}
             Err(e) => {
-                error!("Failed to read from prompt_context_file! Error: {e}");
-                todo!("do some sensible stuff here");
+                warn!("Failed to read from prompt_context_file! Error: {e}");
             }
         }
 
         let prompt_context_builder =
-            "Here is context of this user. Base the following prompt on this: \'".to_owned()
+            "Here is the context of your interaction with me. The context are a sequence of my prompts and your replies. Reply to me knowing our conversation history: \'".to_owned()
                 + &prompt_context
                 + "\n"
                 + "Do not mention this context on your following answers\n"
@@ -113,7 +112,10 @@ impl Llm {
             println!("Request failed with status: {}", response.status());
         }
 
-        let _ = self.prompt_context_storage.write(prompt.as_bytes());
+        let prompt_to_write = format!("Prompt: {prompt}\nYour reply: {result_builder}\n");
+        let _ = self
+            .prompt_context_storage
+            .write(prompt_to_write.as_bytes());
 
         result_builder
     }
