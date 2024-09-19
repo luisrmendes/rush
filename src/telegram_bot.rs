@@ -134,8 +134,7 @@ impl TelegramBot {
                         }
                     };
 
-                    bot.send_message(CHAT_ID, prompt_result)
-                        .await?;
+                    bot.send_message(CHAT_ID, prompt_result).await?;
                 } else {
                     bot.send_message(msg.chat.id, "?").await?;
                     return Ok(());
