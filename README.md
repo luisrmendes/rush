@@ -34,7 +34,7 @@ go run main.go
 
 ## Host Machine Dependencies
 
-- bind (dig...)
+- dnsutils (dig...)
 - wol  
 - Requires desktop i2c monitor bus numbers  
 - gnu-netcat

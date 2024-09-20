@@ -203,7 +203,7 @@ pub async fn wakeup(target_sys: Pc) -> Result<String, String> {
         return Err("Trying to wakup a system without a associated MAC address".to_string());
     };
 
-    send_command(&format!("wol {}", &mac), None).await
+    send_command(&format!("wakeonlan {}", &mac), None).await
 }
 
 pub async fn get_ipv4() -> Result<String, String> {
