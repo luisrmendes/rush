@@ -33,32 +33,35 @@ pub fn calculate_ddc_mon_brightness(env_brightness: u32) -> u32 {
     ((env_brightness * coef) as u32).clamp(0, 100)
 }
 
-pub async fn check_external_system_connection(systems: &[Pc]) -> Result<String, String> {
+pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, String> {
     debug!("checking for PC accesses");
     let mut return_str: String = String::new();
     let mut is_there_some_error: bool = false; // used to return Result Err
 
     // check if systems are online
-    for sys in systems {
-        let online_status: &str = match is_online(sys) {
+    for pc in pcs {
+        let online_status: &str = match is_online(pc) {
             Ok(true) => "online",
             Ok(false) => {
                 is_there_some_error = true;
                 "offline"
             }
-            Err(e) => return Err(e),
+            Err(e) => {
+                is_there_some_error = true;
+                &format!("Failed to lookup PC {0}. Error: {e}\n", pc.ip)
+            }
         };
 
-        let ssh_status: String = if get_ssh_status(sys).await {
+        let ssh_status: String = if get_ssh_status(pc).await {
             "Ok".to_owned()
         } else {
             is_there_some_error = true;
-            format!("Failed ssh access. \n\tSystem: {sys:?}")
+            format!("Failed ssh access. \n\tSystem: {pc:?}")
         };
 
         return_str += &format!(
             "\nSystem \'{}\' is {online_status}, ssh status: {ssh_status}",
-            &sys.ip
+            &pc.ip
         );
     }
 
@@ -184,7 +187,7 @@ pub fn is_online(target_sys: &Pc) -> Result<bool, String> {
     // Resolve the hostname to an IP address
     let mut addr = match (target_sys.ip.clone(), 0).to_socket_addrs() {
         Ok(addr) => addr,
-        Err(e) => return Err(format!("Error resolving hostname, error: {e}")),
+        Err(e) => return Err(format!("Error resolving hostname: {e}")),
     };
 
     let addr = match addr.next().ok_or("Failed to resolve hostname") {

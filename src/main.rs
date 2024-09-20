@@ -57,13 +57,6 @@ struct OfficeEnv {
 fn load_env_vars() -> Systems {
     dotenv().ok();
 
-    CombinedLogger::init(vec![WriteLogger::new(
-        LevelFilter::Debug,
-        Config::default(),
-        File::create("/tmp/rush.log").unwrap(),
-    )])
-    .unwrap();
-
     std::env::var("TELOXIDE_TOKEN").unwrap_or_else(|_| panic!("TELOXIDE_TOKEN must be set."));
 
     // Check for the expected env vars
@@ -186,6 +179,13 @@ fn load_env_vars() -> Systems {
 
 #[tokio::main]
 async fn main() {
+    CombinedLogger::init(vec![WriteLogger::new(
+        LevelFilter::Debug,
+        Config::default(),
+        File::create("/tmp/rush.log").unwrap(),
+    )])
+    .unwrap();
+
     let global_state: Arc<Mutex<GlobalState>> = Arc::new(Mutex::new(GlobalState {
         am_i_home: false,
         office_env: OfficeEnv {
