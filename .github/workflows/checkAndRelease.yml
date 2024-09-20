@@ -54,5 +54,4 @@ jobs:
 
     steps:
       - name: Run Deploy Script
-        run: chmod +x .github/workflows/deployScript.sh &&
-          ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS $RPI5_VARS $RPI3_VARS
+        run: ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS $RPI5_VARS $RPI3_VARS
