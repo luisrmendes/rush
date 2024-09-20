@@ -12,7 +12,6 @@ use std::sync::atomic::AtomicU32;
 use std::sync::atomic::Ordering;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tokio::task;
 use tokio::time::sleep;
 use tokio::time::Duration;
 
@@ -34,7 +33,7 @@ impl Fsm {
         let monitor_list_out = match send_command("ddcutil detect", Some(session)).await {
             Ok(out) => out,
             Err(e) => {
-                return Err(format!("{e}"));
+                return Err(e.to_string());
             }
         };
 
@@ -85,9 +84,6 @@ impl Fsm {
 
     async fn connected(&mut self) {
         static MON_BRIGHTNESS: AtomicU32 = AtomicU32::new(0);
-        static GET_I2C_COUNTER: AtomicU32 = AtomicU32::new(0);
-
-        //let session_arc: Arc<Mutex<Option<Session>>> = Arc::new(Mutex::new(self.session));
 
         let env_brightness = self.global_state.lock().await.office_env.brightness;
         let mon_brightness = calculate_ddc_mon_brightness(env_brightness);
@@ -100,39 +96,6 @@ impl Fsm {
         }
 
         MON_BRIGHTNESS.store(mon_brightness, Ordering::SeqCst);
-
-        // Clone Arc references so they can be accessed inside the async task
-        let monitor_i2c_ids = Arc::clone(&self.monitor_i2c_ids);
-
-        // refresh i2c monitor numbers periodically in case i've switched a monitor off or on
-        // GET_I2C_COUNTER.fetch_add(1, Ordering::SeqCst);
-        // if GET_I2C_COUNTER.load(Ordering::SeqCst) >= 20 {
-        //     GET_I2C_COUNTER.store(0, Ordering::SeqCst);
-
-        //     tokio::spawn(async move {
-        //         loop {
-        //             let mut monitor_i2c_ids_lock = monitor_i2c_ids.lock().await;
-        //             let session_lock = session_arc.lock().await;
-
-        //             let Some(ref session) = *session_lock else {
-        //                 debug!("Not connected");
-        //                 return;
-        //             };
-
-        //             let i2c = match Self::get_i2c_monitor_numbers(&session).await {
-        //                 Ok(out) => out,
-        //                 Err(e) => {
-        //                     warn!("Failed to get monitor I2C ids. Error: {e}");
-        //                     sleep(Duration::from_secs(30)).await;
-        //                     continue;
-        //                 }
-        //             };
-
-        //             debug!("Refreshing I2C IDs: {i2c:?}");
-        //             *monitor_i2c_ids_lock = i2c;
-        //         }
-        //     });
-        // }
 
         // Use the original `session` here
         let mut command_builder = String::new();
