@@ -1,6 +1,7 @@
-use crate::{GlobalState, Systems};
+use crate::{commands, GlobalState, Systems};
 use crossterm::event::{self, Event, KeyCode};
 
+use log::warn;
 use ratatui::{
     backend::CrosstermBackend,
     crossterm::{
@@ -16,14 +17,14 @@ use tokio::sync::Mutex;
 
 pub struct Tui {
     global_state: Arc<Mutex<GlobalState>>,
-    _systems: Systems,
+    systems: Systems,
 }
 
 impl Tui {
     pub fn new(global_state: Arc<Mutex<GlobalState>>, systems: Systems) -> Self {
         Self {
             global_state,
-            _systems: systems,
+            systems,
         }
     }
 
@@ -40,13 +41,12 @@ impl Tui {
             let temp = self.global_state.lock().await.office_env.temperature;
             let humidity = self.global_state.lock().await.office_env.humidity;
             let am_i_home = self.global_state.lock().await.am_i_home;
-            // let sys1_is_online = if let Ok(out) = commands::is_online(&self.systems.pcs[0]) {
-            //     out
-            // } else {
-            //     warn!("Falied to get is_online");
-            //     false
-            // };
-            let sys1_is_online = false;
+            let sys1_is_online = if let Ok(out) = commands::is_online(&self.systems.pcs[0]) {
+                out
+            } else {
+                warn!("Falied to get is_online");
+                false
+            };
 
             // Draw the terminal UI
             terminal.draw(|f| {
