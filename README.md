@@ -1,4 +1,4 @@
-[![Build And Test](https://github.com/luisrmendes/rush/actions/workflows/buildAndTest.yml/badge.svg)](https://github.com/luisrmendes/rush/actions/workflows/buildAndTest.yml)
+[![Check And Release](https://github.com/luisrmendes/rush/actions/workflows/checkAndRelease.yml/badge.svg)](https://github.com/luisrmendes/rush/actions/workflows/checkAndRelease.yml)
 
 # Rush
 
