@@ -159,7 +159,7 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
                 };
 
                 debug!("stdout: \n{stdout}");
-                debug!("stderr: \n{stderr}");
+                error!("stderr: \n{stderr}");
 
                 if !stderr.is_empty() {
                     return Err(stderr);
