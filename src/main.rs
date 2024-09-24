@@ -53,15 +53,40 @@ struct OfficeEnv {
     humidity: u32,
 }
 
-//TODO: this needs a refactor
 fn load_env_vars() -> Systems {
     dotenv().ok();
 
-    std::env::var("TELOXIDE_TOKEN").unwrap_or_else(|_| panic!("TELOXIDE_TOKEN must be set."));
+    let mut pcs = vec![];
 
-    // Check for the expected env vars
-    let env_var_map = vec![
-        "ESP8266_ADDRESS_PORT",
+    let env_var = "TELOXIDE_TOKEN";
+    std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
+
+    let env_var = "ESP8266_ADDRESS_PORT";
+    let var_content = std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
+
+    let mut hostname: String = String::new();
+    let mut port: String = String::new();
+
+    for part in var_content.split(';') {
+        let mut key_value = part.split('=');
+        let Some(key) = key_value.next() else {
+            panic!("{part} has no next!")
+        };
+        let Some(value) = key_value.next() else {
+            panic!("{part} has no next!")
+        };
+
+        match key {
+            "hostname" => hostname = value.to_string(),
+            "port" => port = value.to_string(),
+            other => {
+                panic!("Not handling key {other}")
+            }
+        }
+    }
+    let esp8266_rush = Embedded { hostname, port };
+
+    let pc_name_array = [
         "SYRINX_VARS",
         "SNOWDOG_VARS",
         "THINKPADX1_VARS",
@@ -69,118 +94,45 @@ fn load_env_vars() -> Systems {
         "RPI3_VARS",
     ];
 
-    let mut pcs = vec![];
-    let mut esp8266_rush = Embedded {
-        hostname: String::new(),
-        port: String::new(),
-    };
+    // Filter PC env vars
+    for pc_name in pc_name_array {
+        let var_content =
+            std::env::var(pc_name).unwrap_or_else(|_| panic!("{pc_name} must be set."));
 
-    for env_var in env_var_map {
-        let system_vars =
-            std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
-        assert!(
-            !system_vars.is_empty(),
-            "{env_var} is empty. Please set it."
-        );
+        let mut user = String::new();
+        let mut ip = String::new();
+        let mut mac: Option<String> = None;
 
-        // Parse the SYSTEMX_VARS string
-        match env_var {
-            "ESP8266_ADDRESS_PORT" => {
-                let val =
-                    std::env::var(env_var).unwrap_or_else(|_| panic!("{env_var} must be set."));
-                assert!(!val.is_empty(), "{env_var} is empty. Please set it.");
+        for part in var_content.split(';') {
+            let mut key_value = part.split('=');
+            let Some(key) = key_value.next() else {
+                panic!("{part} has no next!")
+            };
+            let Some(value) = key_value.next() else {
+                panic!("{part} has no next!")
+            };
 
-                let mut hostname: String = String::new();
-                let mut port: String = String::new();
-
-                for part in system_vars.split(';') {
-                    let mut key_value = part.split('=');
-                    let Some(key) = key_value.next() else {
-                        panic!("{part} has no next!")
-                    };
-                    let Some(value) = key_value.next() else {
-                        panic!("{part} has no next!")
-                    };
-
-                    match key {
-                        "hostname" => hostname = value.to_string(),
-                        "port" => port = value.to_string(),
-                        other => {
-                            panic!("Not handling key {other}")
-                        }
-                    }
+            match key {
+                "user" => user = value.to_string(),
+                "ip" => ip = value.to_string(),
+                "mac" => mac = Some(value.to_string()),
+                other => {
+                    panic!("Not handling key {other}")
                 }
-                esp8266_rush = Embedded { hostname, port };
-            }
-            "SNOWDOG_VARS" => {
-                let mut user = String::new();
-                let mut ip = String::new();
-                let mut mac = String::new();
-
-                for part in system_vars.split(';') {
-                    let mut key_value = part.split('=');
-                    let Some(key) = key_value.next() else {
-                        panic!("{part} has no next!")
-                    };
-                    let Some(value) = key_value.next() else {
-                        panic!("{part} has no next!")
-                    };
-
-                    match key {
-                        "user" => user = value.to_string(),
-                        "ip" => ip = value.to_string(),
-                        "mac" => mac = value.to_string(),
-                        other => {
-                            panic!("Not handling key {other}")
-                        }
-                    }
-                }
-                pcs.push(Pc {
-                    user,
-                    ip,
-                    mac: Some(mac),
-                });
-            }
-            "SYRINX_VARS" | "THINKPADX1_VARS" | "RPI5_VARS" | "RPI3_VARS" => {
-                let mut user = String::new();
-                let mut ip = String::new();
-
-                for part in system_vars.split(';') {
-                    let mut key_value = part.split('=');
-                    let Some(key) = key_value.next() else {
-                        panic!("{part} has no next!")
-                    };
-                    let Some(value) = key_value.next() else {
-                        panic!("{part} has no next!")
-                    };
-
-                    match key {
-                        "user" => user = value.to_string(),
-                        "ip" => ip = value.to_string(),
-                        other => {
-                            panic!("Not handling key {other}")
-                        }
-                    }
-                }
-                pcs.push(Pc {
-                    user,
-                    ip,
-                    mac: None,
-                });
-            }
-            other => {
-                panic!("Not handling env var {other}")
             }
         }
+
+        pcs.push(Pc { user, ip, mac });
     }
 
     Systems { esp8266_rush, pcs }
 }
 
+#[allow(clippy::too_many_lines)]
 #[tokio::main]
 async fn main() {
     CombinedLogger::init(vec![WriteLogger::new(
-        LevelFilter::Debug,
+        LevelFilter::Info,
         Config::default(),
         File::create("/tmp/rush.log").unwrap(),
     )])
@@ -209,84 +161,81 @@ async fn main() {
     let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
     let tui = Tui::new(global_state.clone(), systems);
 
-    // TODO: Simplify the task spawning
-
-    // Create a broadcast channel for shutdown signal
     let (shutdown_tx, _) = broadcast::channel(1);
 
-    // Task 1: Office environment FSM
-    let mut shutdown_rx1 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // Office environment FSM
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let handle1 = tokio::spawn(async move {
         tokio::select! {
             () = env_fsm.run() => {},
-            _ = shutdown_rx1.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("env_fsm received shutdown signal");
             }
         }
     });
 
-    // Task 2: Desktop control FSM
-    let mut shutdown_rx2 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // Desktop control FSM
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let handle2 = tokio::spawn(async move {
         tokio::select! {
             () = thinkpad_fsm.run() => {},
-            _ = shutdown_rx2.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("thinkpad_fsm received shutdown signal");
             }
         }
     });
 
-    // Task 3: Telegram bot answer commands
-    let mut shutdown_rx3 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // Telegram bot answer commands
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let bot_clone = telegram_bot.clone();
     let handle3 = tokio::spawn(async move {
         tokio::select! {
             () = bot_clone.run_repl() => {},
-            _ = shutdown_rx3.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("telegram_bot.answer_commands received shutdown signal");
             }
         }
     });
 
-    // Task 4: Get Am I home
-    let mut shutdown_rx4 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // Get Am I home
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let handle4 = tokio::spawn(async move {
         tokio::select! {
             () = commands::get_am_i_home(global_state.clone()) => {},
-            _ = shutdown_rx4.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("get_am_i_home received shutdown signal");
             }
         }
     });
 
-    // Task 5: Telegram Bot Update Am I Home
-    let mut shutdown_rx5 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // Telegram Bot Update Am I Home
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let handle5 = tokio::spawn(async move {
         tokio::select! {
             () = telegram_bot.update_am_i_home() => {},
-            _ = shutdown_rx5.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("telegram_bot.update_am_i_home received shutdown signal");
             }
         }
     });
 
-    // Task 6: TUI
-    let mut shutdown_rx6 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // TUI
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let handle6 = tokio::spawn(async move {
         tokio::select! {
             _ = tui.run() => {},
-            _ = shutdown_rx6.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("tui received shutdown signal");
             }
         }
     });
 
-    // Task 7: Snowdog FSM
-    let mut shutdown_rx7 = shutdown_tx.subscribe(); // Subscribe to the shutdown signal
+    // Snowdog FSM
+    let mut shutdown_rx = shutdown_tx.subscribe();
     let handle7 = tokio::spawn(async move {
         tokio::select! {
             () = snowdog_fsm.run() => {},
-            _ = shutdown_rx7.recv() => {
+            _ = shutdown_rx.recv() => {
                 debug!("snowdog_fsm received shutdown signal");
             }
         }
@@ -299,7 +248,6 @@ async fn main() {
         let _ = shutdown_tx.send(()); // Broadcast the shutdown signal
     });
 
-    // Await all tasks to complete
     let _ = tokio::try_join!(
         handle1,
         handle2,
