@@ -132,7 +132,7 @@ fn load_env_vars() -> Systems {
 #[tokio::main]
 async fn main() {
     CombinedLogger::init(vec![WriteLogger::new(
-        LevelFilter::Info,
+        LevelFilter::Debug,
         Config::default(),
         File::create("/tmp/rush.log").unwrap(),
     )])
