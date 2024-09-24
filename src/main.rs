@@ -154,27 +154,22 @@ async fn main() {
         Err(e) => warn!("{}", e),
     };
 
-    let mut ambient_fsm = ambient_fsm::new(systems.clone(), global_state.clone());
-    let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
-    let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
-    let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3.1");
-    let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
-    let tui = Tui::new(global_state.clone(), systems);
-
     let (shutdown_tx, _) = broadcast::channel(1);
 
-    // Office ambient FSM
+    // Ambient FSM
+    let mut ambient_fsm = ambient_fsm::new(systems.clone(), global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle1 = tokio::spawn(async move {
         tokio::select! {
             () = ambient_fsm.run() => {},
             _ = shutdown_rx.recv() => {
-                debug!("env_fsm received shutdown signal");
+                debug!("ambient_fsm received shutdown signal");
             }
         }
     });
 
-    // Desktop control FSM
+    // Thinkpad control FSM
+    let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle2 = tokio::spawn(async move {
         tokio::select! {
@@ -185,10 +180,24 @@ async fn main() {
         }
     });
 
-    // Telegram bot answer commands
+    // Snowdog FSM
+    let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
+    let mut shutdown_rx = shutdown_tx.subscribe();
+    let handle3 = tokio::spawn(async move {
+        tokio::select! {
+            () = snowdog_fsm.run() => {},
+            _ = shutdown_rx.recv() => {
+                debug!("snowdog_fsm received shutdown signal");
+            }
+        }
+    });
+
+    // Telegram Bot: REPL
+    let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3.1");
+    let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
     let mut shutdown_rx = shutdown_tx.subscribe();
     let bot_clone = telegram_bot.clone();
-    let handle3 = tokio::spawn(async move {
+    let handle4 = tokio::spawn(async move {
         tokio::select! {
             () = bot_clone.run_repl() => {},
             _ = shutdown_rx.recv() => {
@@ -197,18 +206,7 @@ async fn main() {
         }
     });
 
-    // Get Am I home
-    let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle4 = tokio::spawn(async move {
-        tokio::select! {
-            () = commands::get_am_i_home(global_state.clone()) => {},
-            _ = shutdown_rx.recv() => {
-                debug!("get_am_i_home received shutdown signal");
-            }
-        }
-    });
-
-    // Telegram Bot Update Am I Home
+    // Telegram Bot: Update Am I Home
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle5 = tokio::spawn(async move {
         tokio::select! {
@@ -220,6 +218,7 @@ async fn main() {
     });
 
     // TUI
+    let tui = Tui::new(global_state.clone(), systems);
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle6 = tokio::spawn(async move {
         tokio::select! {
@@ -230,13 +229,13 @@ async fn main() {
         }
     });
 
-    // Snowdog FSM
+    // Get Am I home
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle7 = tokio::spawn(async move {
         tokio::select! {
-            () = snowdog_fsm.run() => {},
+            () = commands::get_am_i_home(global_state.clone()) => {},
             _ = shutdown_rx.recv() => {
-                debug!("snowdog_fsm received shutdown signal");
+                debug!("get_am_i_home received shutdown signal");
             }
         }
     });
