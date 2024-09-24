@@ -17,6 +17,6 @@ tmux send-keys -t $tmuxSessionName "sleep 2" Enter
 
 tmuxSeshCommand=""
 tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYRINX_VARS=$3 SNOWDOG_VARS=$4 THINKPADX1_VARS=$5 RPI5_VARS=$6 RPI3_VARS=$7"
-tmuxSeshCommand="${tmuxSeshCommand} RUST_LOG=warn target/release/rush"
+tmuxSeshCommand="${tmuxSeshCommand} target/release/rush"
 
 tmux send-keys -t $tmuxSessionName "${tmuxSeshCommand}" Enter
