@@ -9,7 +9,7 @@ use tokio::time::timeout;
 use tokio::time::Duration;
 
 use crate::GlobalState;
-use crate::OfficeEnv;
+use crate::OfficeAmbient;
 use crate::Systems;
 enum State {
     Connecting,
@@ -130,8 +130,8 @@ impl Fsm {
             .map(str::parse)
             .collect();
 
-        let office_env: OfficeEnv = match office_env {
-            Ok(office_env) => OfficeEnv {
+        let office_env: OfficeAmbient = match office_env {
+            Ok(office_env) => OfficeAmbient {
                 brightness: office_env[1],
                 temperature: office_env[2],
                 humidity: office_env[3],

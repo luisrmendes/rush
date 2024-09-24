@@ -1,5 +1,5 @@
 mod commands;
-mod get_env_fsm;
+mod get_ambient_fsm;
 mod llm_wrapper;
 mod snowdog_ctrl_fsm;
 mod telegram_bot;
@@ -7,7 +7,7 @@ mod thinkpad_ctrl_fsm;
 mod tui;
 
 use dotenv::dotenv;
-use get_env_fsm::Fsm as env_fsm;
+use get_ambient_fsm::Fsm as ambient_fsm;
 use llm_wrapper::Llm;
 use log::{debug, info, warn, LevelFilter};
 use simplelog::{CombinedLogger, Config, WriteLogger};
@@ -24,7 +24,7 @@ use tui::Tui;
 #[derive(Clone, Debug)]
 pub struct GlobalState {
     am_i_home: bool,
-    office_env: OfficeEnv,
+    office_env: OfficeAmbient,
 }
 
 #[derive(Clone, Debug)]
@@ -47,7 +47,7 @@ struct Embedded {
 }
 
 #[derive(Clone, Debug)]
-struct OfficeEnv {
+struct OfficeAmbient {
     brightness: u32,
     temperature: u32,
     humidity: u32,
@@ -140,7 +140,7 @@ async fn main() {
 
     let global_state: Arc<Mutex<GlobalState>> = Arc::new(Mutex::new(GlobalState {
         am_i_home: false,
-        office_env: OfficeEnv {
+        office_env: OfficeAmbient {
             brightness: 0,
             temperature: 0,
             humidity: 0,
@@ -154,7 +154,7 @@ async fn main() {
         Err(e) => warn!("{}", e),
     };
 
-    let mut env_fsm = env_fsm::new(systems.clone(), global_state.clone());
+    let mut ambient_fsm = ambient_fsm::new(systems.clone(), global_state.clone());
     let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
     let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
     let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3.1");
@@ -163,11 +163,11 @@ async fn main() {
 
     let (shutdown_tx, _) = broadcast::channel(1);
 
-    // Office environment FSM
+    // Office ambient FSM
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle1 = tokio::spawn(async move {
         tokio::select! {
-            () = env_fsm.run() => {},
+            () = ambient_fsm.run() => {},
             _ = shutdown_rx.recv() => {
                 debug!("env_fsm received shutdown signal");
             }
