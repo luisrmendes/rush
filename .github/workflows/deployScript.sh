@@ -19,13 +19,13 @@ fi
 # tmux send-keys -t $tmuxSessionName "sleep 1" Enter
 
 # Kill all instances of the process by name
-killall target/release/rush
+killall rush
 
 # Wait for all processes to be terminated
-while pgrep target/release/rush > /dev/null; do sleep 1; done
+while pgrep rush > /dev/null; do sleep 1; done
 
 # Notify when the processes are terminated
-echo "All instances of 'target/release/rush' have been terminated."
+echo "All instances of 'rush' have been terminated."
 
 tmuxSeshCommand=""
 tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYRINX_VARS=$3 SNOWDOG_VARS=$4 THINKPADX1_VARS=$5 RPI5_VARS=$6 RPI3_VARS=$7"
