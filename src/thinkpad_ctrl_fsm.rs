@@ -4,6 +4,7 @@ use crate::GlobalState;
 use crate::Pc;
 use log::debug;
 use log::error;
+use log::warn;
 use openssh::KnownHosts;
 use openssh::Session;
 use std::sync::atomic::AtomicU32;
@@ -85,7 +86,7 @@ impl Fsm {
                 self.state = State::Connected;
             }
             Err(e) => {
-                debug!("Failed ssh connection to {0}. Error: {e}", self.pc.ip);
+                warn!("Failed ssh connection to {0}. Error: {e}", self.pc.ip);
                 sleep(Duration::from_secs(2)).await;
             }
         }
