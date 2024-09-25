@@ -137,10 +137,9 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
 
                 Ok(stdout)
             }
-            Err(e) => {
-                error!("Failed to execute command. Error: {e}");
-                Err(format!("Failed to execute command. Error: {e}"))
-            }
+            Err(e) => Err(format!(
+                "Failed to execute command \'{command}\'. Error: {e}"
+            )),
         },
         None => match Command::new("sh").arg("-c").arg(command).output().await {
             Ok(out) => {
