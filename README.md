@@ -48,3 +48,6 @@ go run main.go
 - User monitor in video group
 - Add udev rule to give video group brightness control permissions
 - Add monitorcontrol write permissions to kbd_backlight (eg on .bashrc, "sudo chmod 757 /sys/class/leds/tpacpi\:\:kbd_backlight/brightness")
+
+## Set OLLAMA access
+OLLAMA_HOST=0.0.0.0:8080
