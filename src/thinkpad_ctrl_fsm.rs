@@ -26,6 +26,8 @@ pub struct Fsm {
     session: Option<Session>,
 }
 
+static FSM_REST: Duration = Duration::new(1, 0); // rest time between states
+
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
 fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
@@ -87,7 +89,7 @@ impl Fsm {
             }
             Err(e) => {
                 warn!("Failed ssh connection to {0}. Error: {e}", self.pc.ip);
-                sleep(Duration::from_secs(2)).await;
+                sleep(FSM_REST).await;
             }
         }
     }
@@ -105,7 +107,7 @@ impl Fsm {
             debug!("Sending command: {cmd}");
             cmd
         } else {
-            sleep(Duration::from_millis(500)).await;
+            sleep(FSM_REST).await;
             return;
         };
 

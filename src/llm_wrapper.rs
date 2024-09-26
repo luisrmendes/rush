@@ -45,7 +45,6 @@ impl Llm {
 
         let mut result_builder = String::new();
         if response.status().is_success() {
-            // Get the response body as a stream of bytes
             let mut stream = response.bytes_stream();
 
             // Process each chunk as it arrives

@@ -28,6 +28,8 @@ pub struct Fsm {
     monitor_i2c_ids: Arc<Mutex<Vec<String>>>,
 }
 
+static FSM_REST: Duration = Duration::new(1, 0); // rest time between states
+
 impl Fsm {
     async fn get_i2c_monitor_numbers(session: &Session) -> Result<Vec<String>, String> {
         let monitor_list_out = match send_command("ddcutil detect", Some(session)).await {
@@ -61,13 +63,13 @@ impl Fsm {
             }
             Err(e) => {
                 warn!("Failed ssh connection to {0}. Error: {e}", self.pc.ip);
-                sleep(Duration::from_secs(2)).await;
+                sleep(FSM_REST).await;
                 return;
             }
         }
 
         let Some(session) = &mut self.session else {
-            sleep(Duration::from_secs(2)).await;
+            sleep(FSM_REST).await;
             return;
         };
 
@@ -91,7 +93,7 @@ impl Fsm {
         // Only proceed if brightness has changed
         if MON_BRIGHTNESS.load(Ordering::Relaxed) == mon_brightness {
             debug!("Same brightness calculated. Static brightness: {MON_BRIGHTNESS:?}, brightness: {mon_brightness}");
-            sleep(Duration::from_millis(500)).await;
+            sleep(FSM_REST).await;
             return;
         }
 

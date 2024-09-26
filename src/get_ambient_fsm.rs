@@ -23,7 +23,10 @@ pub struct Fsm {
     stream: Option<TcpStream>,
 }
 
+static FSM_REST: Duration = Duration::new(1, 0);    // rest time between states
+
 impl Fsm {
+
     pub fn new(ctx: Systems, global_state: Arc<Mutex<GlobalState>>) -> Self {
         Self {
             state: State::Connecting,
@@ -55,7 +58,7 @@ impl Fsm {
                     format!("Error resolving hostname \'{hostname}\', error: {e}")
                 );
 
-                sleep(Duration::from_secs(1)).await;
+                sleep(FSM_REST).await;
                 return;
             }
         };
@@ -64,7 +67,7 @@ impl Fsm {
             Ok(addr) => addr.to_string(),
             Err(e) => {
                 warn!("{}", e.to_string(),);
-                sleep(Duration::from_secs(1)).await;
+                sleep(FSM_REST).await;
                 return;
             }
         };
@@ -86,7 +89,7 @@ impl Fsm {
             }
             Err(e) => {
                 debug!("Failed to connect: {e}");
-                sleep(Duration::from_secs(2)).await;
+                sleep(FSM_REST).await;
             }
         }
     }
