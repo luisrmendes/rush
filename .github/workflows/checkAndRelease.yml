@@ -48,10 +48,9 @@ jobs:
       ESP8266_ADDRESS_PORT: ${{ secrets.ESP8266_ADDRESS_PORT }}
       SYRINX_VARS: ${{ secrets.SYRINX_VARS }}
       SNOWDOG_VARS: ${{ secrets.SNOWDOG_VARS }}
-      THINKPADX1_VARS: ${{ secrets.THINKPADX1_VARS }}
-      RPI5_VARS: ${{ secrets.RPI5_VARS }}
+      CYGNUS_VARS: ${{ secrets.CYGNUS_VARS }}
       RPI3_VARS: ${{ secrets.RPI3_VARS }}
 
     steps:
       - name: Run Deploy Script
-        run: ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $THINKPADX1_VARS $RPI5_VARS $RPI3_VARS
+        run: ./.github/workflows/deployScript.sh $TELOXIDE_TOKEN $ESP8266_ADDRESS_PORT $SYRINX_VARS $SNOWDOG_VARS $CYGNUS_VARS $RPI3_VARS

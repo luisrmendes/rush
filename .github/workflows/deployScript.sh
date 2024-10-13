@@ -28,7 +28,7 @@ while pgrep rush > /dev/null; do sleep 1; done
 echo "All instances of 'rush' have been terminated."
 
 tmuxSeshCommand=""
-tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYRINX_VARS=$3 SNOWDOG_VARS=$4 THINKPADX1_VARS=$5 RPI5_VARS=$6 RPI3_VARS=$7"
+tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYRINX_VARS=$3 SNOWDOG_VARS=$4 CYGNUS_VARS=$5 PI3_VARS=$6"
 tmuxSeshCommand="${tmuxSeshCommand} RUST_LOG=trace target/release/rush"
 
 tmux send-keys -t $tmuxSessionName "${tmuxSeshCommand}" Enter
