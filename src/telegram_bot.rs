@@ -130,7 +130,7 @@ impl TelegramBot {
                     let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
                         Ok(res) => res,
                         Err(e) => {
-                            format!("Something bad happened connecting to my brain. Error: {e}")
+                            format!("Something bad happened connecting to my llm. Error: {e}")
                         }
                     };
 

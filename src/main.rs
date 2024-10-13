@@ -187,7 +187,7 @@ async fn main() {
     });
 
     // Telegram Bot: REPL
-    let llm_wrapper = Llm::new("http://localhost:11434/api/generate", "llama3.1");
+    let llm_wrapper = Llm::new();
     let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
     let mut shutdown_rx = shutdown_tx.subscribe();
     let bot_clone = telegram_bot.clone();

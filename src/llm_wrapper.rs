@@ -1,16 +1,19 @@
 use std::error::Error;
 
 use futures::StreamExt;
+use log::info;
 use reqwest::Client;
 use serde_json::{json, Value};
 
 #[derive(Clone)]
 pub struct Llm {
-    url: &'static str,
-    model: &'static str,
     client: Client,
     prompt_context: String,
 }
+
+static URL: &str = "http://cygnus:11434/api/generate";
+static BACKUP_URL: &str = "http://localhost:11434/api/generate";
+static MODEL: &str = "llama3.2";
 
 impl Llm {
     fn format_response(text: &str) -> String {
@@ -31,17 +34,27 @@ impl Llm {
                 + prompt;
 
         let json_body = json!({
-            "model": &self.model,
+            "model": &MODEL,
             "prompt": prompt_context_builder
         });
 
         // Send a POST request with the JSON body
-        let response = self
+        let response = if let Ok(res) = self
             .client
-            .post(self.url)
+            .post(URL)
             .json(&json_body) // Send the JSON body
             .send()
-            .await?;
+            .await
+        {
+            res
+        } else {
+            info!("Primary URL is unavailable, using localhost llm");
+            self.client
+                .post(BACKUP_URL)
+                .json(&json_body) // Send the JSON body
+                .send()
+                .await?
+        };
 
         let mut result_builder = String::new();
         if response.status().is_success() {
@@ -81,12 +94,10 @@ impl Llm {
         Ok(result_builder)
     }
 
-    pub fn new(url: &'static str, model: &'static str) -> Self {
+    pub fn new() -> Self {
         let client = Client::new();
         let prompt_context = String::new();
         Self {
-            url,
-            model,
             client,
             prompt_context,
         }
