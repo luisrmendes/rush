@@ -30,7 +30,7 @@ static FSM_REST: Duration = Duration::new(1, 0); // rest time between states
 
 #[allow(clippy::cast_sign_loss)]
 #[allow(clippy::cast_possible_truncation)]
-fn get_thinkpad_x1_mon_brightness(env_brightness: u32) -> u32 {
+fn get_cygnus_mon_brightness(env_brightness: u32) -> u32 {
     let env_brightness = f64::from(env_brightness);
     let max_mon_brightness: f64 = 19393.0;
     let coef = 0.142_857_15;
@@ -57,7 +57,7 @@ fn get_brightness_cmds(env_brightness: u32) -> Result<String, ()> {
 
     MAIN_MON_BRIGHTNESS.store(main_mon_brightness, Ordering::SeqCst);
 
-    let laptop_mon_brightness = get_thinkpad_x1_mon_brightness(env_brightness);
+    let laptop_mon_brightness = get_cygnus_mon_brightness(env_brightness);
 
     let set_kbd_brightness = match env_brightness {
         250..=u32::MAX => 0,
@@ -67,7 +67,7 @@ fn get_brightness_cmds(env_brightness: u32) -> Result<String, ()> {
 
     let command: String = String::from("echo ")
         + &laptop_mon_brightness.to_string()
-        + " > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 14 setvcp 10 "
+        + " > /sys/class/backlight/intel_backlight/brightness & ddcutil --bus 15 setvcp 10 "
         + &main_mon_brightness.to_string()
         + " & echo "
         + &set_kbd_brightness.to_string()

@@ -51,3 +51,6 @@ go run main.go
 
 ## Set OLLAMA access
 OLLAMA_HOST=0.0.0.0:8080
+
+## TODO
+Remove all dependencies like ddcutil i2c-dev i2c-tools

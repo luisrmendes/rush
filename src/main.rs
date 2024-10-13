@@ -1,11 +1,12 @@
 mod commands;
+mod cygnus_ctrl_fsm;
 mod get_ambient_fsm;
 mod llm_wrapper;
 mod snowdog_ctrl_fsm;
 mod telegram_bot;
-mod thinkpad_ctrl_fsm;
 mod tui;
 
+use cygnus_ctrl_fsm::Fsm as cygnus_fsm;
 use dotenv::dotenv;
 use get_ambient_fsm::Fsm as ambient_fsm;
 use llm_wrapper::Llm;
@@ -14,7 +15,6 @@ use simplelog::{CombinedLogger, Config, WriteLogger};
 use snowdog_ctrl_fsm::Fsm as snowdog_fsm;
 use std::{fs::File, sync::Arc};
 use telegram_bot::TelegramBot;
-use thinkpad_ctrl_fsm::Fsm as thinkpad_fsm;
 use tokio::{
     signal,
     sync::{broadcast, Mutex},
@@ -86,13 +86,7 @@ fn load_env_vars() -> Systems {
     }
     let esp8266_rush = Embedded { hostname, port };
 
-    let pc_name_array = [
-        "SYRINX_VARS",
-        "SNOWDOG_VARS",
-        "THINKPADX1_VARS",
-        "RPI5_VARS",
-        "RPI3_VARS",
-    ];
+    let pc_name_array = ["SYRINX_VARS", "SNOWDOG_VARS", "CYGNUS_VARS", "RPI3_VARS"];
 
     // Filter PC env vars
     for pc_name in pc_name_array {
@@ -168,14 +162,14 @@ async fn main() {
         }
     });
 
-    // Thinkpad control FSM
-    let mut thinkpad_fsm = thinkpad_fsm::new(systems.pcs[2].clone(), global_state.clone());
+    // Cygnus FSM
+    let mut cygnus_fsm = cygnus_fsm::new(systems.pcs[2].clone(), global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle2 = tokio::spawn(async move {
         tokio::select! {
-            () = thinkpad_fsm.run() => {},
+            () = cygnus_fsm.run() => {},
             _ = shutdown_rx.recv() => {
-                debug!("thinkpad_fsm received shutdown signal");
+                debug!("cygnus_fsm received shutdown signal");
             }
         }
     });
@@ -220,7 +214,7 @@ async fn main() {
     // TUI
     let tui = Tui::new(global_state.clone(), systems);
     let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle6 = tokio::spawn(async move {
+    let handle_tui = tokio::spawn(async move {
         tokio::select! {
             _ = tui.run() => {},
             _ = shutdown_rx.recv() => {
@@ -253,7 +247,7 @@ async fn main() {
         handle3,
         handle4,
         handle5,
-        handle6,
+        handle_tui,
         handle7,
         shutdown_listener
     );

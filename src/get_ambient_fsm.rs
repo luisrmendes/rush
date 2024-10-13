@@ -23,10 +23,9 @@ pub struct Fsm {
     stream: Option<TcpStream>,
 }
 
-static FSM_REST: Duration = Duration::new(1, 0);    // rest time between states
+static FSM_REST: Duration = Duration::new(1, 0); // rest time between states
 
 impl Fsm {
-
     pub fn new(ctx: Systems, global_state: Arc<Mutex<GlobalState>>) -> Self {
         Self {
             state: State::Connecting,
