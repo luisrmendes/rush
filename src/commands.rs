@@ -171,6 +171,7 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
     }
 }
 
+#[allow(dead_code)]
 pub async fn suspend(sys: Pc) -> Result<String, String> {
     let session_access: &str = &(sys.user.clone() + "@" + &sys.ip);
     let session = match Session::connect(session_access, KnownHosts::Strict).await {
@@ -200,6 +201,7 @@ pub fn is_online(target_sys: &Pc) -> Result<bool, String> {
     Ok(ping_rs::send_ping(&addr.ip(), Duration::from_millis(100), &[1, 2, 3, 4], None).is_ok())
 }
 
+#[allow(dead_code)]
 pub async fn wakeup(target_sys: Pc) -> Result<String, String> {
     let Some(mac) = target_sys.mac else {
         return Err("Trying to wakup a system without a associated MAC address".to_string());

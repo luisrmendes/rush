@@ -15,11 +15,13 @@ use ratatui::{
 use std::{io, sync::Arc, time::Duration};
 use tokio::sync::Mutex;
 
+#[allow(dead_code)]
 pub struct Tui {
     global_state: Arc<Mutex<GlobalState>>,
     systems: Systems,
 }
 
+#[allow(dead_code)]
 impl Tui {
     pub fn new(global_state: Arc<Mutex<GlobalState>>, systems: Systems) -> Self {
         Self {

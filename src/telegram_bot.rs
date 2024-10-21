@@ -30,6 +30,7 @@ pub enum Command {
 
 //impl Executable for Command {}
 
+#[allow(clippy::to_string_trait_impl)]
 impl ToString for Command {
     fn to_string(&self) -> String {
         match self {
@@ -100,9 +101,7 @@ impl TelegramBot {
                 Ok(out) => Ok(out.to_string()),
                 Err(e) => Err(e),
             },
-            Command::LightsOn | Command::LightsOff=> {
-                Ok("NO-OP".to_string())
-            }
+            Command::LightsOn | Command::LightsOff => Ok("NO-OP".to_string()),
         }
     }
 
@@ -146,7 +145,7 @@ impl TelegramBot {
                         bot.send_message(msg.chat.id, cmd_output).await?;
                         return Ok(());
                     }
-                    
+
                     let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
                         Ok(res) => res,
                         Err(e) => {
@@ -167,14 +166,14 @@ impl TelegramBot {
                         + "Answer just with the command you believe fits best from the prompt. Answer \"undefined\" if you cannot find any correlation\n"
                         + "Prompt: "
                         + text;
-        
+
                     let get_command_from_prompt_result = match llm_clone.lock().await.send_prompt(&get_command_from_prompt).await {
                         Ok(res) => res,
                         Err(e) => {
                             format!("Something bad happened connecting to my llm. Error: {e}")
                         }
                     };
-                    
+
                     if let Ok(cmd) = Command::from_str(&get_command_from_prompt_result) {
                        match Self::execute(&context_clone, &cmd).await {
                                 Ok(output) => output,
@@ -188,7 +187,7 @@ impl TelegramBot {
                             bot.send_message(CHAT_ID, prompt_result).await?;
                             debug!("Command not infered");
                         }
-                    }                
+                    }
                 else {
                     bot.send_message(msg.chat.id, "Did you sent an empty message?").await?;
                     return Ok(());

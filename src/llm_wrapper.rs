@@ -93,8 +93,6 @@ impl Llm {
 
     pub fn new() -> Self {
         let client = Client::new();
-        Self {
-            client,
-        }
+        Self { client }
     }
 }
