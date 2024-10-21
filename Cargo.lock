@@ -1163,6 +1163,7 @@ dependencies = [
  "reqwest",
  "serde_json",
  "simplelog",
+ "strum",
  "teloxide",
  "tokio",
 ]

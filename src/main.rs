@@ -19,7 +19,6 @@ use tokio::{
     signal,
     sync::{broadcast, Mutex},
 };
-use tui::Tui;
 
 #[derive(Clone, Debug)]
 pub struct GlobalState {
@@ -212,16 +211,16 @@ async fn main() {
     });
 
     // TUI
-    let tui = Tui::new(global_state.clone(), systems);
-    let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle_tui = tokio::spawn(async move {
-        tokio::select! {
-            _ = tui.run() => {},
-            _ = shutdown_rx.recv() => {
-                debug!("tui received shutdown signal");
-            }
-        }
-    });
+    // let tui = Tui::new(global_state.clone(), systems);
+    // let mut shutdown_rx = shutdown_tx.subscribe();
+    // let handle_tui = tokio::spawn(async move {
+    //     tokio::select! {
+    //         _ = tui.run() => {},
+    //         _ = shutdown_rx.recv() => {
+    //             debug!("tui received shutdown signal");
+    //         }
+    //     }
+    // });
 
     // Get Am I home
     let mut shutdown_rx = shutdown_tx.subscribe();
@@ -247,7 +246,7 @@ async fn main() {
         handle3,
         handle4,
         handle5,
-        handle_tui,
+        //handle_tui,
         handle7,
         shutdown_listener
     );

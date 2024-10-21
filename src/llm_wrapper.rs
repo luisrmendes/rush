@@ -8,7 +8,6 @@ use serde_json::{json, Value};
 #[derive(Clone)]
 pub struct Llm {
     client: Client,
-    prompt_context: String,
 }
 
 static URL: &str = "http://cygnus:11434/api/generate";
@@ -25,17 +24,17 @@ impl Llm {
     }
 
     pub async fn send_prompt(&mut self, prompt: &str) -> Result<String, Box<dyn Error>> {
-        let prompt_context_builder =
-            "Here is context of this user. Base the following prompt on this: \'".to_owned()
-                + &self.prompt_context
-                + "\n"
-                + "Do not mention this context on your following answers\n"
-                + "Prompt: "
-                + prompt;
+        // let prompt_context_builder =
+        //     "Here is context of this user. Base the following prompt on this: \'".to_owned()
+        //         + &self.prompt_context
+        //         + "\n"
+        //         + "Do not mention this context on your following answers\n"
+        //         + "Prompt: "
+        //         + prompt;
 
         let json_body = json!({
             "model": &MODEL,
-            "prompt": prompt_context_builder
+            "prompt": prompt
         });
 
         // Send a POST request with the JSON body
@@ -89,17 +88,13 @@ impl Llm {
             println!("Request failed with status: {}", response.status());
         }
 
-        self.prompt_context += prompt;
-
         Ok(result_builder)
     }
 
     pub fn new() -> Self {
         let client = Client::new();
-        let prompt_context = String::new();
         Self {
             client,
-            prompt_context,
         }
     }
 }
