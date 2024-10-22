@@ -1,6 +1,8 @@
 use crate::{GlobalState, Pc};
 use log::{debug, error, warn};
 use openssh::{KnownHosts, Session, SessionBuilder};
+use reqwest::Client;
+use std::error::Error;
 use std::net::ToSocketAddrs;
 use std::{
     sync::{
@@ -10,6 +12,24 @@ use std::{
     time::Duration,
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
+
+pub async fn lights_off() -> Result<String, Box<dyn Error>> {
+    let client = Client::new();
+    let response = client
+        .get("http://192.168.1.212/relay/0?turn=off")
+        .send()
+        .await?;
+    Ok(response.text().await?)
+}
+
+pub async fn lights_on() -> Result<String, Box<dyn Error>> {
+    let client = Client::new();
+    let response = client
+        .get("http://192.168.1.212/relay/0?turn=on")
+        .send()
+        .await?;
+    Ok(response.text().await?)
+}
 
 pub async fn get_ssh_status(target_pc: &Pc) -> bool {
     let session_access: String = target_pc.user.clone() + "@" + &target_pc.ip;

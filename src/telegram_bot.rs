@@ -4,7 +4,7 @@ use crate::{
     GlobalState, Systems,
 };
 use log::debug;
-use std::str::FromStr;
+use std::{error::Error, str::FromStr};
 use std::{
     sync::{
         atomic::{AtomicBool, Ordering},
@@ -94,14 +94,15 @@ impl TelegramBot {
         }
     }
 
-    async fn execute(ctx: &Systems, op: &Command) -> Result<String, String> {
+    async fn execute(ctx: &Systems, op: &Command) -> Result<String, Box<dyn Error>> {
         match op {
-            Command::GetIpv4 => commands::get_ipv4().await,
+            Command::GetIpv4 => Ok(commands::get_ipv4().await?),
             Command::StatusSnowdog => match commands::is_online(&ctx.pcs[1].clone()) {
                 Ok(out) => Ok(out.to_string()),
-                Err(e) => Err(e),
+                Err(e) => Err(e.into()),
             },
-            Command::LightsOn | Command::LightsOff => Ok("NO-OP".to_string()),
+            Command::LightsOn => Ok(commands::lights_on().await?),
+            Command::LightsOff => Ok(commands::lights_off().await?),
         }
     }
 
@@ -183,6 +184,7 @@ impl TelegramBot {
                                 }
                             };
                             bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
+                            let _ = Self::execute(&context_clone,&cmd).await;
                         } else {
                             bot.send_message(CHAT_ID, prompt_result).await?;
                             debug!("Command not infered");
