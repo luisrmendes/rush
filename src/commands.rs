@@ -23,32 +23,32 @@ static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
 pub async fn lights_off() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
     let response = client
-        .get("http://".to_owned()+SHELLY_PLUG1_HOSTNAME+"/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG2_HOSTNAME+"/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG2_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG3_HOSTNAME+"/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG4_HOSTNAME+"/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG5_HOSTNAME+"/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG6_HOSTNAME+"/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
 
@@ -58,32 +58,32 @@ pub async fn lights_off() -> Result<String, Box<dyn Error>> {
 pub async fn lights_on() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
     let response = client
-        .get("http://".to_owned()+SHELLY_PLUG1_HOSTNAME+"/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG2_HOSTNAME+"/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG2_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG3_HOSTNAME+"/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG4_HOSTNAME+"/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG5_HOSTNAME+"/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
 
     let _response = client
-        .get("http://".to_owned()+SHELLY_PLUG6_HOSTNAME+"/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
 
