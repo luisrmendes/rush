@@ -20,6 +20,62 @@ static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
 static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
 static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
 
+pub async fn lights_off_living_room() -> Result<String, Box<dyn Error>> {
+    let client = Client::new();
+
+    let response = client
+        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=off")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=off")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=off")
+        .send()
+        .await?;
+
+    Ok(response.text().await?)
+}
+
+pub async fn lights_on_living_room() -> Result<String, Box<dyn Error>> {
+    let client = Client::new();
+    // let response = client
+    //     .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=on")
+    //     .send()
+    //     .await?;
+
+    // let _response = client
+    //     .get("http://".to_owned() + SHELLY_PLUG2_HOSTNAME + "/relay/0?turn=on")
+    //     .send()
+    //     .await?;
+
+    // let _response = client
+    //     .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=on")
+    //     .send()
+    //     .await?;
+
+    let response = client
+        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=on")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=on")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=on")
+        .send()
+        .await?;
+
+    Ok(response.text().await?)
+}
+
 pub async fn lights_off() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
     let response = client
