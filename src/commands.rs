@@ -13,21 +13,80 @@ use std::{
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
+static SHELLY_PLUG1_HOSTNAME: &str = "shellyplusplugs-fcb4670e1130";
+static SHELLY_PLUG2_HOSTNAME: &str = "shellyplusplugs-e465b8b362f8";
+static SHELLY_PLUG3_HOSTNAME: &str = "shellyplusplugs-c82e180a8dd8";
+static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
+static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
+static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
+
 pub async fn lights_off() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
     let response = client
-        .get("http://192.168.1.212/relay/0?turn=off")
+        .get("http://".to_owned()+SHELLY_PLUG1_HOSTNAME+"/relay/0?turn=off")
         .send()
         .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG2_HOSTNAME+"/relay/0?turn=off")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG3_HOSTNAME+"/relay/0?turn=off")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG4_HOSTNAME+"/relay/0?turn=off")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG5_HOSTNAME+"/relay/0?turn=off")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG6_HOSTNAME+"/relay/0?turn=off")
+        .send()
+        .await?;
+
     Ok(response.text().await?)
 }
 
 pub async fn lights_on() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
     let response = client
-        .get("http://192.168.1.212/relay/0?turn=on")
+        .get("http://".to_owned()+SHELLY_PLUG1_HOSTNAME+"/relay/0?turn=on")
         .send()
         .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG2_HOSTNAME+"/relay/0?turn=on")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG3_HOSTNAME+"/relay/0?turn=on")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG4_HOSTNAME+"/relay/0?turn=on")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG5_HOSTNAME+"/relay/0?turn=on")
+        .send()
+        .await?;
+
+    let _response = client
+        .get("http://".to_owned()+SHELLY_PLUG6_HOSTNAME+"/relay/0?turn=on")
+        .send()
+        .await?;
+
     Ok(response.text().await?)
 }
 

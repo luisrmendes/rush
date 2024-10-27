@@ -1,7 +1,6 @@
 use std::error::Error;
 
 use futures::StreamExt;
-use log::info;
 use reqwest::Client;
 use serde_json::{json, Value};
 
@@ -24,20 +23,20 @@ impl Llm {
     }
 
     pub async fn send_prompt(&mut self, prompt: &str) -> Result<String, Box<dyn Error>> {
-        // let prompt_context_builder =
-        //     "Here is context of this user. Base the following prompt on this: \'".to_owned()
-        //         + &self.prompt_context
-        //         + "\n"
-        //         + "Do not mention this context on your following answers\n"
-        //         + "Prompt: "
-        //         + prompt;
-
         let json_body = json!({
             "model": &MODEL,
             "prompt": prompt
         });
 
         // Send a POST request with the JSON body
+        // let response = self
+        //     .client
+        //     .post(BACKUP_URL)
+        //     .json(&json_body) // Send the JSON body
+        //     .send()
+        //     .await?;
+
+        // TODO: Implement quikck timeout when cannot find cygnus
         let response = if let Ok(res) = self
             .client
             .post(URL)
@@ -45,9 +44,10 @@ impl Llm {
             .send()
             .await
         {
+            println!("Primary URL");
             res
         } else {
-            info!("Primary URL is unavailable, using localhost llm");
+            println!("Primary URL is unavailable, using localhost llm");
             self.client
                 .post(BACKUP_URL)
                 .json(&json_body) // Send the JSON body
@@ -80,7 +80,7 @@ impl Llm {
                         }
                     }
                     Err(e) => {
-                        println!("Error receiving chunk: {e}");
+                        eprintln!("Error receiving chunk: {e}");
                     }
                 }
             }
