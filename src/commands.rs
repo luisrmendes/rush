@@ -27,12 +27,12 @@ pub async fn lights_off_living_room() -> Result<String, Box<dyn Error>> {
         .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
-
+    sleep(Duration::new(1, 0)).await;
     let _response = client
         .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=off")
         .send()
         .await?;
-
+    sleep(Duration::new(1, 0)).await;
     let _response = client
         .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=off")
         .send()
