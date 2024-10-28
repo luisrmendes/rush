@@ -155,13 +155,6 @@ impl TelegramBot {
                         return Ok(());
                     }
 
-                    let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
-                        Ok(res) => res,
-                        Err(e) => {
-                            format!("Something bad happened connecting to my llm. Error: {e}")
-                        }
-                    };
-
                     // Try to find a corresponding command from the prompt
                     let mut command_list = String::new();
                     for cmd in Command::iter() {
@@ -194,6 +187,12 @@ impl TelegramBot {
                             bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
                             let _ = Self::execute(&context_clone,&cmd).await;
                         } else {
+                            let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
+                                Ok(res) => res,
+                                Err(e) => {
+                                    format!("Something bad happened connecting to my llm. Error: {e}")
+                                }
+                            };
                             bot.send_message(CHAT_ID, prompt_result).await?;
                             debug!("Command not infered");
                         }

@@ -15,6 +15,7 @@ enum State {
     Connected,
 }
 
+#[allow(dead_code)]
 pub struct Fsm {
     state: State,
     global_state: Arc<Mutex<GlobalState>>,
