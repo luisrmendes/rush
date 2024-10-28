@@ -1,6 +1,7 @@
 mod commands;
 mod cygnus_ctrl_fsm;
 mod get_ambient_fsm;
+mod light_ctrl_fsm;
 mod llm_wrapper;
 mod snowdog_ctrl_fsm;
 mod telegram_bot;
@@ -224,11 +225,23 @@ async fn main() {
 
     // Get Am I home
     let mut shutdown_rx = shutdown_tx.subscribe();
+    let global_state_clone = global_state.clone();
     let handle7 = tokio::spawn(async move {
         tokio::select! {
-            () = commands::get_am_i_home(global_state.clone()) => {},
+            () = commands::get_am_i_home(global_state_clone) => {},
             _ = shutdown_rx.recv() => {
                 debug!("get_am_i_home received shutdown signal");
+            }
+        }
+    });
+
+    let mut light_ctrl_fsm = light_ctrl_fsm::Fsm::new(global_state.clone());
+    let mut shutdown_rx = shutdown_tx.subscribe();
+    let handle8 = tokio::spawn(async move {
+        tokio::select! {
+            () = light_ctrl_fsm.run() => {},
+            _ = shutdown_rx.recv() => {
+                debug!("light_ctrl_fsm received shutdown signal");
             }
         }
     });
@@ -248,6 +261,7 @@ async fn main() {
         handle5,
         //handle_tui,
         handle7,
+        handle8,
         shutdown_listener
     );
 }

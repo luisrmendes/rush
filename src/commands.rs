@@ -13,12 +13,12 @@ use std::{
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
-static SHELLY_PLUG1_HOSTNAME: &str = "shellyplusplugs-fcb4670e1130";
-static SHELLY_PLUG2_HOSTNAME: &str = "shellyplusplugs-e465b8b362f8";
-static SHELLY_PLUG3_HOSTNAME: &str = "shellyplusplugs-c82e180a8dd8";
-static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
-static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
-static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
+pub(crate) static SHELLY_PLUG1_HOSTNAME: &str = "shellyplusplugs-fcb4670e1130";
+pub(crate) static SHELLY_PLUG2_HOSTNAME: &str = "shellyplusplugs-e465b8b362f8";
+pub(crate) static SHELLY_PLUG3_HOSTNAME: &str = "shellyplusplugs-c82e180a8dd8";
+pub(crate) static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
+pub(crate) static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
+pub(crate) static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
 
 pub async fn lights_off_living_room() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
