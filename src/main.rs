@@ -5,7 +5,6 @@ mod light_ctrl_fsm;
 mod llm_wrapper;
 mod snowdog_ctrl_fsm;
 mod telegram_bot;
-mod tui;
 
 use cygnus_ctrl_fsm::Fsm as cygnus_fsm;
 use dotenv::dotenv;
@@ -46,6 +45,7 @@ struct Embedded {
     port: String,
 }
 
+#[allow(dead_code)]
 #[derive(Clone, Debug)]
 struct OfficeAmbient {
     brightness: u32,
@@ -211,18 +211,6 @@ async fn main() {
         }
     });
 
-    // TUI
-    // let tui = Tui::new(global_state.clone(), systems);
-    // let mut shutdown_rx = shutdown_tx.subscribe();
-    // let handle_tui = tokio::spawn(async move {
-    //     tokio::select! {
-    //         _ = tui.run() => {},
-    //         _ = shutdown_rx.recv() => {
-    //             debug!("tui received shutdown signal");
-    //         }
-    //     }
-    // });
-
     // Get Am I home
     let mut shutdown_rx = shutdown_tx.subscribe();
     let global_state_clone = global_state.clone();
@@ -259,7 +247,6 @@ async fn main() {
         handle3,
         handle4,
         handle5,
-        //handle_tui,
         handle7,
         handle8,
         shutdown_listener

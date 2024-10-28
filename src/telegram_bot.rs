@@ -30,8 +30,6 @@ pub enum Command {
     LightsOffLivingRoom,
 }
 
-//impl Executable for Command {}
-
 #[allow(clippy::to_string_trait_impl)]
 impl ToString for Command {
     fn to_string(&self) -> String {
