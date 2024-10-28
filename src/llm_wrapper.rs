@@ -1,6 +1,7 @@
 use std::error::Error;
 
 use futures::StreamExt;
+use log::warn;
 use reqwest::Client;
 use serde_json::{json, Value};
 
@@ -76,11 +77,11 @@ impl Llm {
 
                             result_builder += &Self::format_response(trimmed_data);
                         } else {
-                            println!("Failed to parse a chunk of the response");
+                            warn!("Failed to parse a chunk of the response");
                         }
                     }
                     Err(e) => {
-                        eprintln!("Error receiving chunk: {e}");
+                        warn!("Error receiving chunk: {e}");
                     }
                 }
             }
