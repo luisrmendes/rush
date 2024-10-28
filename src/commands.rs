@@ -43,35 +43,20 @@ pub async fn lights_off_living_room() -> Result<String, Box<dyn Error>> {
 
 pub async fn lights_on_living_room() -> Result<String, Box<dyn Error>> {
     let client = Client::new();
-    // let response = client
-    //     .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=on")
-    //     .send()
-    //     .await?;
-
-    // let _response = client
-    //     .get("http://".to_owned() + SHELLY_PLUG2_HOSTNAME + "/relay/0?turn=on")
-    //     .send()
-    //     .await?;
-
-    // let _response = client
-    //     .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=on")
-    //     .send()
-    //     .await?;
-
     let response = client
         .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=on")
         .send()
         .await?;
-
+    sleep(Duration::new(1, 0)).await;
     let _response = client
         .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=on")
         .send()
-        .await?;
-
+        .await;
+    sleep(Duration::new(1, 0)).await;
     let _response = client
         .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=on")
         .send()
-        .await?;
+        .await;
 
     Ok(response.text().await?)
 }
