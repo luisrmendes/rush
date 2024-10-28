@@ -9,7 +9,7 @@ pub struct Llm {
     client: Client,
 }
 
-static URL: &str = "http://cygnus:11434/api/generate";
+// static URL: &str = "http://cygnus:11434/api/generate";
 static BACKUP_URL: &str = "http://localhost:11434/api/generate";
 static MODEL: &str = "llama3.2";
 
