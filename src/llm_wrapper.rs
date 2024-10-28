@@ -29,31 +29,31 @@ impl Llm {
         });
 
         // Send a POST request with the JSON body
-        // let response = self
-        //     .client
-        //     .post(BACKUP_URL)
-        //     .json(&json_body) // Send the JSON body
-        //     .send()
-        //     .await?;
-
-        // TODO: Implement quikck timeout when cannot find cygnus
-        let response = if let Ok(res) = self
+        let response = self
             .client
-            .post(URL)
+            .post(BACKUP_URL)
             .json(&json_body) // Send the JSON body
             .send()
-            .await
-        {
-            println!("Primary URL");
-            res
-        } else {
-            println!("Primary URL is unavailable, using localhost llm");
-            self.client
-                .post(BACKUP_URL)
-                .json(&json_body) // Send the JSON body
-                .send()
-                .await?
-        };
+            .await?;
+
+        // TODO: Implement quikck timeout when cannot find cygnus
+        // let response = if let Ok(res) = self
+        //     .client
+        //     .post(URL)
+        //     .json(&json_body) // Send the JSON body
+        //     .send()
+        //     .await
+        // {
+        //     println!("Primary URL");
+        //     res
+        // } else {
+        //     println!("Primary URL is unavailable, using localhost llm");
+        //     self.client
+        //         .post(BACKUP_URL)
+        //         .json(&json_body) // Send the JSON body
+        //         .send()
+        //         .await?
+        // };
 
         let mut result_builder = String::new();
         if response.status().is_success() {
