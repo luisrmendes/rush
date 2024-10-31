@@ -23,7 +23,6 @@ use tokio::{sync::Mutex, time::sleep};
 #[derive(Debug, EnumIter)]
 pub enum Command {
     GetIpv4,
-    StatusSnowdog,
     LightsOn,
     LightsOff,
     LightsOnLivingRoom,
@@ -37,7 +36,6 @@ impl ToString for Command {
     fn to_string(&self) -> String {
         match self {
             Command::GetIpv4 => String::from("/ipv4"),
-            Command::StatusSnowdog => String::from("/status_snowdog"),
             Command::LightsOn => String::from("/lights_on"),
             Command::LightsOff => String::from("/lights_off"),
             Command::LightsOnLivingRoom => String::from("/lights_on_living_room"),
@@ -53,7 +51,6 @@ impl FromStr for Command {
     fn from_str(input: &str) -> Result<Command, Self::Err> {
         match input {
             "/ipv4" => Ok(Command::GetIpv4),
-            "/status_snowdog" => Ok(Command::StatusSnowdog),
             "/lights_on" => Ok(Command::LightsOn),
             "/lights_off" => Ok(Command::LightsOff),
             "/lights_on_living_room" => Ok(Command::LightsOnLivingRoom),
@@ -104,13 +101,9 @@ impl TelegramBot {
         }
     }
 
-    async fn execute(ctx: &Systems, op: &Command) -> Result<String, Box<dyn Error>> {
+    async fn execute(_ctx: &Systems, op: &Command) -> Result<String, Box<dyn Error>> {
         match op {
             Command::GetIpv4 => Ok(commands::get_ipv4().await?),
-            Command::StatusSnowdog => match commands::is_online(&ctx.pcs[1].clone()) {
-                Ok(out) => Ok(out.to_string()),
-                Err(e) => Err(e.into()),
-            },
             Command::LightsOn => Ok(commands::ctrl_all_lights(commands::LightCmd::On).await?),
             Command::LightsOff => Ok(commands::ctrl_all_lights(commands::LightCmd::Off).await?),
             Command::LightsOnLivingRoom => {
