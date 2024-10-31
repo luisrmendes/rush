@@ -25,9 +25,11 @@ pub enum Command {
     GetIpv4,
     StatusSnowdog,
     LightsOn,
-    LightsOnLivingRoom,
     LightsOff,
+    LightsOnLivingRoom,
     LightsOffLivingRoom,
+    LightsOnHall,
+    LightsOffHall,
 }
 
 #[allow(clippy::to_string_trait_impl)]
@@ -37,9 +39,11 @@ impl ToString for Command {
             Command::GetIpv4 => String::from("/ipv4"),
             Command::StatusSnowdog => String::from("/status_snowdog"),
             Command::LightsOn => String::from("/lights_on"),
-            Command::LightsOnLivingRoom => String::from("/lights_on_living_room"),
             Command::LightsOff => String::from("/lights_off"),
+            Command::LightsOnLivingRoom => String::from("/lights_on_living_room"),
             Command::LightsOffLivingRoom => String::from("/lights_off_living_room"),
+            Command::LightsOnHall => String::from("/lights_on_hall"),
+            Command::LightsOffHall => String::from("/lights_off_hall"),
         }
     }
 }
@@ -51,9 +55,11 @@ impl FromStr for Command {
             "/ipv4" => Ok(Command::GetIpv4),
             "/status_snowdog" => Ok(Command::StatusSnowdog),
             "/lights_on" => Ok(Command::LightsOn),
-            "/lights_on_living_room" => Ok(Command::LightsOnLivingRoom),
             "/lights_off" => Ok(Command::LightsOff),
+            "/lights_on_living_room" => Ok(Command::LightsOnLivingRoom),
             "/lights_off_living_room" => Ok(Command::LightsOffLivingRoom),
+            "/lights_on_hall" => Ok(Command::LightsOnHall),
+            "/lights_off_hall" => Ok(Command::LightsOffHall),
             _ => Err(()),
         }
     }
@@ -94,7 +100,7 @@ impl TelegramBot {
                 }
                 STORE_AM_I_ONLINE_STATE.store(state, Ordering::SeqCst);
             }
-            sleep(Duration::from_millis(1000)).await;
+            sleep(Duration::from_secs(1)).await;
         }
     }
 
@@ -105,10 +111,18 @@ impl TelegramBot {
                 Ok(out) => Ok(out.to_string()),
                 Err(e) => Err(e.into()),
             },
-            Command::LightsOn => Ok(commands::lights_on().await?),
-            Command::LightsOnLivingRoom => Ok(commands::lights_on_living_room().await?),
-            Command::LightsOff => Ok(commands::lights_off().await?),
-            Command::LightsOffLivingRoom => Ok(commands::lights_off_living_room().await?),
+            Command::LightsOn => Ok(commands::ctrl_all_lights(commands::LightCmd::On).await?),
+            Command::LightsOff => Ok(commands::ctrl_all_lights(commands::LightCmd::Off).await?),
+            Command::LightsOnLivingRoom => {
+                Ok(commands::ctrl_living_room_lights(commands::LightCmd::On).await?)
+            }
+            Command::LightsOffLivingRoom => {
+                Ok(commands::ctrl_living_room_lights(commands::LightCmd::Off).await?)
+            }
+            Command::LightsOnHall => Ok(commands::ctrl_hall_lights(commands::LightCmd::On).await?),
+            Command::LightsOffHall => {
+                Ok(commands::ctrl_hall_lights(commands::LightCmd::Off).await?)
+            }
         }
     }
 

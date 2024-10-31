@@ -1,6 +1,5 @@
 use chrono::Local;
 use chrono::Timelike;
-use reqwest::Client;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tokio::time::sleep;
@@ -8,6 +7,7 @@ use tokio::time::sleep;
 use tokio::time::Duration;
 
 use crate::commands;
+use crate::commands::LightCmd;
 use crate::GlobalState;
 
 enum State {
@@ -15,10 +15,10 @@ enum State {
     Connected,
 }
 
-#[allow(dead_code)]
 pub struct Fsm {
     state: State,
     global_state: Arc<Mutex<GlobalState>>,
+    are_living_room_lights_on: bool,
 }
 
 static FSM_REST: Duration = Duration::new(5, 0); // rest time between states
@@ -28,6 +28,7 @@ impl Fsm {
         Self {
             state: State::Connecting,
             global_state,
+            are_living_room_lights_on: false,
         }
     }
 
@@ -45,30 +46,22 @@ impl Fsm {
     }
 
     async fn connected(&mut self) {
-        let now = Local::now();
-        if now.hour() == 18 && now.minute() == 0 {
-            let client = Client::new();
+        if !self.global_state.lock().await.am_i_home {
+            sleep(FSM_REST).await;
+            return;
+        }
 
-            let _response = client
-                .get("http://".to_owned() + commands::SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=on")
-                .send()
-                .await;
-            sleep(Duration::new(1, 0)).await;
-            let _response = client
-                .get("http://".to_owned() + commands::SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=on")
-                .send()
-                .await;
-            sleep(Duration::new(1, 0)).await;
-            let _response = client
-                .get("http://".to_owned() + commands::SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=ofonf")
-                .send()
-                .await;
+        let now = Local::now();
+        if now.hour() == 18 && now.minute() == 0 && self.are_living_room_lights_on {
+            let _ = commands::ctrl_hall_lights(LightCmd::On).await;
+            self.are_living_room_lights_on = true;
         } else {
             sleep(FSM_REST).await;
         }
 
-        if now.hour() == 23 && now.minute() == 0 {
-            let _ = commands::lights_off_living_room().await;
+        if now.hour() == 0 && now.minute() == 0 && !self.are_living_room_lights_on {
+            let _ = commands::ctrl_hall_lights(LightCmd::Off).await;
+            self.are_living_room_lights_on = false;
         } else {
             sleep(FSM_REST).await;
         }

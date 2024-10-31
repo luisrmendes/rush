@@ -1,6 +1,7 @@
 use crate::{GlobalState, Pc};
 use log::{debug, error, warn};
 use openssh::{KnownHosts, Session, SessionBuilder};
+use ratatui::text::ToText;
 use reqwest::Client;
 use std::error::Error;
 use std::net::ToSocketAddrs;
@@ -20,115 +21,81 @@ pub(crate) static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
 pub(crate) static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
 pub(crate) static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
 
-pub async fn lights_off_living_room() -> Result<String, Box<dyn Error>> {
+pub(crate) static SHELLY_PLUGS: [&str; 6] = [
+    SHELLY_PLUG1_HOSTNAME,
+    SHELLY_PLUG2_HOSTNAME,
+    SHELLY_PLUG3_HOSTNAME,
+    SHELLY_PLUG4_HOSTNAME,
+    SHELLY_PLUG5_HOSTNAME,
+    SHELLY_PLUG6_HOSTNAME,
+];
+
+#[derive(PartialEq)]
+pub(crate) enum LightCmd {
+    On,
+    Off,
+}
+
+pub async fn ctrl_hall_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
     let client = Client::new();
 
+    let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
+
     let response = client
-        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-    sleep(Duration::new(1, 0)).await;
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-    sleep(Duration::new(1, 0)).await;
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=" + on_or_off)
         .send()
         .await?;
 
     Ok(response.text().await?)
 }
 
-pub async fn lights_on_living_room() -> Result<String, Box<dyn Error>> {
+pub async fn ctrl_living_room_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
     let client = Client::new();
+
+    let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
+
     let response = client
-        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=" + on_or_off)
         .send()
         .await?;
     sleep(Duration::new(1, 0)).await;
     let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=on")
+        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=" + on_or_off)
         .send()
-        .await;
+        .await?;
     sleep(Duration::new(1, 0)).await;
     let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await;
-
-    Ok(response.text().await?)
-}
-
-pub async fn lights_off() -> Result<String, Box<dyn Error>> {
-    let client = Client::new();
-    let response = client
-        .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG2_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=off")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=off")
+        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=" + on_or_off)
         .send()
         .await?;
 
     Ok(response.text().await?)
 }
 
-pub async fn lights_on() -> Result<String, Box<dyn Error>> {
+pub async fn ctrl_all_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
+    let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
+
     let client = Client::new();
-    let response = client
-        .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await?;
 
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG2_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await?;
+    let mut responses = String::new();
 
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await?;
+    for plug in SHELLY_PLUGS {
+        match client
+            .get("http://".to_owned() + plug + "/relay/0?turn=" + on_or_off)
+            .timeout(Duration::from_millis(500))
+            .send()
+            .await
+        {
+            Ok(_) => {}
+            Err(e) => responses += &e.to_text().to_string(),
+        }
+    }
 
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await?;
-
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=on")
-        .send()
-        .await?;
-
-    Ok(response.text().await?)
+    if responses.is_empty() {
+        Ok(String::new())
+    } else {
+        Err(responses.into())
+    }
 }
 
 pub async fn get_ssh_status(target_pc: &Pc) -> bool {
@@ -144,7 +111,7 @@ pub async fn get_ssh_status(target_pc: &Pc) -> bool {
 #[allow(clippy::cast_possible_truncation)]
 pub fn calculate_ddc_mon_brightness(env_brightness: u32) -> u32 {
     let env_brightness = f64::from(env_brightness);
-    let coef = 0.08;
+    let coef = 0.07;
 
     if env_brightness <= 50.0 {
         return 0;
@@ -221,7 +188,7 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
         };
 
         if global_state.lock().await.am_i_home
-            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 30
+            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 50
         {
             global_state.lock().await.am_i_home = false;
             AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
