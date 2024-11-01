@@ -14,11 +14,12 @@ use std::{
 };
 use strum::{EnumIter, IntoEnumIterator};
 use teloxide::{
+    net::Download,
     prelude::{Request, Requester},
     types::ChatId,
     Bot,
 };
-use tokio::{sync::Mutex, time::sleep};
+use tokio::{fs, sync::Mutex, time::sleep};
 
 #[derive(Debug, EnumIter)]
 pub enum Command {
@@ -134,33 +135,97 @@ impl TelegramBot {
 
                 bot.send_message(msg.chat.id, "...").await?;
 
-                let Some(text) = msg.text() else {
-                    bot.send_message(msg.chat.id, "?").await?;
-                    return Ok(());
-                };
+                if msg.text().is_some() {
+                    let Some(text) = msg.text() else {
+                        bot.send_message(msg.chat.id, "?").await?;
+                        return Ok(());
+                    };
+                    if let Some(char) = text.chars().next() {
+                        if char == '/' {
+                            let Ok(command) = Command::from_str(text) else {
+                                let reply = "Failed to parse command".to_owned();
+                                debug!("{reply}");
+                                bot.send_message(msg.chat.id, reply).await?;
+                                return Ok(());
+                            };
 
-                if let Some(char) = text.chars().next() {
-                    if char == '/' {
-                        let Ok(command) = Command::from_str(text) else {
-                            let reply = "Failed to parse command".to_owned();
-                            debug!("{reply}");
-                            bot.send_message(msg.chat.id, reply).await?;
+                            let cmd_output = match Self::execute(&context_clone, &command).await {
+                                Ok(output) => output,
+                                Err(e) => {
+                                    debug!("Error executing command: {e}");
+                                    format!("Error: {e}")
+                                }
+                            };
+                            debug!("Sending to bot: {:?}", cmd_output);
+                            bot.send_message(msg.chat.id, cmd_output).await?;
                             return Ok(());
-                        };
+                        }
 
-                        let cmd_output = match Self::execute(&context_clone, &command).await {
-                            Ok(output) => output,
+                        // Try to find a corresponding command from the prompt
+                        let mut command_list = String::new();
+                        for cmd in Command::iter() {
+                            let cmd_string = cmd.to_string();
+                            command_list += &format!("{cmd_string}\n");
+                        }
+
+                        let get_command_from_prompt =
+                            "This prompt might have a request that correlates to one of these commands: \n".to_owned()
+                            + &command_list
+                            + "Answer just with the command you believe fits best from the prompt. Answer \"undefined\" if you cannot find any correlation\n"
+                            + "Prompt: "
+                            + text;
+
+                        let get_command_from_prompt_result = match llm_clone.lock().await.send_prompt(&get_command_from_prompt).await {
+                            Ok(res) => res,
                             Err(e) => {
-                                debug!("Error executing command: {e}");
-                                format!("Error: {e}")
+                                format!("Something bad happened connecting to my llm. Error: {e}")
                             }
                         };
-                        debug!("Sending to bot: {:?}", cmd_output);
-                        bot.send_message(msg.chat.id, cmd_output).await?;
+
+                        if let Ok(cmd) = Command::from_str(&get_command_from_prompt_result) {
+                           match Self::execute(&context_clone, &cmd).await {
+                                    Ok(output) => output,
+                                    Err(e) => {
+                                        debug!("Error executing command: {e}");
+                                        format!("Error: {e}")
+                                    }
+                                };
+                                bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
+                                let _ = Self::execute(&context_clone,&cmd).await;
+                            } else {
+                                let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
+                                    Ok(res) => res,
+                                    Err(e) => {
+                                        format!("Something bad happened connecting to my llm. Error: {e}")
+                                    }
+                                };
+                                bot.send_message(CHAT_ID, prompt_result).await?;
+                                debug!("Command not infered");
+                            }
+                        }
+                    else {
+                        bot.send_message(msg.chat.id, "Did you sent an empty message?").await?;
                         return Ok(());
                     }
+                } else if msg.voice().is_some() {
+                    let Some(voice) = msg.voice() else {
+                        bot.send_message(msg.chat.id, "?").await?;
+                        return Ok(());
+                    };
+                    let file_id = &voice.file.id;
 
-                    // Try to find a corresponding command from the prompt
+                    let file = bot.get_file(file_id).await?;
+                    let mut dst = fs::File::create(format!("/tmp/{file_id}.ogg")).await?;
+                    bot.download_file(&file.path, &mut dst).await?;
+
+                    // give this file to whisper
+                    println!("Giving file {file_id} to whisper");
+                    let _response = commands::send_command(&format!("whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model tiny"), None).await;
+
+                    let text: &str = &fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
+                    println!("{text}");
+                    bot.send_message(msg.chat.id, format!("Interpreted \"{text}\"")).await?;
+
                     let mut command_list = String::new();
                     for cmd in Command::iter() {
                         let cmd_string = cmd.to_string();
@@ -168,44 +233,44 @@ impl TelegramBot {
                     }
 
                     let get_command_from_prompt =
-                        "This prompt might have a request that correlates to one of these commands: \n".to_owned()
-                        + &command_list
-                        + "Answer just with the command you believe fits best from the prompt. Answer \"undefined\" if you cannot find any correlation\n"
-                        + "Prompt: "
-                        + text;
+                       "This prompt might have a request that correlates to one of these commands: \n".to_owned()
+                       + &command_list
+                       + "Answer just with the command you believe fits best from the prompt. Answer \"undefined\" if you cannot find any correlation\n"
+                       + "Prompt: "
+                       + text;
 
                     let get_command_from_prompt_result = match llm_clone.lock().await.send_prompt(&get_command_from_prompt).await {
-                        Ok(res) => res,
-                        Err(e) => {
-                            format!("Something bad happened connecting to my llm. Error: {e}")
-                        }
+                       Ok(res) => res,
+                       Err(e) => {
+                           format!("Something bad happened connecting to my llm. Error: {e}")
+                       }
                     };
 
                     if let Ok(cmd) = Command::from_str(&get_command_from_prompt_result) {
-                       match Self::execute(&context_clone, &cmd).await {
-                                Ok(output) => output,
-                                Err(e) => {
-                                    debug!("Error executing command: {e}");
-                                    format!("Error: {e}")
-                                }
-                            };
-                            bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
-                            let _ = Self::execute(&context_clone,&cmd).await;
-                        } else {
-                            let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
-                                Ok(res) => res,
-                                Err(e) => {
-                                    format!("Something bad happened connecting to my llm. Error: {e}")
-                                }
-                            };
-                            bot.send_message(CHAT_ID, prompt_result).await?;
-                            debug!("Command not infered");
-                        }
-                    }
-                else {
-                    bot.send_message(msg.chat.id, "Did you sent an empty message?").await?;
+                        match Self::execute(&context_clone, &cmd).await {
+                                 Ok(output) => output,
+                                 Err(e) => {
+                                     debug!("Error executing command: {e}");
+                                     format!("Error: {e}")
+                                 }
+                             };
+                             bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
+                             let _ = Self::execute(&context_clone,&cmd).await;
+                         } else {
+                             let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
+                                 Ok(res) => res,
+                                 Err(e) => {
+                                     format!("Something bad happened connecting to my llm. Error: {e}")
+                                 }
+                             };
+                             bot.send_message(CHAT_ID, prompt_result).await?;
+                             debug!("Command not infered");
+                            }
+                } else {
+                    bot.send_message(msg.chat.id, "?").await?;
                     return Ok(());
                 }
+
                 Ok(())
             }
         })

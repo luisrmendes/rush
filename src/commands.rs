@@ -41,8 +41,13 @@ pub async fn ctrl_hall_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
 
     let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
 
-    let response = client
+    let _response = client
         .get("http://".to_owned() + SHELLY_PLUG1_HOSTNAME + "/relay/0?turn=" + on_or_off)
+        .send()
+        .await?;
+    sleep(Duration::new(1, 0)).await;
+    let response = client
+        .get("http://".to_owned() + SHELLY_PLUG3_HOSTNAME + "/relay/0?turn=" + on_or_off)
         .send()
         .await?;
 
