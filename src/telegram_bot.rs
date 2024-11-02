@@ -12,7 +12,7 @@ use std::{
     },
     time::Duration,
 };
-use strum::{EnumIter, IntoEnumIterator};
+use strum::EnumIter;
 use teloxide::{
     net::Download,
     prelude::{Request, Requester},
@@ -24,8 +24,8 @@ use tokio::{fs, sync::Mutex, time::sleep};
 #[derive(Debug, EnumIter)]
 pub enum Command {
     GetIpv4,
-    LightsOn,
-    LightsOff,
+    LightsOnAll,
+    LightsOffAll,
     LightsOnLivingRoom,
     LightsOffLivingRoom,
     LightsOnHall,
@@ -37,8 +37,8 @@ impl ToString for Command {
     fn to_string(&self) -> String {
         match self {
             Command::GetIpv4 => String::from("/ipv4"),
-            Command::LightsOn => String::from("/lights_on"),
-            Command::LightsOff => String::from("/lights_off"),
+            Command::LightsOnAll => String::from("/lights_on_all"),
+            Command::LightsOffAll => String::from("/lights_off_all"),
             Command::LightsOnLivingRoom => String::from("/lights_on_living_room"),
             Command::LightsOffLivingRoom => String::from("/lights_off_living_room"),
             Command::LightsOnHall => String::from("/lights_on_hall"),
@@ -52,8 +52,8 @@ impl FromStr for Command {
     fn from_str(input: &str) -> Result<Command, Self::Err> {
         match input {
             "/ipv4" => Ok(Command::GetIpv4),
-            "/lights_on" => Ok(Command::LightsOn),
-            "/lights_off" => Ok(Command::LightsOff),
+            "/lights_on_all" => Ok(Command::LightsOnAll),
+            "/lights_off_all" => Ok(Command::LightsOffAll),
             "/lights_on_living_room" => Ok(Command::LightsOnLivingRoom),
             "/lights_off_living_room" => Ok(Command::LightsOffLivingRoom),
             "/lights_on_hall" => Ok(Command::LightsOnHall),
@@ -105,8 +105,8 @@ impl TelegramBot {
     async fn execute(_ctx: &Systems, op: &Command) -> Result<String, Box<dyn Error>> {
         match op {
             Command::GetIpv4 => Ok(commands::get_ipv4().await?),
-            Command::LightsOn => Ok(commands::ctrl_all_lights(commands::LightCmd::On).await?),
-            Command::LightsOff => Ok(commands::ctrl_all_lights(commands::LightCmd::Off).await?),
+            Command::LightsOnAll => Ok(commands::ctrl_all_lights(commands::LightCmd::On).await?),
+            Command::LightsOffAll => Ok(commands::ctrl_all_lights(commands::LightCmd::Off).await?),
             Command::LightsOnLivingRoom => {
                 Ok(commands::ctrl_living_room_lights(commands::LightCmd::On).await?)
             }
@@ -135,6 +135,7 @@ impl TelegramBot {
 
                 bot.send_message(msg.chat.id, "...").await?;
 
+                let my_prompt: String;
                 if msg.text().is_some() {
                     let Some(text) = msg.text() else {
                         bot.send_message(msg.chat.id, "?").await?;
@@ -160,53 +161,9 @@ impl TelegramBot {
                             bot.send_message(msg.chat.id, cmd_output).await?;
                             return Ok(());
                         }
-
-                        // Try to find a corresponding command from the prompt
-                        let mut command_list = String::new();
-                        for cmd in Command::iter() {
-                            let cmd_string = cmd.to_string();
-                            command_list += &format!("{cmd_string}\n");
-                        }
-
-                        let get_command_from_prompt =
-                            "This prompt might have a request that correlates to one of these commands: \n".to_owned()
-                            + &command_list
-                            + "Answer just with the command you believe fits best from the prompt. Answer \"undefined\" if you cannot find any correlation\n"
-                            + "Prompt: "
-                            + text;
-
-                        let get_command_from_prompt_result = match llm_clone.lock().await.send_prompt(&get_command_from_prompt).await {
-                            Ok(res) => res,
-                            Err(e) => {
-                                format!("Something bad happened connecting to my llm. Error: {e}")
-                            }
-                        };
-
-                        if let Ok(cmd) = Command::from_str(&get_command_from_prompt_result) {
-                           match Self::execute(&context_clone, &cmd).await {
-                                    Ok(output) => output,
-                                    Err(e) => {
-                                        debug!("Error executing command: {e}");
-                                        format!("Error: {e}")
-                                    }
-                                };
-                                bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
-                                let _ = Self::execute(&context_clone,&cmd).await;
-                            } else {
-                                let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
-                                    Ok(res) => res,
-                                    Err(e) => {
-                                        format!("Something bad happened connecting to my llm. Error: {e}")
-                                    }
-                                };
-                                bot.send_message(CHAT_ID, prompt_result).await?;
-                                debug!("Command not infered");
-                            }
-                        }
-                    else {
-                        bot.send_message(msg.chat.id, "Did you sent an empty message?").await?;
-                        return Ok(());
                     }
+                    my_prompt = text.to_owned();
+
                 } else if msg.voice().is_some() {
                     let Some(voice) = msg.voice() else {
                         bot.send_message(msg.chat.id, "?").await?;
@@ -222,55 +179,35 @@ impl TelegramBot {
                     println!("Giving file {file_id} to whisper");
                     let _response = commands::send_command(&format!("whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model tiny"), None).await;
 
-                    let text: &str = &fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
-                    println!("{text}");
-                    bot.send_message(msg.chat.id, format!("Interpreted \"{text}\"")).await?;
-
-                    let mut command_list = String::new();
-                    for cmd in Command::iter() {
-                        let cmd_string = cmd.to_string();
-                        command_list += &format!("{cmd_string}\n");
-                    }
-
-                    let get_command_from_prompt =
-                       "This prompt might have a request that correlates to one of these commands: \n".to_owned()
-                       + &command_list
-                       + "Answer just with the command you believe fits best from the prompt. Answer \"undefined\" if you cannot find any correlation\n"
-                       + "Prompt: "
-                       + text;
-
-                    let get_command_from_prompt_result = match llm_clone.lock().await.send_prompt(&get_command_from_prompt).await {
-                       Ok(res) => res,
-                       Err(e) => {
-                           format!("Something bad happened connecting to my llm. Error: {e}")
-                       }
-                    };
-
-                    if let Ok(cmd) = Command::from_str(&get_command_from_prompt_result) {
-                        match Self::execute(&context_clone, &cmd).await {
-                                 Ok(output) => output,
-                                 Err(e) => {
-                                     debug!("Error executing command: {e}");
-                                     format!("Error: {e}")
-                                 }
-                             };
-                             bot.send_message(CHAT_ID, format!("Ok, doing {get_command_from_prompt_result}")).await?;
-                             let _ = Self::execute(&context_clone,&cmd).await;
-                         } else {
-                             let prompt_result = match llm_clone.lock().await.send_prompt(text).await {
-                                 Ok(res) => res,
-                                 Err(e) => {
-                                     format!("Something bad happened connecting to my llm. Error: {e}")
-                                 }
-                             };
-                             bot.send_message(CHAT_ID, prompt_result).await?;
-                             debug!("Command not infered");
-                            }
+                    let text: String = fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
+                    let text = &text[..text.len() - 1];
+                    bot.send_message(msg.chat.id, format!("Heard \"{text}\"")).await?;
+                    my_prompt = text.to_owned();
                 } else {
                     bot.send_message(msg.chat.id, "?").await?;
                     return Ok(());
                 }
 
+                let prompt_llm_answer = match llm_clone.lock().await.send_prompt(&my_prompt).await {
+                    Ok(res) => res,
+                    Err(e) => {
+                        format!("Something bad happened connecting to my llm. Error: {e}")
+                    }
+                };
+
+                if let Ok(cmd) = Command::from_str(&prompt_llm_answer) {
+                    match Self::execute(&context_clone, &cmd).await {
+                            Ok(output) => output,
+                            Err(e) => {
+                                debug!("Error executing command: {e}");
+                                format!("Error: {e}")
+                            }
+                        };
+                        bot.send_message(CHAT_ID, format!("Ok, doing {prompt_llm_answer}")).await?;
+                        let _ = Self::execute(&context_clone,&cmd).await;
+                    } else {
+                        bot.send_message(CHAT_ID, prompt_llm_answer).await?;
+                    }
                 Ok(())
             }
         })
