@@ -53,5 +53,16 @@ go run main.go
 OLLAMA_HOST=0.0.0.0:8080
 
 ## TODO
+
+## Ollama create a llm with a modelfile
+```ollama create ambrosio -f ./AmbrosioModelfile```
+
 Remove all dependencies like ddcutil i2c-dev i2c-tools
 How to setup ollama: https://www.youtube.com/watch?v=QSfvLWaJc2s 
+
+## Install Whisper
+
+Use whisper:  
+whisper AwACAgQAAxkBAAIaGWcuMfNBy9Y1UYrtoCmYw4fPy8R4AAJKGQACJIFwUY0kcMq9LnTdNgQ.ogg  --model turbo
+
+### PyTorch

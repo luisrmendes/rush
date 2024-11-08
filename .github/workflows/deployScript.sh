@@ -11,13 +11,6 @@ else
     tmux new-session -s $tmuxSessionName -d
 fi
 
-# tmux send-keys -t $tmuxSessionName "^C" Enter
-# tmux send-keys -t $tmuxSessionName "^C" Enter
-# tmux send-keys -t $tmuxSessionName "^C" Enter
-# tmux send-keys -t $tmuxSessionName "sleep 1" Enter
-# tmux send-keys -t $tmuxSessionName "^C" Enter
-# tmux send-keys -t $tmuxSessionName "sleep 1" Enter
-
 # Kill all instances of the process by name
 killall rush
 
@@ -28,6 +21,7 @@ while pgrep rush > /dev/null; do sleep 1; done
 echo "All instances of 'rush' have been terminated."
 
 tmuxSeshCommand=""
+tmuxSeshCommand="${tmuxSeshCommand} ./whisperSetup.sh && "
 tmuxSeshCommand="${tmuxSeshCommand} TELOXIDE_TOKEN=$1 ESP8266_ADDRESS_PORT=$2 SYRINX_VARS=$3 SNOWDOG_VARS=$4 CYGNUS_VARS=$5 PI3_VARS=$6"
 tmuxSeshCommand="${tmuxSeshCommand} RUST_LOG=trace target/release/rush"
 

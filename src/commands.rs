@@ -1,4 +1,5 @@
 use crate::{GlobalState, Pc};
+use colored::Colorize;
 use log::{debug, error, warn};
 use openssh::{KnownHosts, Session, SessionBuilder};
 use ratatui::text::ToText;
@@ -108,7 +109,6 @@ pub async fn get_ssh_status(target_pc: &Pc) -> bool {
     let mut sesh_builder = SessionBuilder::default();
     sesh_builder.user(target_pc.user.clone());
     sesh_builder.connect_timeout(Duration::from_secs(1));
-
     sesh_builder.connect(session_access).await.is_ok()
 }
 
@@ -125,7 +125,7 @@ pub fn calculate_ddc_mon_brightness(env_brightness: u32) -> u32 {
     ((env_brightness * coef) as u32).clamp(0, 100)
 }
 
-pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, String> {
+pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, Box<dyn Error>> {
     debug!("checking for PC accesses");
     let mut return_str: String = String::new();
     let mut is_there_some_error: bool = false; // used to return Result Err
@@ -140,7 +140,7 @@ pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, Stri
             }
             Err(e) => {
                 is_there_some_error = true;
-                &format!("Failed to lookup PC {0}. Error: {e}\n", pc.ip)
+                &format!("{} {}: {e}", "Failed to lookup PC ".red().bold(), pc.ip)
             }
         };
 
@@ -148,17 +148,17 @@ pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, Stri
             "Ok".to_owned()
         } else {
             is_there_some_error = true;
-            format!("Failed ssh access. \n\tSystem: {pc:?}")
+            format!("{} {pc:?}", "Failed ssh access, system:".red().bold())
         };
 
         return_str += &format!(
-            "\nSystem \'{}\' is {online_status}, ssh status: {ssh_status}",
+            "\nSystem \'{}\' \n\tIs online? {online_status} \n\tSSH status: {ssh_status}\n",
             &pc.ip
         );
     }
 
     if is_there_some_error {
-        Err(return_str)
+        Err(return_str.into())
     } else {
         Ok(return_str)
     }
@@ -229,9 +229,7 @@ pub async fn send_command(command: &str, ssh_session: Option<&Session>) -> Resul
 
                 Ok(stdout)
             }
-            Err(e) => Err(format!(
-                "Failed to execute command \'{command}\'. Error: {e}"
-            )),
+            Err(e) => Err(format!("Failed to execute command \'{command}\': {e}")),
         },
         None => match Command::new("sh").arg("-c").arg(command).output().await {
             Ok(out) => {
@@ -278,16 +276,16 @@ pub async fn suspend(sys: Pc) -> Result<String, String> {
     send_command("sudo systemctl suspend", Some(&session)).await
 }
 
-pub fn is_online(target_sys: &Pc) -> Result<bool, String> {
+pub fn is_online(target_sys: &Pc) -> Result<bool, Box<dyn Error>> {
     // Resolve the hostname to an IP address
     let mut addr = match (target_sys.ip.clone(), 0).to_socket_addrs() {
         Ok(addr) => addr,
-        Err(e) => return Err(format!("Error resolving hostname: {e}")),
+        Err(e) => return Err(format!("Error resolving hostname: {e}").into()),
     };
 
     let addr = match addr.next().ok_or("Failed to resolve hostname") {
         Ok(addr) => addr,
-        Err(e) => return Err(e.to_string()),
+        Err(e) => return Err(e.to_string().into()),
     };
 
     Ok(ping_rs::send_ping(&addr.ip(), Duration::from_millis(100), &[1, 2, 3, 4], None).is_ok())

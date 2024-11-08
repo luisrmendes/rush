@@ -144,8 +144,14 @@ async fn main() {
     let systems = load_env_vars();
 
     match commands::check_external_system_connection(&systems.pcs).await {
-        Ok(out) => info!("{}", out),
-        Err(e) => warn!("{}", e),
+        Ok(out) => {
+            info!("{out}");
+            println!("{out}");
+        }
+        Err(e) => {
+            warn!("{e}");
+            eprintln!("{e}");
+        }
     };
 
     let (shutdown_tx, _) = broadcast::channel(1);

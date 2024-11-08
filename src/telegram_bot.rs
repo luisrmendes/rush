@@ -177,7 +177,7 @@ impl TelegramBot {
 
                     // give this file to whisper
                     println!("Giving file {file_id} to whisper");
-                    let _response = commands::send_command(&format!("whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model tiny"), None).await;
+                    let _response = commands::send_command(&format!(".venv/bin/whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model turbo"), None).await;
 
                     let text: String = fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
                     let text = &text[..text.len() - 1];

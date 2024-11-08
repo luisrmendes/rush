@@ -1,4 +1,4 @@
-FROM llama3.2
+FROM llama3.2:1b
 
 # set the temperature to 1 [higher is more creative, lower is more coherent]
 PARAMETER temperature 1
@@ -15,5 +15,5 @@ You are a personal assistant. Some prompts might correlate to one of these comma
 "/lights_on_hall"
 "/lights_off_hall"
 
-If the prompt correlates to one of these commands, answer with just the command. If not, answer normally.
+If the prompt correlates to one of these commands, answer with just the command.
 """
