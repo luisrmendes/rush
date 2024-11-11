@@ -95,7 +95,7 @@ impl TelegramBot {
         bot.download_file(&file.path, &mut dst).await?;
 
         // give this file to whisper
-        let _response = commands::send_command(&format!(".venv/bin/whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model turbo"), None).await;
+        let _response = commands::send_command(&format!(".venv/bin/whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model base"), None).await;
 
         let text: String = fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
         let text = &text[..text.len() - 1];
