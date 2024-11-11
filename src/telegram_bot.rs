@@ -16,7 +16,7 @@ use strum::EnumIter;
 use teloxide::{
     net::Download,
     prelude::{Request, Requester},
-    types::ChatId,
+    types::{ChatId, Message},
     Bot,
 };
 use tokio::{fs, sync::Mutex, time::sleep};
@@ -74,6 +74,36 @@ pub struct TelegramBot {
 const CHAT_ID: ChatId = ChatId(322_011_297);
 
 impl TelegramBot {
+    // fn handle_message_prompts(
+    //     msg: &Message,
+    //     bot: &teloxide::Bot,
+    // ) -> Result<String, Box<dyn Error>> {
+    // }
+
+    async fn handle_voice_messages(
+        msg: &Message,
+        bot: &teloxide::Bot,
+    ) -> Result<String, Box<dyn Error>> {
+        let Some(voice) = msg.voice() else {
+            bot.send_message(msg.chat.id, "?").await?;
+            return Ok(String::new());
+        };
+        let file_id = &voice.file.id;
+
+        let file = bot.get_file(file_id).await?;
+        let mut dst = fs::File::create(format!("/tmp/{file_id}.ogg")).await?;
+        bot.download_file(&file.path, &mut dst).await?;
+
+        // give this file to whisper
+        let _response = commands::send_command(&format!(".venv/bin/whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model turbo"), None).await;
+
+        let text: String = fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
+        let text = &text[..text.len() - 1];
+        bot.send_message(msg.chat.id, format!("Heard \"{text}\""))
+            .await?;
+        Ok(text.to_owned())
+    }
+
     /// Loop function that messages the telegram bot when I'm home or not
     /// I'm home if my phone is connected to the local network
     pub async fn update_am_i_home(&self) {
@@ -132,15 +162,16 @@ impl TelegramBot {
 
             async move {
                 debug!("Received from bot: {:?}", msg.text());
-
                 bot.send_message(msg.chat.id, "...").await?;
-
                 let my_prompt: String;
                 if msg.text().is_some() {
                     let Some(text) = msg.text() else {
-                        bot.send_message(msg.chat.id, "?").await?;
+                        bot.send_message(msg.chat.id, "DEBUG: No text but text?")
+                            .await?;
                         return Ok(());
                     };
+
+                    // Handle if bot receives a text command
                     if let Some(char) = text.chars().next() {
                         if char == '/' {
                             let Ok(command) = Command::from_str(text) else {
@@ -163,51 +194,35 @@ impl TelegramBot {
                         }
                     }
                     my_prompt = text.to_owned();
-
                 } else if msg.voice().is_some() {
-                    let Some(voice) = msg.voice() else {
-                        bot.send_message(msg.chat.id, "?").await?;
-                        return Ok(());
-                    };
-                    let file_id = &voice.file.id;
-
-                    let file = bot.get_file(file_id).await?;
-                    let mut dst = fs::File::create(format!("/tmp/{file_id}.ogg")).await?;
-                    bot.download_file(&file.path, &mut dst).await?;
-
-                    // give this file to whisper
-                    println!("Giving file {file_id} to whisper");
-                    let _response = commands::send_command(&format!(".venv/bin/whisper /tmp/{file_id}.ogg --output_format txt --output_dir /tmp --model turbo"), None).await;
-
-                    let text: String = fs::read_to_string(format!("/tmp/{file_id}.txt")).await?;
-                    let text = &text[..text.len() - 1];
-                    bot.send_message(msg.chat.id, format!("Heard \"{text}\"")).await?;
-                    my_prompt = text.to_owned();
+                    my_prompt = (Self::handle_voice_messages(&msg, &bot).await).unwrap_or_default();
                 } else {
-                    bot.send_message(msg.chat.id, "?").await?;
+                    bot.send_message(msg.chat.id, "DEBUG: No voice but voice?")
+                        .await?;
                     return Ok(());
                 }
 
                 let prompt_llm_answer = match llm_clone.lock().await.send_prompt(&my_prompt).await {
                     Ok(res) => res,
                     Err(e) => {
-                        format!("Something bad happened connecting to my llm. Error: {e}")
+                        format!("Something bad happened connecting to Ambrosio LLM. Error: {e}")
                     }
                 };
 
                 if let Ok(cmd) = Command::from_str(&prompt_llm_answer) {
                     match Self::execute(&context_clone, &cmd).await {
-                            Ok(output) => output,
-                            Err(e) => {
-                                debug!("Error executing command: {e}");
-                                format!("Error: {e}")
-                            }
-                        };
-                        bot.send_message(CHAT_ID, format!("Ok, doing {prompt_llm_answer}")).await?;
-                        let _ = Self::execute(&context_clone,&cmd).await;
-                    } else {
-                        bot.send_message(CHAT_ID, prompt_llm_answer).await?;
-                    }
+                        Ok(output) => output,
+                        Err(e) => {
+                            debug!("Error executing command: {e}");
+                            format!("Error: {e}")
+                        }
+                    };
+                    bot.send_message(CHAT_ID, format!("Ok, doing {prompt_llm_answer}"))
+                        .await?;
+                    let _ = Self::execute(&context_clone, &cmd).await;
+                } else {
+                    bot.send_message(CHAT_ID, prompt_llm_answer).await?;
+                }
                 Ok(())
             }
         })
