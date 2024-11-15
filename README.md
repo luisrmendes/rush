@@ -67,3 +67,4 @@ How to setup ollama: https://www.youtube.com/watch?v=QSfvLWaJc2s
 Use whisper:  
 whisper AwACAgQAAxkBAAIaGWcuMfNBy9Y1UYrtoCmYw4fPy8R4AAJKGQACJIFwUY0kcMq9LnTdNgQ.ogg  --model turbo
 
+## Shelly connections

@@ -21,6 +21,7 @@ pub(crate) static SHELLY_PLUG3_HOSTNAME: &str = "shellyplusplugs-c82e180a8dd8";
 pub(crate) static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
 pub(crate) static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
 pub(crate) static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
+pub(crate) static SHELLY_VINTAGE1_HOSTNAME: &str = "ShellyVintage-40915157FD76";
 
 pub(crate) static SHELLY_PLUGS: [&str; 6] = [
     SHELLY_PLUG1_HOSTNAME,
