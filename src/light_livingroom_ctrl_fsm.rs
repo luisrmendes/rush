@@ -59,7 +59,7 @@ impl Fsm {
             sleep(FSM_REST).await;
         }
 
-        if now.hour() == 0 && now.minute() == 0 && self.are_living_room_lights_on {
+        if now.hour() == 0 && now.minute() == 0 {
             let _ = commands::ctrl_hall_lights(LightCmd::Off).await;
             self.are_living_room_lights_on = false;
         } else {
