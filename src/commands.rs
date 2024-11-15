@@ -136,7 +136,7 @@ pub async fn get_ssh_status(target_pc: &Pc) -> bool {
 #[allow(clippy::cast_possible_truncation)]
 pub fn calculate_ddc_mon_brightness(env_brightness: u32) -> u32 {
     let env_brightness = f64::from(env_brightness);
-    let coef = 0.07;
+    let coef = 0.05;
 
     if env_brightness <= 50.0 {
         return 0;

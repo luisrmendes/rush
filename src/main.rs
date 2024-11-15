@@ -6,14 +6,10 @@ mod llm_wrapper;
 mod snowdog_ctrl_fsm;
 mod telegram_bot;
 
-use cygnus_ctrl_fsm::Fsm as cygnus_fsm;
 use dotenv::dotenv;
-use get_ambient_fsm::Fsm as ambient_fsm;
-use light_livingroom_ctrl_fsm::Fsm as light_livingroom_fsm;
 use llm_wrapper::Llm;
 use log::{debug, info, warn, LevelFilter};
 use simplelog::{CombinedLogger, Config, WriteLogger};
-use snowdog_ctrl_fsm::Fsm as snowdog_fsm;
 use std::{fs::File, sync::Arc};
 use telegram_bot::TelegramBot;
 use tokio::{
@@ -160,9 +156,9 @@ async fn main() {
     let (shutdown_tx, _) = broadcast::channel(1);
 
     // Ambient FSM
-    let mut ambient_fsm = ambient_fsm::new(systems.clone(), global_state.clone());
+    let mut ambient_fsm = get_ambient_fsm::Fsm::new(systems.clone(), global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle1 = tokio::spawn(async move {
+    let ambient_fsm_handle = tokio::spawn(async move {
         tokio::select! {
             () = ambient_fsm.run() => {},
             _ = shutdown_rx.recv() => {
@@ -172,9 +168,9 @@ async fn main() {
     });
 
     // Cygnus FSM
-    let mut cygnus_fsm = cygnus_fsm::new(systems.pcs[2].clone(), global_state.clone());
+    let mut cygnus_fsm = cygnus_ctrl_fsm::Fsm::new(systems.pcs[2].clone(), global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle2 = tokio::spawn(async move {
+    let cygnus_fsm_handle = tokio::spawn(async move {
         tokio::select! {
             () = cygnus_fsm.run() => {},
             _ = shutdown_rx.recv() => {
@@ -184,9 +180,9 @@ async fn main() {
     });
 
     // Snowdog FSM
-    let mut snowdog_fsm = snowdog_fsm::new(systems.pcs[1].clone(), global_state.clone());
+    let mut snowdog_fsm = snowdog_ctrl_fsm::Fsm::new(systems.pcs[1].clone(), global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle3 = tokio::spawn(async move {
+    let snowdog_fsm_handle = tokio::spawn(async move {
         tokio::select! {
             () = snowdog_fsm.run() => {},
             _ = shutdown_rx.recv() => {
@@ -200,7 +196,7 @@ async fn main() {
     let telegram_bot = TelegramBot::new(systems.clone(), global_state.clone(), llm_wrapper).await;
     let mut shutdown_rx = shutdown_tx.subscribe();
     let bot_clone = telegram_bot.clone();
-    let handle4 = tokio::spawn(async move {
+    let telegram_bot_repl_handle = tokio::spawn(async move {
         tokio::select! {
             () = bot_clone.run_repl() => {},
             _ = shutdown_rx.recv() => {
@@ -211,7 +207,7 @@ async fn main() {
 
     // Telegram Bot: Update Am I Home
     let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle5 = tokio::spawn(async move {
+    let update_home_presence_handle = tokio::spawn(async move {
         tokio::select! {
             () = telegram_bot.update_home_presence() => {},
             _ = shutdown_rx.recv() => {
@@ -223,7 +219,7 @@ async fn main() {
     // Get Am I home
     let mut shutdown_rx = shutdown_tx.subscribe();
     let global_state_clone = global_state.clone();
-    let handle7 = tokio::spawn(async move {
+    let get_home_presence_handle = tokio::spawn(async move {
         tokio::select! {
             () = commands::get_home_presence(global_state_clone) => {},
             _ = shutdown_rx.recv() => {
@@ -232,7 +228,7 @@ async fn main() {
         }
     });
 
-    let mut light_livingroom_fsm = light_livingroom_fsm::new(global_state.clone());
+    let mut light_livingroom_fsm = light_livingroom_ctrl_fsm::Fsm::new(global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle_light_livingroom_fsm = tokio::spawn(async move {
         tokio::select! {
@@ -251,12 +247,12 @@ async fn main() {
     });
 
     let _ = tokio::try_join!(
-        handle1,
-        handle2,
-        handle3,
-        handle4,
-        handle5,
-        handle7,
+        ambient_fsm_handle,
+        cygnus_fsm_handle,
+        snowdog_fsm_handle,
+        telegram_bot_repl_handle,
+        update_home_presence_handle,
+        get_home_presence_handle,
         handle_light_livingroom_fsm,
         shutdown_listener
     );
