@@ -135,11 +135,7 @@ impl TelegramBot {
 
             if is_she_home != STORE_IS_SHE_HOME_STATE.load(Ordering::Relaxed) {
                 if is_she_home {
-                    let _ = self
-                        .bot
-                        .send_message(CHAT_ID, "She's home!")
-                        .send()
-                        .await;
+                    let _ = self.bot.send_message(CHAT_ID, "She's home!").send().await;
                 } else {
                     let _ = self
                         .bot

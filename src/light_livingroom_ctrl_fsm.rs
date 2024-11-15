@@ -46,7 +46,8 @@ impl Fsm {
     }
 
     async fn connected(&mut self) {
-        if !(self.global_state.lock().await.am_i_home || self.global_state.lock().await.is_she_home) {
+        if !(self.global_state.lock().await.am_i_home || self.global_state.lock().await.is_she_home)
+        {
             sleep(FSM_REST).await;
             return;
         }

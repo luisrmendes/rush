@@ -207,8 +207,8 @@ pub async fn get_home_presence(global_state: Arc<Mutex<GlobalState>>) {
                         "adding 1 to not at home counter. Counter: {}",
                         AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed)
                     );
-                } 
-                
+                }
+
                 if out.contains("OPPO-A3s") {
                     global_state.lock().await.is_she_home = true;
                     IS_SHE_HOME_COUNTER.store(0, Ordering::SeqCst);
