@@ -15,13 +15,20 @@ use std::{
 };
 use tokio::{process::Command, sync::Mutex, time::sleep};
 
+pub(crate) struct Bulb {
+    hostname: &'static str,
+}
+
+pub(crate) static VINTAGE_BULB: Bulb = Bulb {
+    hostname: "ShellyVintage-40915157FD76",
+};
+
 pub(crate) static SHELLY_PLUG1_HOSTNAME: &str = "shellyplusplugs-fcb4670e1130";
 pub(crate) static SHELLY_PLUG2_HOSTNAME: &str = "shellyplusplugs-e465b8b362f8";
 pub(crate) static SHELLY_PLUG3_HOSTNAME: &str = "shellyplusplugs-c82e180a8dd8";
 pub(crate) static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
 pub(crate) static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
 pub(crate) static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
-pub(crate) static SHELLY_VINTAGE1_HOSTNAME: &str = "ShellyVintage-40915157FD76";
 
 pub(crate) static SHELLY_PLUGS: [&str; 6] = [
     SHELLY_PLUG1_HOSTNAME,
@@ -36,6 +43,18 @@ pub(crate) static SHELLY_PLUGS: [&str; 6] = [
 pub(crate) enum LightCmd {
     On,
     Off,
+}
+
+pub async fn ctrl_bulb(bulb: &Bulb, cmd: LightCmd) -> Result<String, Box<dyn Error>> {
+    let client = Client::new();
+
+    let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
+    let response = client
+        .get("http://".to_owned() + bulb.hostname + "/light/0?turn=" + on_or_off)
+        .send()
+        .await?;
+
+    Ok(response.text().await?)
 }
 
 pub async fn ctrl_hall_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
@@ -169,14 +188,16 @@ pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, Box<
 /// I am at home if my phone is connected to the local network
 /// Assumes i am not at home if my phone is not in the network in three consecutive searches
 /// TODO: Check if dependencies exist. If not, install (nmap)
-pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
+pub async fn get_home_presence(global_state: Arc<Mutex<GlobalState>>) {
     loop {
         static AM_I_NOT_AT_HOME_COUNTER: AtomicI16 = AtomicI16::new(0);
         let am_i_at_home = global_state.lock().await.am_i_home;
+        static IS_SHE_HOME_COUNTER: AtomicI16 = AtomicI16::new(0);
+        let is_she_home = global_state.lock().await.am_i_home;
 
         match send_command("nmap -T5 -sn 192.168.1.0/24", None).await {
             Ok(out) => {
-                if out.contains("Galaxy-S22") {
+                if out.contains("lrm-S22") {
                     global_state.lock().await.am_i_home = true;
                     AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
                 } else if am_i_at_home {
@@ -186,6 +207,18 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
                         "adding 1 to not at home counter. Counter: {}",
                         AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed)
                     );
+                } 
+                
+                if out.contains("OPPO-A3s") {
+                    global_state.lock().await.is_she_home = true;
+                    IS_SHE_HOME_COUNTER.store(0, Ordering::SeqCst);
+                } else if is_she_home {
+                    // increments the counter if does not find my phone
+                    IS_SHE_HOME_COUNTER.fetch_add(1, Ordering::Relaxed);
+                    debug!(
+                        "adding 1 to not at home counter. Counter: {}",
+                        IS_SHE_HOME_COUNTER.load(Ordering::Relaxed)
+                    );
                 }
             }
             Err(e) => {
@@ -194,10 +227,17 @@ pub async fn get_am_i_home(global_state: Arc<Mutex<GlobalState>>) {
         };
 
         if global_state.lock().await.am_i_home
-            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 50
+            && AM_I_NOT_AT_HOME_COUNTER.load(Ordering::Relaxed) > 100
         {
             global_state.lock().await.am_i_home = false;
             AM_I_NOT_AT_HOME_COUNTER.store(0, Ordering::SeqCst);
+        }
+
+        if global_state.lock().await.is_she_home
+            && IS_SHE_HOME_COUNTER.load(Ordering::Relaxed) > 100
+        {
+            global_state.lock().await.is_she_home = false;
+            IS_SHE_HOME_COUNTER.store(0, Ordering::SeqCst);
         }
         sleep(Duration::from_secs(1)).await;
     }

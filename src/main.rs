@@ -1,7 +1,7 @@
 mod commands;
 mod cygnus_ctrl_fsm;
 mod get_ambient_fsm;
-mod light_ctrl_fsm;
+mod light_livingroom_ctrl_fsm;
 mod llm_wrapper;
 mod snowdog_ctrl_fsm;
 mod telegram_bot;
@@ -13,6 +13,7 @@ use llm_wrapper::Llm;
 use log::{debug, info, warn, LevelFilter};
 use simplelog::{CombinedLogger, Config, WriteLogger};
 use snowdog_ctrl_fsm::Fsm as snowdog_fsm;
+use light_livingroom_ctrl_fsm::Fsm as light_livingroom_fsm;
 use std::{fs::File, sync::Arc};
 use telegram_bot::TelegramBot;
 use tokio::{
@@ -23,6 +24,7 @@ use tokio::{
 #[derive(Clone, Debug)]
 pub struct GlobalState {
     am_i_home: bool,
+    is_she_home: bool,
     office_env: OfficeAmbient,
 }
 
@@ -134,6 +136,7 @@ async fn main() {
 
     let global_state: Arc<Mutex<GlobalState>> = Arc::new(Mutex::new(GlobalState {
         am_i_home: false,
+        is_she_home: false,
         office_env: OfficeAmbient {
             brightness: 0,
             temperature: 0,
@@ -210,7 +213,7 @@ async fn main() {
     let mut shutdown_rx = shutdown_tx.subscribe();
     let handle5 = tokio::spawn(async move {
         tokio::select! {
-            () = telegram_bot.update_am_i_home() => {},
+            () = telegram_bot.update_home_presence() => {},
             _ = shutdown_rx.recv() => {
                 debug!("telegram_bot.update_am_i_home received shutdown signal");
             }
@@ -222,18 +225,18 @@ async fn main() {
     let global_state_clone = global_state.clone();
     let handle7 = tokio::spawn(async move {
         tokio::select! {
-            () = commands::get_am_i_home(global_state_clone) => {},
+            () = commands::get_home_presence(global_state_clone) => {},
             _ = shutdown_rx.recv() => {
                 debug!("get_am_i_home received shutdown signal");
             }
         }
     });
 
-    let mut light_ctrl_fsm = light_ctrl_fsm::Fsm::new(global_state.clone());
+    let mut light_livingroom_fsm = light_livingroom_fsm::new(global_state.clone());
     let mut shutdown_rx = shutdown_tx.subscribe();
-    let handle8 = tokio::spawn(async move {
+    let handle_light_livingroom_fsm = tokio::spawn(async move {
         tokio::select! {
-            () = light_ctrl_fsm.run() => {},
+            () = light_livingroom_fsm.run() => {},
             _ = shutdown_rx.recv() => {
                 debug!("light_ctrl_fsm received shutdown signal");
             }
@@ -254,7 +257,7 @@ async fn main() {
         handle4,
         handle5,
         handle7,
-        handle8,
+        handle_light_livingroom_fsm,
         shutdown_listener
     );
 }

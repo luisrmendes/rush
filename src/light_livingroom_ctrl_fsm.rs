@@ -46,20 +46,20 @@ impl Fsm {
     }
 
     async fn connected(&mut self) {
-        if !self.global_state.lock().await.am_i_home {
+        if !(self.global_state.lock().await.am_i_home || self.global_state.lock().await.is_she_home) {
             sleep(FSM_REST).await;
             return;
         }
 
         let now = Local::now();
-        if now.hour() == 18 && now.minute() == 0 && self.are_living_room_lights_on {
-            let _ = commands::ctrl_hall_lights(LightCmd::On).await;
+        if now.hour() == 18 && now.minute() == 30 && !self.are_living_room_lights_on {
+            let _ = commands::ctrl_bulb(&commands::VINTAGE_BULB, LightCmd::On).await;
             self.are_living_room_lights_on = true;
         } else {
             sleep(FSM_REST).await;
         }
 
-        if now.hour() == 0 && now.minute() == 0 && !self.are_living_room_lights_on {
+        if now.hour() == 0 && now.minute() == 0 && self.are_living_room_lights_on {
             let _ = commands::ctrl_hall_lights(LightCmd::Off).await;
             self.are_living_room_lights_on = false;
         } else {

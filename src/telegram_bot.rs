@@ -106,14 +106,18 @@ impl TelegramBot {
 
     /// Loop function that messages the telegram bot when I'm home or not
     /// I'm home if my phone is connected to the local network
-    pub async fn update_am_i_home(&self) {
+    pub async fn update_home_presence(&self) {
         loop {
-            static STORE_AM_I_ONLINE_STATE: AtomicBool = AtomicBool::new(false);
-            let state = self.global_state.lock().await.am_i_home;
-            debug!("Am I home? {state}");
+            static STORE_AM_I_HOME_STATE: AtomicBool = AtomicBool::new(false);
+            static STORE_IS_SHE_HOME_STATE: AtomicBool = AtomicBool::new(false);
 
-            if state != STORE_AM_I_ONLINE_STATE.load(Ordering::Relaxed) {
-                if state {
+            let am_i_home = self.global_state.lock().await.am_i_home;
+            let is_she_home = self.global_state.lock().await.is_she_home;
+
+            debug!("Am I home? {am_i_home}");
+
+            if am_i_home != STORE_AM_I_HOME_STATE.load(Ordering::Relaxed) {
+                if am_i_home {
                     let _ = self
                         .bot
                         .send_message(CHAT_ID, "You are at home!")
@@ -126,7 +130,24 @@ impl TelegramBot {
                         .send()
                         .await;
                 }
-                STORE_AM_I_ONLINE_STATE.store(state, Ordering::SeqCst);
+                STORE_AM_I_HOME_STATE.store(am_i_home, Ordering::SeqCst);
+            }
+
+            if is_she_home != STORE_IS_SHE_HOME_STATE.load(Ordering::Relaxed) {
+                if is_she_home {
+                    let _ = self
+                        .bot
+                        .send_message(CHAT_ID, "She's home!")
+                        .send()
+                        .await;
+                } else {
+                    let _ = self
+                        .bot
+                        .send_message(CHAT_ID, "She's not at home!")
+                        .send()
+                        .await;
+                }
+                STORE_IS_SHE_HOME_STATE.store(is_she_home, Ordering::SeqCst);
             }
             sleep(Duration::from_secs(1)).await;
         }
