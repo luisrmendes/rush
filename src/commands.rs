@@ -19,6 +19,18 @@ pub(crate) struct Bulb {
     hostname: &'static str,
 }
 
+pub(crate) struct Plug {
+    hostname: &'static str,
+}
+
+pub(crate) static PLUG5: Plug = Plug {
+    hostname: "shellyplusplugs-c82e18083148",
+};
+
+// pub(crate) static ALL_POWER_PLUG: Plug = Plug {
+//     hostname: "shellyplusplugs-fcb4670d686c",
+// };
+
 pub(crate) static VINTAGE_BULB: Bulb = Bulb {
     hostname: "ShellyVintage-40915157FD76",
 };
@@ -28,21 +40,31 @@ pub(crate) static SHELLY_PLUG2_HOSTNAME: &str = "shellyplusplugs-e465b8b362f8";
 pub(crate) static SHELLY_PLUG3_HOSTNAME: &str = "shellyplusplugs-c82e180a8dd8";
 pub(crate) static SHELLY_PLUG4_HOSTNAME: &str = "shellyplusplugs-c82e180b59c4";
 pub(crate) static SHELLY_PLUG5_HOSTNAME: &str = "shellyplusplugs-c82e18083148";
-pub(crate) static SHELLY_PLUG6_HOSTNAME: &str = "shellyplusplugs-fcb4670d686c";
 
-pub(crate) static SHELLY_PLUGS: [&str; 6] = [
+pub(crate) static SHELLY_PLUGS: [&str; 5] = [
     SHELLY_PLUG1_HOSTNAME,
     SHELLY_PLUG2_HOSTNAME,
     SHELLY_PLUG3_HOSTNAME,
     SHELLY_PLUG4_HOSTNAME,
     SHELLY_PLUG5_HOSTNAME,
-    SHELLY_PLUG6_HOSTNAME,
 ];
 
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub(crate) enum LightCmd {
     On,
     Off,
+}
+
+pub async fn ctrl_plug(plug: &Plug, cmd: LightCmd) -> Result<String, Box<dyn Error>> {
+    let client = Client::new();
+
+    let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
+    let response = client
+        .get("http://".to_owned() + plug.hostname + "/relay/0?turn=" + on_or_off)
+        .send()
+        .await?;
+
+    Ok(response.text().await?)
 }
 
 pub async fn ctrl_bulb(bulb: &Bulb, cmd: LightCmd) -> Result<String, Box<dyn Error>> {
@@ -76,26 +98,11 @@ pub async fn ctrl_hall_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
 }
 
 pub async fn ctrl_living_room_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
-    let client = Client::new();
-
-    let on_or_off: &str = if cmd == LightCmd::On { "on" } else { "off" };
-
-    let response = client
-        .get("http://".to_owned() + SHELLY_PLUG4_HOSTNAME + "/relay/0?turn=" + on_or_off)
-        .send()
-        .await?;
+    ctrl_bulb(&VINTAGE_BULB, cmd.clone()).await?;
     sleep(Duration::new(1, 0)).await;
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG5_HOSTNAME + "/relay/0?turn=" + on_or_off)
-        .send()
-        .await?;
-    sleep(Duration::new(1, 0)).await;
-    let _response = client
-        .get("http://".to_owned() + SHELLY_PLUG6_HOSTNAME + "/relay/0?turn=" + on_or_off)
-        .send()
-        .await?;
+    ctrl_plug(&PLUG5, cmd).await?;
 
-    Ok(response.text().await?)
+    Ok(String::new())
 }
 
 pub async fn ctrl_all_lights(cmd: LightCmd) -> Result<String, Box<dyn Error>> {
@@ -191,8 +198,8 @@ pub async fn check_external_system_connection(pcs: &[Pc]) -> Result<String, Box<
 pub async fn get_home_presence(global_state: Arc<Mutex<GlobalState>>) {
     loop {
         static AM_I_NOT_AT_HOME_COUNTER: AtomicI16 = AtomicI16::new(0);
-        let am_i_at_home = global_state.lock().await.am_i_home;
         static IS_SHE_HOME_COUNTER: AtomicI16 = AtomicI16::new(0);
+        let am_i_at_home = global_state.lock().await.am_i_home;
         let is_she_home = global_state.lock().await.am_i_home;
 
         match send_command("nmap -T5 -sn 192.168.1.0/24", None).await {
