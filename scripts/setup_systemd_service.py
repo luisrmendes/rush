@@ -3,6 +3,7 @@
 import os
 import subprocess
 import sys
+from time import sleep
 
 
 def format_std(text):
@@ -28,6 +29,7 @@ print(format_std("Kill " + PROGRAM_NAME))
 result = subprocess.run(["pgrep", PROGRAM_NAME], stdout=subprocess.DEVNULL)
 if result.returncode == 0:
     subprocess.run(["pkill", PROGRAM_NAME], check=False)
+sleep(0.5)
 
 # mkdir if not already present
 subprocess.run(["mkdir", "-p", BIN_DIR], check=True)
@@ -41,8 +43,9 @@ print(format_std("Add executable permissions"))
 subprocess.run(["chmod", "+x", PROGRAM_PATH], check=True)
 
 # Check if Systemd service was already installed
+print(format_std("Check if is already installed"))
 if os.path.exists(SERVICE_PATH) is True:
-    print("rush.service already exists")
+    print("rush.service already exists, stopping")
     subprocess.run(["systemctl", "stop", "rush"], check=True)
 
 # Create systemd file
