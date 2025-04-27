@@ -12,7 +12,7 @@ pub struct Llm {
 
 // static URL: &str = "http://cygnus:11434/api/generate";
 static BACKUP_URL: &str = "http://localhost:8080/api/generate";
-static MODEL: &str = "ambrosio";
+static MODEL: &str = "gemma3";
 
 impl Llm {
     fn format_response(text: &str) -> String {
