@@ -11,7 +11,7 @@ pub struct Llm {
 }
 
 // static URL: &str = "http://cygnus:11434/api/generate";
-static BACKUP_URL: &str = "http://localhost:11434/api/generate";
+static BACKUP_URL: &str = "http://localhost:8080/api/generate";
 static MODEL: &str = "ambrosio";
 
 impl Llm {

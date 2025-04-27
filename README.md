@@ -6,11 +6,22 @@ My monolithic project to control everything in my house.
 Handles Telegram bot chat API and climate data through ESP8266 sensors. Controls desktops (monitor and keyboard brightness according to ambient brightness, desktop wakeup), telegram chat commands and electric outlet control with RaspberryPi and Energienie sockets.
 Using GitHub actions for automatic deploy.
 
+## Setup
+
+Setup Rust  
+```curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh```
+
+Build  
+```cargo build```
+
+Setup as a systemd service
+```cd scripts && sudo ./setup_system_service.py```
+
 ## Telegram Bot commands and description  
 
 ipv4 - Get ipv4 home address  
 wakeup_snowdog - Wake up desktop WoL  
-status_snowdog - Check if Snowdog is online    
+status_snowdog - Check if Snowdog is online  
 disable_brightness_auto_control - Disable automatic brightness control  
 enable_brightness_auto_control - Enable automatic brightness control  
 
@@ -50,17 +61,19 @@ go run main.go
 - Add monitorcontrol write permissions to kbd_backlight (eg on .bashrc, "sudo chmod 757 /sys/class/leds/tpacpi\:\:kbd_backlight/brightness")
 
 ## Set OLLAMA access
+
 OLLAMA_HOST=0.0.0.0:8080
 
 ## TODO
 
 ## Ollama create a llm with a modelfile
+
 ```
 ollama create ambrosio -f ./AmbrosioModelfile
 ```
 
 Remove all dependencies like ddcutil i2c-dev i2c-tools
-How to setup ollama: https://www.youtube.com/watch?v=QSfvLWaJc2s 
+How to setup ollama: <https://www.youtube.com/watch?v=QSfvLWaJc2s>
 
 ## Install Whisper
 
