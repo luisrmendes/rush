@@ -56,7 +56,7 @@ SYSTEMD_FILE_CONTENT = (
 [Unit]\n\
 Description=Rush\n\
 After=network.target\n\
-# Requires=network-online.target  # More robust network check (optional)\n\
+Requires=network-online.target  # More robust network check (optional)\n\
 \n\
 [Service]\n\
 User=lrm \n\
